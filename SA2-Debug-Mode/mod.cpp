@@ -7,10 +7,8 @@ extern "C" {
 
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
 	{
-
 		HelperFunctionsGlobal = helperFunctions;
 		Collisions_Init();
-
 	}
 
 

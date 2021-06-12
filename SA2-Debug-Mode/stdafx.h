@@ -14,5 +14,6 @@
 #include "Trampoline.h"
 #include "helper.h"
 #include "IniFile.hpp"
+#include "utils.h"
 
 #include "mod.h"

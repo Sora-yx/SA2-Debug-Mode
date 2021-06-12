@@ -10,6 +10,19 @@ Trampoline* addCol_t;
 
 bool isColDebug = false;
 
+//set color according to the type of col (blue = not solid/player detection, green = solid, red = hurt)
+void CheckAndSetColColor(CollisionInfo* Col) {
+
+
+	if ((Col->Id == 3)) {
+		SetMaterialColorOffset(1.0, 0, 0, 0.0); //red
+		return;
+	}
+	else {
+		SetMaterialColorOffset(0.0, 1, 0.0, 0.0); //green
+	}
+}
+
 void __cdecl DrawCollisionInfo(CollisionInfo* ColInfo)
 {
 	CollisionData* Col; // esi
@@ -223,11 +236,11 @@ void DrawColCube2Model(EntityData1* data, CollisionData* col)
 	sx = col->param1 * 0.2;
 	njScale(0, sx, sy, sz);
 	v9 = Cube->getmodel();
-	if ((col->damage & 3u) < 4)
-	{
-		//SetMaterialAndSpriteColor(&stru_88C458[col->damage & 3]);
-	}
+
+
+	CheckAndSetColColor(data->Collision);
 	DrawObject(v9);
+	ResetMaterialColorOffset();
 	njPopMatrix(1u);
 }
 
@@ -287,12 +300,10 @@ void DrawColCylinder2Model(CollisionData* Col, EntityData1* Data)
 	}
 	njScale(0, XScale, sy, XScale);
 	v10 = Cylinder->getmodel();
-	if ((Col->damage & 3u) < 4)
-	{
-		//SetMaterialAndSpriteColor(&stru_88C458[Col->damage & 3]);
-	}
-	DrawObject(v10);
 
+	CheckAndSetColColor(Data->Collision);
+	DrawObject(v10);
+	ResetMaterialColorOffset();
 	njPopMatrix(1u);
 }
 
@@ -358,11 +369,11 @@ void DrawColCubeModel(EntityData1* data, CollisionData* col)
 	sx = col->param1 * 0.2;
 	njScale(0, sx, sy, sz);
 	v8 = Cube->getmodel();
-	if ((col->damage & 3u) < 4)
-	{
-		//SetMaterialAndSpriteColor(&stru_88C458[col->damage & 3]);
-	}
+
+
+	CheckAndSetColColor(data->Collision);
 	DrawObject(v8);
+	ResetMaterialColorOffset();
 	njPopMatrix(1u);
 }
 
@@ -418,11 +429,11 @@ void DrawColCylinderModel(EntityData1* data, CollisionData* col)
 	}
 	njScale(0, sx, sy, sx);
 	v6 = Cylinder->getmodel();
-	if ((col->damage & 3u) < 4)
-	{
-		//SetMaterialAndSpriteColor(&stru_88C458[col->damage & 3]);
-	}
+
+
+	CheckAndSetColColor(data->Collision);
 	DrawObject(v6);
+	ResetMaterialColorOffset();
 	njPopMatrix(1u);
 }
 
@@ -436,12 +447,10 @@ void DrawColSphereModel(CollisionData* Col, EntityData1* Data)
 	njTranslateCol(Col, Data);
 	njScale(0, XScale, XScale, XScale);
 	v3 = Sphere->getmodel();
-	if ((Col->damage & 3u) < 4)
-	{
-		//SetMaterialAndSpriteColor(&stru_88C458[Col->damage & 3]);
-	}
-	DrawObject(v3);
 
+	CheckAndSetColColor(Data->Collision);
+	DrawObject(v3);
+	ResetMaterialColorOffset();
 	njPopMatrix(1u);
 }
 
@@ -481,7 +490,7 @@ void __cdecl DrawCol(CollisionData* Col, EntityData1* a2)
 	}
 }
 
-int inputDelay = 20;
+int inputDelay = 0;
 void CheckController_ColDebug() {
 
 	if (inputDelay > 0) {
@@ -491,7 +500,7 @@ void CheckController_ColDebug() {
 
 	for (int i = 0; i < 2; i++) {
 
-		if (Controllers[i].on & Buttons_L) {
+		if (Controllers[i].on & Buttons_L && Controllers[i].on & Buttons_R) {
 			isColDebug = !isColDebug;
 			inputDelay = 20;
 			return;

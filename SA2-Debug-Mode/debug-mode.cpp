@@ -29,7 +29,7 @@ void UnsetFreeMovements() {
 
 		if (Controllers[i].press & Buttons_A) {
 			isFreeMov = false;
-			MainCharObj1[i]->Action = 10;
+			MainCharObj1[i]->Action = Action_Jump;
 			return;
 		}
 	}
