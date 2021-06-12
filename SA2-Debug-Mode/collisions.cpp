@@ -3,6 +3,8 @@
 static ModelInfo* Cube;
 static ModelInfo* Sphere;
 static ModelInfo* Cylinder;
+static ModelInfo* HalfSphere;
+static ModelInfo* Capsule;
 
 Trampoline* addCol_t;
 
@@ -47,21 +49,12 @@ void __cdecl DrawCollisionInfo(CollisionInfo* ColInfo)
 
 void __cdecl DrawDebugCollision(ObjectMaster* a1)
 {
-	for (int i = 0; i < 2; i++) {
 
-		if (Controllers[i].press & Buttons_Y) {
-			if (isColDebug)
-				isColDebug = false;
-			else
-				isColDebug = true;
+	if (a1->Data1.Entity->Collision == nullptr || !isColDebug)
+		return;
 
-			return;
-		}
-	}
+	DrawCollisionInfo(a1->Data1.Entity->Collision);
 
-	if (isColDebug) {
-		DrawCollisionInfo(a1->Data1.Entity->Collision);
-	}
 }
 
 void CheckAndDisplayCol(ObjectMaster* a1) {
@@ -160,6 +153,147 @@ void njTranslateCol(CollisionData* Col, EntityData1* data)
 		}
 	}
 	njTranslateV(0, &Col->center);
+}
+
+void DrawColCube2Model(EntityData1* data, CollisionData* col)
+{
+	Uint32 v3; // ebx
+	Angle v5; // eax
+	Angle v6; // eax
+	int v7; // eax
+	int v8; // eax
+	NJS_OBJECT* v9; // esi
+	Float sx; // [esp+0h] [ebp-18h]
+	Float sy; // [esp+4h] [ebp-14h]
+	Float sz; // [esp+8h] [ebp-10h]
+
+	v3 = col->attr;
+	njPushMatrix(0);
+	njTranslateCol(col, data);
+	if ((v3 & 0x20) == 0 && (v3 & 0x8000) == 0)
+	{
+		v5 = data->Rotation.x;
+		if (v5 || data->Rotation.z)
+		{
+			if ((v3 & 0x200) != 0)
+			{
+				if (v5)
+				{
+					njRotateX(0, (unsigned __int16)-LOWORD(data->Rotation.x));
+				}
+				if (data->Rotation.z)
+				{
+					njRotateZ(0, (unsigned __int16)-LOWORD(data->Rotation.z));
+				}
+			}
+			else
+			{
+				if (data->Rotation.y)
+				{
+					njRotateY(0, (unsigned __int16)-LOWORD(data->Rotation.y));
+				}
+				if (data->Rotation.x)
+				{
+					njRotateX(0, (unsigned __int16)-LOWORD(data->Rotation.x));
+				}
+				if (data->Rotation.z)
+				{
+					njRotateZ(0, (unsigned __int16)-LOWORD(data->Rotation.z));
+				}
+				v6 = data->Rotation.y;
+				if (v6)
+				{
+					njRotateY(0, (unsigned __int16)v6);
+				}
+			}
+		}
+	}
+	v7 = col->rotation.y;
+	if (v7)
+	{
+		njRotateY(0, (unsigned __int16)v7);
+	}
+	v8 = col->rotation.z;
+	if (v8)
+	{
+		njRotateZ(0, (unsigned __int16)v8);
+	}
+	sz = col->param3 * 0.2;
+	sy = col->param2 * 0.2;
+	sx = col->param1 * 0.2;
+	njScale(0, sx, sy, sz);
+	v9 = Cube->getmodel();
+	if ((col->damage & 3u) < 4)
+	{
+		//SetMaterialAndSpriteColor(&stru_88C458[col->damage & 3]);
+	}
+	DrawObject(v9);
+	njPopMatrix(1u);
+}
+
+void DrawColCylinder2Model(CollisionData* Col, EntityData1* Data)
+{
+	Uint32 v3; // ebx
+	int v4; // eax
+	int v5; // eax
+	int v6; // eax
+	int rotZ; // eax
+	int v8; // eax
+	int v9; // eax
+	NJS_OBJECT* v10; // esi
+	float XScale; // [esp+Ch] [ebp-8h]
+	float sy; // [esp+10h] [ebp-4h]
+
+	v3 = Col->attr;
+	XScale = Col->param1 * 0.1;
+	sy = Col->param2 * 0.1;
+	njPushMatrix(0);
+	njTranslateCol(Col, Data);
+	if ((v3 & 0x200) != 0)
+	{
+		v4 = Col->rotation.y;
+		if (v4)
+		{
+			njRotateY(0, (unsigned __int16)v4);
+		}
+		v5 = Col->rotation.z;
+		if (v5)
+		{
+			njRotateZ(0, (unsigned __int16)v5);
+		}
+		v6 = Col->rotation.x;
+		if (v6)
+		{
+			njRotateX(0, (unsigned __int16)v6);
+		}
+	}
+	else
+	{
+		rotZ = Col->rotation.z;
+		if (rotZ)
+		{
+			njRotateZ(0, (unsigned __int16)rotZ);
+		}
+		v8 = Col->rotation.x;
+		if (v8)
+		{
+			njRotateX(0, (unsigned __int16)v8);
+		}
+		v9 = Col->rotation.y;
+		if (v9)
+		{
+			njRotateY(0, (unsigned __int16)v9);
+		}
+	}
+	njScale(0, XScale, sy, XScale);
+	v10 = Cylinder->getmodel();
+	if ((Col->damage & 3u) < 4)
+	{
+		//SetMaterialAndSpriteColor(&stru_88C458[Col->damage & 3]);
+	}
+	DrawObject(v10);
+
+	njPopMatrix(1u);
 }
 
 void DrawColCubeModel(EntityData1* data, CollisionData* col)
@@ -326,15 +460,13 @@ void __cdecl DrawCol(CollisionData* Col, EntityData1* a2)
 				DrawColCylinderModel(a2, Col);
 				break;
 			case 2:
-				DrawColCylinderModel(a2, Col);
-				//DrawColCylinder2Model(Col, Col, a2);
+				DrawColCylinder2Model(Col, a2);
 				break;
 			case 3:
 				DrawColCubeModel(a2, Col);
 				break;
 			case 4:
-				DrawColCubeModel(a2, Col);
-				//DrawColCube2Model(a2, Col);
+				DrawColCube2Model(a2, Col);
 				break;
 			case 6:
 				//sub_79ED30(Col, Col, a2);
@@ -349,6 +481,24 @@ void __cdecl DrawCol(CollisionData* Col, EntityData1* a2)
 	}
 }
 
+int inputDelay = 20;
+void CheckController_ColDebug() {
+
+	if (inputDelay > 0) {
+		inputDelay--;
+		return;
+	}
+
+	for (int i = 0; i < 2; i++) {
+
+		if (Controllers[i].on & Buttons_L) {
+			isColDebug = !isColDebug;
+			inputDelay = 20;
+			return;
+		}
+	}
+}
+
 
 void Collisions_Init()
 {
@@ -356,4 +506,6 @@ void Collisions_Init()
 	Cube = LoadMDL("cube", ModelFormat_Chunk);
 	Sphere = LoadMDL("sphere", ModelFormat_Chunk);
 	Cylinder = LoadMDL("cylinder", ModelFormat_Chunk);
+	HalfSphere = LoadMDL("half-cylinder", ModelFormat_Chunk);
+	Capsule = LoadMDL("Capsule", ModelFormat_Chunk);
 }

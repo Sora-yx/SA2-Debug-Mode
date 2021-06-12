@@ -2,3 +2,5 @@
 
 extern HelperFunctions HelperFunctionsGlobal;
 void Collisions_Init();
+void Debugging_InputCheck();
+void CheckController_ColDebug();
