@@ -3,16 +3,16 @@
 static ModelInfo* Cube;
 static ModelInfo* Sphere;
 static ModelInfo* Cylinder;
-static ModelInfo* HalfSphere;
+static ModelInfo* HalfSphere[2];
 static ModelInfo* Capsule;
 
 Trampoline* addCol_t;
 
 bool isColDebug = false;
 
+
 //set color according to the type of col (blue = not solid/player detection, green = solid, red = hurt)
 void CheckAndSetColColor(CollisionInfo* Col) {
-
 
 	if ((Col->Id == 3)) {
 		SetMaterialColorOffset(1.0, 0, 0, 0.0); //red
@@ -454,34 +454,212 @@ void DrawColSphereModel(CollisionData* Col, EntityData1* Data)
 	njPopMatrix(1u);
 }
 
-void __cdecl DrawCol(CollisionData* Col, EntityData1* a2)
+void DrawCapsuleCol(CollisionData* col, EntityData1* data)
+{
+	NJS_OBJECT* v2; // ebp
+	Uint32 v4; // ebx
+	int v5; // eax
+	int v6; // eax
+	int v7; // eax
+	int v8; // eax
+	int v9; // eax
+	int v10; // eax
+	NJS_OBJECT* Cyl2; // ebx
+	float y; // [esp+10h] [ebp-Ch]
+	float XScale; // [esp+14h] [ebp-8h]
+	Float sy; // [esp+18h] [ebp-4h]
+
+	v2 = HalfSphere[1]->getmodel();
+	v4 = col->attr;
+	y = col->param2;
+	XScale = col->param1 * 0.1;
+	njPushMatrix(0);
+	njTranslateCol(col, data);
+	if ((v4 & 0x200) != 0)
+	{
+		v5 = col->rotation.y;
+		if (v5)
+		{
+			njRotateY(0, (unsigned __int16)v5);
+		}
+		v6 = col->rotation.z;
+		if (v6)
+		{
+			njRotateZ(0, (unsigned __int16)v6);
+		}
+		v7 = col->rotation.x;
+		{
+			njRotateX(0, (unsigned __int16)v7);
+		}
+	}
+	else
+	{
+		v8 = col->rotation.z;
+		if (v8)
+		{
+			njRotateZ(0, (unsigned __int16)v8);
+		}
+		v9 = col->rotation.x;
+		if (v9)
+		{
+			njRotateX(0, (unsigned __int16)v9);
+		}
+		v10 = col->rotation.y;;
+		if (v10)
+		{
+			njRotateY(0, (unsigned __int16)v10);
+		}
+	}
+	njPushMatrix(0);
+	sy = y * 0.1;
+	njScale(0, XScale, sy, XScale);
+	Cyl2 = Capsule->getmodel();
+
+	CheckAndSetColColor(data->Collision);
+
+	DrawObject(Cyl2);
+	ResetMaterialColorOffset();
+	njPopMatrix(1u);
+	njPushMatrix(0);
+	njTranslate(0, 0.0, y, 0.0);
+	njScale(0, XScale, XScale, XScale);
+
+	CheckAndSetColColor(data->Collision);
+	DrawObject(v2);
+	ResetMaterialColorOffset();
+	njPopMatrix(1u);
+	njRotateX(0, 0x8000);
+	njTranslate(0, 0.0, y, 0.0);
+	njScale(0, XScale, XScale, XScale);
+	CheckAndSetColColor(data->Collision);
+	DrawObject(v2);
+	ResetMaterialColorOffset();
+	njPopMatrix(1u);
+}
+
+void drawColinfoPlane(EntityData1* data, CollisionData* col)
+{
+	NJS_OBJECT* CubeObj; // ebp
+	Uint32 v4; // ebx
+	Angle v6; // eax
+	Angle v7; // eax
+	int v8; // eax
+	Float sx; // [esp+0h] [ebp-1Ch]
+	Float sy; // [esp+4h] [ebp-18h]
+
+	CubeObj = Cube->getmodel();
+	v4 = col->attr;
+	njPushMatrix(0);
+	njTranslateCol(col, data);
+	if ((v4 & 0x20) == 0 && (v4 & 0x8000) == 0)
+	{
+		v6 = data->Rotation.x;
+		if (v6 || data->Rotation.z)
+		{
+			if ((v4 & 0x200) != 0)
+			{
+				if (v6)
+				{
+					njRotateX(0, (unsigned __int16)-LOWORD(data->Rotation.x));
+				}
+				if (data->Rotation.z)
+				{
+					njRotateZ(0, (unsigned __int16)-LOWORD(data->Rotation.z));
+				}
+			}
+			else
+			{
+				if (data->Rotation.y)
+				{
+					njRotateY(0, (unsigned __int16)-LOWORD(data->Rotation.y));
+				}
+				if (data->Rotation.x)
+				{
+					njRotateX(0, (unsigned __int16)-LOWORD(data->Rotation.x));
+				}
+				if (data->Rotation.z)
+				{
+					njRotateZ(0, (unsigned __int16)-LOWORD(data->Rotation.z));
+				}
+				v7 = data->Rotation.y;
+				if (v7)
+				{
+					njRotateY(0, (unsigned __int16)v7);
+				}
+			}
+		}
+	}
+	v8 = col->rotation.y;
+	if (v8)
+	{
+		njRotateY(0, (unsigned __int16)v8);
+	}
+	njPushMatrix(0);
+	njTranslate(0, 0.0, 0.0, 10.0);
+	njScale(0, 0.1, 0.1, 2.0);
+
+	CheckAndSetColColor(data->Collision);
+	DrawObject(CubeObj);
+	ResetMaterialColorOffset();
+	njPopMatrix(1u);
+	njPushMatrix(0);
+	njTranslate(0, 0.0, 0.0, 20.0);
+	njRotateX(0, 0x2000);
+	njTranslate(0, 0.0, 0.0, -3.0);
+	njScale(0, 0.1, 0.1, 0.69999999);
+
+	CheckAndSetColColor(data->Collision);
+	DrawObject(CubeObj);
+	ResetMaterialColorOffset();
+	njPopMatrix(1u);
+	njPushMatrix(0);
+	njTranslate(0, 0.0, 0.0, 20.0);
+	njRotateX(0, 57344);
+	njTranslate(0, 0.0, 0.0, -3.0);
+	njScale(0, 0.1, 0.1, 0.69999999);
+
+	CheckAndSetColColor(data->Collision);
+	DrawObject(CubeObj);
+	ResetMaterialColorOffset();
+	njPopMatrix(1u);
+	sy = col->param2 * 0.2;
+	sx = col->param1 * 0.2;
+	njScale(0, sx, sy, 0.1);
+
+	CheckAndSetColColor(data->Collision);
+	DrawObject(CubeObj);
+	ResetMaterialColorOffset();
+	njPopMatrix(1u);
+}
+
+void __cdecl DrawCol(CollisionData* Col, EntityData1* data)
 {
 	if (Col)
 	{
-		if (a2)
+		if (data)
 		{
 			switch (Col->form)
 			{
 			case 0:
-				DrawColSphereModel(Col, a2);
+				DrawColSphereModel(Col, data);
 				break;
 			case 1:
-				DrawColCylinderModel(a2, Col);
+				DrawColCylinderModel(data, Col);
 				break;
 			case 2:
-				DrawColCylinder2Model(Col, a2);
+				DrawColCylinder2Model(Col, data);
 				break;
 			case 3:
-				DrawColCubeModel(a2, Col);
+				DrawColCubeModel(data, Col);
 				break;
 			case 4:
-				DrawColCube2Model(a2, Col);
+				DrawColCube2Model(data, Col);
 				break;
 			case 6:
-				//sub_79ED30(Col, Col, a2);
+				DrawCapsuleCol(Col, data);
 				break;
 			case 9:
-				//sub_79F1A0(a2, Col);
+				drawColinfoPlane(data, Col);
 				break;
 			default:
 				return;
@@ -500,7 +678,7 @@ void CheckController_ColDebug() {
 
 	for (int i = 0; i < 2; i++) {
 
-		if (Controllers[i].on & Buttons_L && Controllers[i].on & Buttons_R) {
+		if (Controllers[i].on & Buttons_L && Controllers[i].on & Buttons_Y) {
 			isColDebug = !isColDebug;
 			inputDelay = 20;
 			return;
@@ -515,6 +693,8 @@ void Collisions_Init()
 	Cube = LoadMDL("cube", ModelFormat_Chunk);
 	Sphere = LoadMDL("sphere", ModelFormat_Chunk);
 	Cylinder = LoadMDL("cylinder", ModelFormat_Chunk);
-	HalfSphere = LoadMDL("half-cylinder", ModelFormat_Chunk);
+	HalfSphere[0] = LoadMDL("half-sphere", ModelFormat_Chunk);
+	HalfSphere[1] = LoadMDL("half-sphere2", ModelFormat_Chunk);
 	Capsule = LoadMDL("Capsule", ModelFormat_Chunk);
+	return;
 }
