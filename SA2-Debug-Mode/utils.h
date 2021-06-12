@@ -15,5 +15,7 @@ DataPointer(float, GlobalMatColorR, 0x25EFFD4);
 DataPointer(float, GlobalMatColorG, 0x25EFFD8);
 DataPointer(float, GlobalMatColorB, 0x25EFFDC);
 DataPointer(float, GlobalMatColorA, 0x25EFFD0);
+
+DataPointer(int, DeathZoneDebug, 0x174B002);
 void SetMaterialColorOffset(float r, float g, float b, float a);
 void ResetMaterialColorOffset();

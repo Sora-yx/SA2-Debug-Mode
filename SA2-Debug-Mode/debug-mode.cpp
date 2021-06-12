@@ -15,6 +15,7 @@ void SetFreeMovements() {
 				return;
 
 			isFreeMov = true;
+			DeathZoneDebug = 1; //death zone can no longer kill player
 			MainCharObj1[i]->Action = Action_Noclip;
 			return;
 		}
@@ -29,6 +30,7 @@ void UnsetFreeMovements() {
 
 		if (Controllers[i].press & Buttons_A) {
 			isFreeMov = false;
+			DeathZoneDebug = 0;
 			MainCharObj1[i]->Action = Action_Jump;
 			return;
 		}
