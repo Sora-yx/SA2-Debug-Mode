@@ -16,3 +16,8 @@ struct DebugStringInfo
 
 void __cdecl DrawDebugCollision(ObjectMaster* a1);
 void __cdecl DrawCol(CollisionData* Col, EntityData1* a2);
+
+void initializeDebugText();
+void DisplayDebugStringFormatted(Int loc, const char* Format, ...);
+void DisplayPlayerInformation();
+void SetDebugFontColor(int color);

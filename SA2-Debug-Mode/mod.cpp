@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-HelperFunctions HelperFunctionsGlobal;
 
+HelperFunctions HelperFunctionsGlobal;
 
 extern "C" {
 
@@ -9,16 +9,21 @@ extern "C" {
 	{
 		HelperFunctionsGlobal = helperFunctions;
 		Collisions_Init();
+		initializeDebugText();
 	}
 
 
 	__declspec(dllexport) void __cdecl OnFrame() {
 
+		if (GameState != GameStates_Ingame && GameState != GameStates_Pause)
+			return;
+
+		DisplayDebugTextInfo();
+
 	}
 
 	__declspec(dllexport) void __cdecl OnInput()
 	{
-
 		Debugging_InputCheck();
 	}
 

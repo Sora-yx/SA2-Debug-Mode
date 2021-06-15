@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClCompile Include="collisions.cpp" />
     <ClCompile Include="debug-mode.cpp" />
+    <ClCompile Include="debug-text.cpp" />
     <ClCompile Include="mod.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="utils.cpp" />

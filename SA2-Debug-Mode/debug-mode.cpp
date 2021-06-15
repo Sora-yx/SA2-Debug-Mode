@@ -1,6 +1,8 @@
 #include "stdafx.h"
 
 bool isFreeMov = false;
+PolygonPoint coolSquare[4] = { 0 };
+extern int currentPage;
 
 void SetFreeMovements() {
 
@@ -9,7 +11,7 @@ void SetFreeMovements() {
 
 	for (int i = 0; i < 2; i++) {
 
-		if ( (Controllers[i].press & Buttons_A && Controllers[i].press & Buttons_R) || (Controllers[i].on & Buttons_A && Controllers[i].on & Buttons_R)) {
+		if ( (Controllers[i].on & Buttons_A && Controllers[i].press & Buttons_R)) {
 
 			if (MainCharObj2[i]->CharID == Characters_Knuckles)
 				return;
@@ -50,4 +52,5 @@ void Debugging_InputCheck() {
 
 	CheckFreeMovements();
 	CheckController_ColDebug();
+	DebugTextUpdateCurrentPage();
 }
