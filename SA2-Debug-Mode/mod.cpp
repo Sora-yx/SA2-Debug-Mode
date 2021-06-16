@@ -15,10 +15,11 @@ extern "C" {
 
 	__declspec(dllexport) void __cdecl OnFrame() {
 
-		if (GameState != GameStates_Ingame && GameState != GameStates_Pause)
+		if (GameState != GameStates_Ingame && GameState != GameStates_Pause && GameMode != 14)
 			return;
 
 		DisplayDebugTextInfo();
+		//DrawRecMaybe((int)dword_1A55924, 191.0, 145.0, 256.0, 256.0, 0.99989998, 0.0, 0.0, 1.0, 1.0, -1);
 
 	}
 

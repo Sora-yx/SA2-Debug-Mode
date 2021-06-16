@@ -9,10 +9,11 @@ void DrawFreeMovementText() {
 	if (!isFreeMov)
 		return;
 
-	DisplayDebugStringFormatted(NJM_LOCATION(10, 10), "FREE MOVEMENTS ENABLED");
+	DisplayDebugStringFormatted(NJM_LOCATION(22, 10), "FREE MOVEMENT ENABLED");
 	return;
 }
 
+//The hunters originally can't use free movements since their action is shared with something else, so we force a different action and manually call the function.
 void Hunters_FreeMovements() {
 
 	if (!isFreeMov)

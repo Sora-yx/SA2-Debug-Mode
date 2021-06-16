@@ -2,6 +2,7 @@
 
 int currentPage = 0;
 
+
 void ScaleDebugFont(int scale)
 {
 	float FontScale;
@@ -26,6 +27,7 @@ void DisplayPlayerInformation() {
 		DisplayDebugStringFormatted(NJM_LOCATION(2, 1), "- PLAYER INFO UNAVAILABLE -");
 		return;
 	}
+
 
 	SetDebugFontColor(0xFF88FFAA);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 7), "- PLAYER INFO -");
@@ -57,7 +59,7 @@ void DisplayGameInfo()
 	DisplayDebugStringFormatted(NJM_LOCATION(5, 7), "- GAME STATS -");
 	SetDebugFontColor(0xFFBFBFBF);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "FRAME: %08d", FrameCount);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "FRAME IN-GAME: %08d", FrameCountIngame);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "FRAME LVL: %08d", FrameCountIngame);
 
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 12), "GAME MODE: %02d", GameMode);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 13), "GAME STATE: %02d", GameState);
@@ -99,6 +101,7 @@ void DebugTextUpdateCurrentPage() {
 
 void DisplayDebugTextInfo() {
 
+	LoadObjDrawBG();
 	DisplayPlayerInformation();
 	DisplayGameInfo();
 	return;

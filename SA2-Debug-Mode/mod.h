@@ -7,3 +7,5 @@ void CheckController_ColDebug();
 void DebugTextUpdateCurrentPage();
 void Init_DZ();
 void DisplayDebugTextInfo();
+void InitBGTex();
+void LoadObjDrawBG();
