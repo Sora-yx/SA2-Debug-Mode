@@ -15,6 +15,10 @@ extern "C" {
 
 	__declspec(dllexport) void __cdecl OnFrame() {
 
+		if (GameState == GameStates_LoadItems) {
+			LoadObjDrawBG();
+		}
+
 		if (GameState != GameStates_Ingame && GameState != GameStates_Pause && GameMode != 14)
 			return;
 

@@ -39,13 +39,14 @@ void DisplayPlayerInformation() {
 
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 13), "ACTION: %d", MainCharObj1[0]->Action);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 14), "NEXT ACTION: %d", MainCharObj1[0]->NextAction);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 15), "HOVER FRAMES: %d", MainCharObj2[0]->field_12);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 16), "NEXT ANIM: %d", MainCharObj2[0]->AnimInfo.Next);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 17), "CURRENT ANIM: %d", MainCharObj2[0]->AnimInfo.Current);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 17), "NEXT ANIM: %d", MainCharObj2[0]->AnimInfo.Next);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 18), "CURRENT ANIM: %d", MainCharObj2[0]->AnimInfo.Current);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 19), "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 20), "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 21), "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 20), "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 21), "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 22), "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
 	return;
 }
 
@@ -101,7 +102,6 @@ void DebugTextUpdateCurrentPage() {
 
 void DisplayDebugTextInfo() {
 
-	LoadObjDrawBG();
 	DisplayPlayerInformation();
 	DisplayGameInfo();
 	return;

@@ -12,9 +12,9 @@ bool isColDebug = false;
 
 
 //set color according to the type of col (blue = not solid/player detection, green = solid, red = hurt)
-void CheckAndSetColColor(CollisionInfo* Col) {
+void CheckAndSetColColor(CollisionData* Col) {
 
-	if ((Col->Id == 3)) {
+	if ((Col->attr >= 0x350 && Col->attr <= 0x1000)) {
 		SetMaterialColorOffset(1.0, 0, 0, 0.0); //red
 		return;
 	}
@@ -238,7 +238,7 @@ void DrawColCube2Model(EntityData1* data, CollisionData* col)
 	v9 = Cube->getmodel();
 
 
-	CheckAndSetColColor(data->Collision);
+	CheckAndSetColColor(col);
 	DrawObject(v9);
 	ResetMaterialColorOffset();
 	njPopMatrix(1u);
@@ -301,7 +301,7 @@ void DrawColCylinder2Model(CollisionData* Col, EntityData1* Data)
 	njScale(0, XScale, sy, XScale);
 	v10 = Cylinder->getmodel();
 
-	CheckAndSetColColor(Data->Collision);
+	CheckAndSetColColor(Col);
 	DrawObject(v10);
 	ResetMaterialColorOffset();
 	njPopMatrix(1u);
@@ -371,7 +371,7 @@ void DrawColCubeModel(EntityData1* data, CollisionData* col)
 	v8 = Cube->getmodel();
 
 
-	CheckAndSetColColor(data->Collision);
+	CheckAndSetColColor(col);
 	DrawObject(v8);
 	ResetMaterialColorOffset();
 	njPopMatrix(1u);
@@ -431,7 +431,7 @@ void DrawColCylinderModel(EntityData1* data, CollisionData* col)
 	v6 = Cylinder->getmodel();
 
 
-	CheckAndSetColColor(data->Collision);
+	CheckAndSetColColor(col);
 	DrawObject(v6);
 	ResetMaterialColorOffset();
 	njPopMatrix(1u);
@@ -448,7 +448,7 @@ void DrawColSphereModel(CollisionData* Col, EntityData1* Data)
 	njScale(0, XScale, XScale, XScale);
 	v3 = Sphere->getmodel();
 
-	CheckAndSetColColor(Data->Collision);
+	CheckAndSetColColor(Col);
 	DrawObject(v3);
 	ResetMaterialColorOffset();
 	njPopMatrix(1u);
@@ -515,7 +515,7 @@ void DrawCapsuleCol(CollisionData* col, EntityData1* data)
 	njScale(0, XScale, sy, XScale);
 	Cyl2 = Capsule->getmodel();
 
-	CheckAndSetColColor(data->Collision);
+	CheckAndSetColColor(col);
 
 	DrawObject(Cyl2);
 	ResetMaterialColorOffset();
@@ -524,14 +524,14 @@ void DrawCapsuleCol(CollisionData* col, EntityData1* data)
 	njTranslate(0, 0.0, y, 0.0);
 	njScale(0, XScale, XScale, XScale);
 
-	CheckAndSetColColor(data->Collision);
+	CheckAndSetColColor(col);
 	DrawObject(v2);
 	ResetMaterialColorOffset();
 	njPopMatrix(1u);
 	njRotateX(0, 0x8000);
 	njTranslate(0, 0.0, y, 0.0);
 	njScale(0, XScale, XScale, XScale);
-	CheckAndSetColColor(data->Collision);
+	CheckAndSetColColor(col);
 	DrawObject(v2);
 	ResetMaterialColorOffset();
 	njPopMatrix(1u);
@@ -598,7 +598,7 @@ void drawColinfoPlane(EntityData1* data, CollisionData* col)
 	njTranslate(0, 0.0, 0.0, 10.0);
 	njScale(0, 0.1, 0.1, 2.0);
 
-	CheckAndSetColColor(data->Collision);
+	CheckAndSetColColor(col);
 	DrawObject(CubeObj);
 	ResetMaterialColorOffset();
 	njPopMatrix(1u);
@@ -608,7 +608,7 @@ void drawColinfoPlane(EntityData1* data, CollisionData* col)
 	njTranslate(0, 0.0, 0.0, -3.0);
 	njScale(0, 0.1, 0.1, 0.69999999);
 
-	CheckAndSetColColor(data->Collision);
+	CheckAndSetColColor(col);
 	DrawObject(CubeObj);
 	ResetMaterialColorOffset();
 	njPopMatrix(1u);
@@ -618,7 +618,7 @@ void drawColinfoPlane(EntityData1* data, CollisionData* col)
 	njTranslate(0, 0.0, 0.0, -3.0);
 	njScale(0, 0.1, 0.1, 0.69999999);
 
-	CheckAndSetColColor(data->Collision);
+	CheckAndSetColColor(col);
 	DrawObject(CubeObj);
 	ResetMaterialColorOffset();
 	njPopMatrix(1u);
@@ -626,7 +626,7 @@ void drawColinfoPlane(EntityData1* data, CollisionData* col)
 	sx = col->param1 * 0.2;
 	njScale(0, sx, sy, 0.1);
 
-	CheckAndSetColColor(data->Collision);
+	CheckAndSetColColor(col);
 	DrawObject(CubeObj);
 	ResetMaterialColorOffset();
 	njPopMatrix(1u);

@@ -36,6 +36,9 @@
     <ClCompile Include="hud.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="save-state.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="hud.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="save-state.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

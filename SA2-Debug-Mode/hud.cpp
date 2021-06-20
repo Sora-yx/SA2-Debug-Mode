@@ -67,9 +67,13 @@ void DrawDebugRectangle(ObjectMaster* obj)
 }
 
 void DrawDebugObjMain(ObjectMaster* obj) {
+
+	if (GameState != GameStates_LoadFinished)
+		return;
+
 	if (obj->Data1.Entity->Action == 0) {
 		obj->DeleteSub = DeleteDebugManager;
-		obj->DisplaySub_Delayed1 = DrawDebugRectangle;
+		obj->DisplaySub_Delayed3 = DrawDebugRectangle;
 		obj->Data1.Entity->Action = 1;
 	}
 }
