@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-int currentPage = 0;
+int currentPage = None;
 
 
 void ScaleDebugFont(int scale)
@@ -18,7 +18,7 @@ void ScaleDebugFont(int scale)
 
 void DisplayPlayerInformation() {
 
-	if (currentPage != 1)
+	if (currentPage != pPlayerInfo)
 		return;
 
 	if (MainCharObj1[0] == nullptr || MainCharObj2[0] == nullptr)
@@ -52,7 +52,7 @@ void DisplayPlayerInformation() {
 
 void DisplayGameInfo()
 {
-	if (currentPage != 2)
+	if (currentPage != pGameInfo)
 		return;
 
 	SetDebugFontColor(0xFF88FFAA);
@@ -71,24 +71,85 @@ void DisplayGameInfo()
 	return;
 }
 
+DataArray(const char*, HintsArray, 0x1AEFF54, 3);
+
+void DisplayTreasureHuntingInfo()
+{
+	if (currentPage != pHuntingInfo)
+		return;
+
+	if (GetCharacterLevel() != Characters_Knuckles && GetCharacterLevel() != Characters_Rouge || !EmeraldManagerObj2)
+	{
+		SetDebugFontColor(0xFFFF0000);
+		DisplayDebugStringFormatted(NJM_LOCATION(2, 7), "- TREASURE HUNTING UNAVAILABLE -");
+		return;
+	}
+
+	SetDebugFontColor(0xFF88FFAA);
+	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
+	DisplayDebugStringFormatted(NJM_LOCATION(5, 7), "- HUNTING -");
+	SetDebugFontColor(0xFFBFBFBF);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "Piece Collected: %d", EmeraldManagerObj2->Status);	
+
+	char* hint = (char*)HintsArray[0];
+	if (hint) {
+		hint = hint + 3;
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "Piece Hint 1:  %.12s .", hint);
+	}
+	hint = (char*)HintsArray[1];
+	if (hint) {
+		hint = hint + 3;
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 11), "Piece Hint 2:  %.12s .", hint);
+	}
+
+	hint = (char*)HintsArray[2];
+	if (hint) {
+		hint = hint + 3;
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 12), "Piece Hint 3:  %.12s .", hint);
+	}
+	//DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "FRAME LVL: %08d", FrameCountIngame);
+	return;
+}
+
+void DisplayCameraInfo()
+{
+	if (currentPage != pCameraInfo)
+		return;
+
+	if (!MainCharObj1[0])
+	{
+		SetDebugFontColor(0xFFFF0000);
+		DisplayDebugStringFormatted(NJM_LOCATION(2, 1), "- CAMERA INFO UNAVAILABLE -");
+		return;
+	}
+
+	SetDebugFontColor(0xFF88FFAA);
+	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
+
+	SetDebugFontColor(0xFF88FFAA);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 7), "- CAMERA INFO -");
+	SetDebugFontColor(0xFFBFBFBF);
+
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "POS X: %.2f", CameraData.Position.x);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "POS Y: %.2f", CameraData.Position.y);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 11), "POS Z: %.2f", CameraData.Position.z);
+
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 13), "ROT X: %.2f", CameraData.Rotation.x);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 14), "ROT Y: %.2f", CameraData.Rotation.y);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 15), "ROT Z: %.2f", CameraData.Rotation.z);
+
+
+	return;
+}
+
+
 
 void DebugTextUpdateCurrentPage() {
 
 	for (int i = 0; i < 2; i++) {
 
 		if ((Controllers[i].on & Buttons_Y && Controllers[i].press & Buttons_Left)) {
-			if (currentPage > 0) {
-				currentPage--;
-				return;
-			}
-			else {
-				currentPage = 2;
-				return;
-			}
-		}
-
-		if ((Controllers[i].on & Buttons_Y && Controllers[i].press & Buttons_Right)) {
-			if (currentPage < 2) {
+			if (currentPage < MaxPage) {
 				currentPage++;
 				return;
 			}
@@ -104,6 +165,8 @@ void DisplayDebugTextInfo() {
 
 	DisplayPlayerInformation();
 	DisplayGameInfo();
+	DisplayTreasureHuntingInfo();
+	DisplayCameraInfo();
 	return;
 }
 

@@ -138,3 +138,22 @@ void ResetMaterialColorOffset()
 	GlobalMatColorA = 0.0f;
 	return;
 }
+
+void njRotateZXY(Rotation* rot)
+{
+	njRotateZ(CURRENT_MATRIX, rot->z);
+	njRotateX(CURRENT_MATRIX, rot->x);
+	njRotateY(CURRENT_MATRIX, rot->y);
+}
+
+signed char GetCharacterLevel() {
+	for (int i = 0; i < 33; i++)
+	{
+		if (CurrentLevel == StageSelectLevels[i].Level)
+		{
+			return StageSelectLevels[i].Character;
+		}
+	}
+
+	return -1;
+}

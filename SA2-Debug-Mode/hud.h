@@ -7,5 +7,7 @@ DataPointer(NJS_TEXLIST, AL_PANEL_TEXLIST, 0x8ac780);
 enum curPage {
 	None,
 	pPlayerInfo,
-	pGameInfo
+	pGameInfo,
+	pHuntingInfo,
+	pCameraInfo
 };

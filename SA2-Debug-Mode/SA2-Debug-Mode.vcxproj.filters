@@ -39,6 +39,9 @@
     <ClCompile Include="save-state.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="treasure-hunting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

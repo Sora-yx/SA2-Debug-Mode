@@ -10,6 +10,7 @@ extern "C" {
 		HelperFunctionsGlobal = helperFunctions;
 		Collisions_Init();
 		initializeDebugText();
+		init_treasureHuntingDebug();
 	}
 
 

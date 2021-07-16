@@ -1,8 +1,6 @@
 #include "stdafx.h"
 
 bool isFreeMov = false;
-PolygonPoint coolSquare[4] = { 0 };
-extern int currentPage;
 
 void DrawFreeMovementText() {
 
@@ -91,4 +89,5 @@ void Debugging_InputCheck() {
 	CheckFreeMovements();
 	CheckController_ColDebug();
 	DebugTextUpdateCurrentPage();
+	SavestatesCheckInput();
 }

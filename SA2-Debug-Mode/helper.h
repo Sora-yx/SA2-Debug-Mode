@@ -21,3 +21,4 @@ void initializeDebugText();
 void DisplayDebugStringFormatted(Int loc, const char* Format, ...);
 void DisplayPlayerInformation();
 void SetDebugFontColor(int color);
+void DisplayEmeraeldLocation();
