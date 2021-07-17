@@ -28,14 +28,6 @@ void EmeraldPiece_Display_r(ObjectMaster* obj) {
 NJS_VECTOR* emerald1Pos;
 int id = 0;
 
-void DisplayEmeraeldLocation() {
-
-
-
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "Piece 3 loc : %f", emerald1Pos->x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "Piece 3 loc : %f", emerald1Pos->y);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 11), "Piece 3 loc : %f", emerald1Pos->z);
-}
 
 DataArray(int, dword_B43448, 0xB43448, 1024);
 void EmeraldPiece_main_r(ObjectMaster* obj) {

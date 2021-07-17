@@ -123,7 +123,6 @@ void DisplayCameraInfo()
 		return;
 	}
 
-	SetDebugFontColor(0xFF88FFAA);
 	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
 
 	SetDebugFontColor(0xFF88FFAA);

@@ -47,6 +47,7 @@ void SetFreeMovements() {
 
 			isFreeMov = true;
 			DeathZoneDebug = 1; //death zone can no longer kill player
+			Life_Count[i] = 99;
 
 			if (MainCharObj2[i]->CharID == Characters_Knuckles || MainCharObj2[i]->CharID == Characters_Rouge)
 				MainCharObj1[i]->Action = 120;

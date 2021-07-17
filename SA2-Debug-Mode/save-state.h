@@ -1,6 +1,10 @@
 #pragma once
 
+#define slot_count 8
+
 struct save_struct {
+    unsigned short level;
+    unsigned char character;
     int lives;
     int score;
     int rings;
@@ -9,27 +13,41 @@ struct save_struct {
     char timeM;
     int action;
     int anim;
-    Float posX;
-    Float posY;
-    Float posZ;
-    Angle rotY;
-    Float spdX;
-    Float spdY;
-    Float spdZ;
-    Float grvX;
-    Float grvY;
-    Float grvZ;
-    Float camPosX;
-    Float camPosY;
-    Float camPosZ;
+    __int16 Status;
+    __int16 Powerups;
+    short hoverFrames;
+    NJS_VECTOR pos;
+    Rotation rot;
+    NJS_POINT3 acc;
+    NJS_VECTOR spd;
+    NJS_VECTOR grv;
+    ObjectMaster* HeldObject;
+    ObjectMaster* HoldTarget;
+    CameraInfo cam;
+    Float camposX;
+    Float camposY;
+    Float camposZ;
+    ObjectMaster* objlist[8];
+    ObjectMaster* SetPtr;
 };
 
 
 class SaveStates {
-
+private:
     SaveStates() {}
     static SaveStates* instance;
-    save_struct slots[8];
+    save_struct slots[slot_count];
+    void getGameInfo();
+    void getPlayerInfo();
+    void getCameraInfo();
+    void getObjectsState();
+    void restoreGameInfo();
+    void restorePlayerInfo();
+    void restoreCameraInfo();
+    void restoreObjectState();
+    int timerSlotDelay;
+    int timerMessage;
+    const char* message;
 
 public:
     static SaveStates* getInstance() {
@@ -41,6 +59,7 @@ public:
 
     void saveOnSlot();
     void loadSlot();
-    void clearSlot();
+    void changeSlot();
+    void displaySaveText();
 
 };
