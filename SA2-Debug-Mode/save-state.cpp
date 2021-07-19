@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "save-state.h"
 
-unsigned int currentSaveState = 0;
+int currentSaveState = 0;
 SaveStates* SaveStates::instance = 0;
 SaveStates* obj1 = obj1->getInstance();
 bool canDisplayMSG = false;
@@ -94,8 +94,6 @@ void SaveStates::restorePlayerInfo() {
 }
 
 void SaveStates::restoreCameraInfo() {
-
-
 	CameraData.Position = this->slots[currentSaveState].camInfo.Position;
 	CameraData.Rotation = this->slots[currentSaveState].camInfo.Rotation;
 	CameraData.field_0 = this->slots[currentSaveState].camInfo.field_0;
@@ -167,7 +165,7 @@ void SaveStates::displaySaveText() {
 
 void SaveStates::saveOnSlot() {
 
-	if (!MainCharObj1[0]) {
+	if (!MainCharObj1[0] || CurrentLevel == LevelIDs_ChaoWorld) {
 
 		this->timerMessage = 60;
 		SetDebugFontColor(0xFFFF0000);
@@ -188,7 +186,7 @@ void SaveStates::saveOnSlot() {
 
 void SaveStates::loadSlot(ObjectMaster* obj) {
 
-	if (!MainCharObj1[0] || CurrentLevel != this->slots[currentSaveState].level) {
+	if (!MainCharObj1[0] || CurrentLevel != this->slots[currentSaveState].level || CurrentLevel == LevelIDs_ChaoWorld) {
 		timerMessage = 60;
 		SetDebugFontColor(0xFFFF0000);
 		this->message = "ERROR, FAILED TO LOAD SAVE ON SLOT: %d";
@@ -211,23 +209,26 @@ void SaveStates::loadSlot(ObjectMaster* obj) {
 	return;
 }
 
-void SaveStates::changeSlot() {
+void SaveStates::changeSlot(Buttons input) {
 
 	SetDebugFontColor(0xFFBFBFBF);
 	timerMessage = 60;
 
-	if (currentSaveState < slot_count) {
+
+	if (input == Buttons_Up)
 		currentSaveState++;
 
-		this->message = "Current Slot %d";
-		return;
-	}
-	else {
-		currentSaveState = 0;
+	if (input == Buttons_Down)
+		currentSaveState--;
 
-		this->message = "Current Slot %d";
-		return;
-	}
+
+	if (currentSaveState > slot_count)
+		currentSaveState = 0;
+	else if (currentSaveState < 0)
+		currentSaveState = slot_count;
+
+	this->message = "Current Slot %d";
+	return;
 }
 
 
@@ -249,7 +250,12 @@ void SavestatesCheckInput(ObjectMaster* obj) {
 	}
 
 	if (Controllers[0].press & Buttons_Up) {
-		data->Action = ChangeMode;
+		obj1->changeSlot(Buttons_Up);
+		return;
+	}
+
+	if (Controllers[0].press & Buttons_Down) {
+		obj1->changeSlot(Buttons_Down);
 		return;
 	}
 }
@@ -293,10 +299,6 @@ void SaveStateManager(ObjectMaster* obj) {
 		obj1->loadSlot(obj);
 		data->Action = SaveDelay;
 		break;
-	case ChangeMode:
-		obj1->changeSlot();
-		data->Action = SaveDelay;
-		break;
 	case SaveDelay:
 		if (data->NextAction == 1)
 			obj1->restoreCameraInfo(); //for some reason, this needs to be called multiple times to restore the camera properly, funny game.
@@ -310,7 +312,7 @@ void SaveStateManager(ObjectMaster* obj) {
 
 
 void LoadObjSaveState() {
-	if (!savestateObj) {
+	if (!savestateObj && isSave) {
 		savestateObj = LoadObject(0, "saveState", SaveStateManager, LoadObj_Data1);
 	}
 }

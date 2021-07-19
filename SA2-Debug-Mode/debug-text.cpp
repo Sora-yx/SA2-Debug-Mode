@@ -145,6 +145,9 @@ void DisplayCameraInfo()
 
 void DebugTextUpdateCurrentPage() {
 
+	if (!isDebugTxt)
+		return;
+
 	for (int i = 0; i < 2; i++) {
 
 		if ((Controllers[i].on & Buttons_Y && Controllers[i].press & Buttons_Left)) {

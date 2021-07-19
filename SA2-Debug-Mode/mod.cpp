@@ -1,5 +1,8 @@
 #include "stdafx.h"
 
+bool isSave;
+bool isDebugTxt;
+bool isFreemov;
 
 HelperFunctions HelperFunctionsGlobal;
 
@@ -8,10 +11,21 @@ extern "C" {
 	__declspec(dllexport) void __cdecl Init(const char* path, const HelperFunctions& helperFunctions)
 	{
 		HelperFunctionsGlobal = helperFunctions;
+		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
+		isSave = config->getBool("General", "isSave", true);
+		isDebugTxt = config->getBool("General", "isDebugTxt", true);
+		isFreemov = config->getBool("General", "isFreemov", true);
+		delete config;
+
 		Collisions_Init();
-		initializeDebugText();
-		init_treasureHuntingDebug();
-		init_SaveState();
+
+		if (isDebugTxt) {
+			initializeDebugText();
+			init_treasureHuntingDebug();
+		}
+
+		if (isSave)
+			init_SaveState();
 	}
 
 

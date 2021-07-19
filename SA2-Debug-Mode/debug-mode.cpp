@@ -43,7 +43,7 @@ void SetFreeMovements() {
 
 	for (int i = 0; i < 2; i++) {
 
-		if ( (Controllers[i].on & Buttons_A && Controllers[i].press & Buttons_R)) {
+		if ( (Controllers[i].on & Buttons_A && Controllers[i].press & Buttons_Y)) {
 
 			isFreeMov = true;
 			DeathZoneDebug = 1; //death zone can no longer kill player
@@ -75,6 +75,10 @@ void UnsetFreeMovements() {
 }
 
 void CheckFreeMovements() {
+
+	if (!isFreeMov)
+		return;
+
 	SetFreeMovements();
 	UnsetFreeMovements();
 	DrawFreeMovementText();

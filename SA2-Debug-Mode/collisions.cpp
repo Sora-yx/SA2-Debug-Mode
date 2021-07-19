@@ -678,7 +678,7 @@ void CheckController_ColDebug() {
 
 	for (int i = 0; i < 2; i++) {
 
-		if (Controllers[i].on & Buttons_L && Controllers[i].on & Buttons_R) {
+		if (Controllers[i].on & Buttons_Y && Controllers[i].on & Buttons_Up) {
 			isColDebug = !isColDebug;
 			inputDelay = 20;
 			return;

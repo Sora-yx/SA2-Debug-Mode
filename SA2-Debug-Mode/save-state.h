@@ -54,7 +54,7 @@ public:
 
     void saveOnSlot();
     void loadSlot(ObjectMaster* obj);
-    void changeSlot();
+    void changeSlot(Buttons input);
     void displaySaveText();
     void restoreCameraInfo();
 
