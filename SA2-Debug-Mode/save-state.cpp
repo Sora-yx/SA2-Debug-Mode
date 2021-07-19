@@ -5,6 +5,8 @@ unsigned int currentSaveState = 0;
 SaveStates* SaveStates::instance = 0;
 SaveStates* obj1 = obj1->getInstance();
 bool canDisplayMSG = false;
+Trampoline* MechEggman_chkDmg_t;
+
 
 void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].level = CurrentLevel;
@@ -36,29 +38,26 @@ void SaveStates::getPlayerInfo() {
 	this->slots[currentSaveState].HeldObject = co2->HeldObject;
 	this->slots[currentSaveState].HoldTarget = co2->HoldTarget;
 	this->slots[currentSaveState].Powerups = co2->Powerups;
+	this->slots[currentSaveState].MechHP = co2->MechHP;
 	return;
 }
 
 void SaveStates::getCameraInfo() {
-	this->slots[currentSaveState].cam = CameraData;
-	this->slots[currentSaveState].camposX = CameraData.Position.x;
-	this->slots[currentSaveState].camposY = CameraData.Position.y;
-	this->slots[currentSaveState].camposZ = CameraData.Position.z;
+	this->slots[currentSaveState].camInfo.Position = CameraData.Position;
+	this->slots[currentSaveState].camInfo.Rotation = CameraData.Rotation;
+	this->slots[currentSaveState].camInfo.field_0 = CameraData.field_0;
+	this->slots[currentSaveState].camInfo.field_4 = CameraData.field_4;
+	this->slots[currentSaveState].camInfo.field_8 = CameraData.field_8;
 
 	return;
 }
 
 void SaveStates::getObjectsState() {
-
-	for (int i = 0; i < ObjectLists_Length; ++i)
-	{
+	for (int i = 2; i < 6; i++) {
 		if (ObjectLists[i]) {
-			this->slots[currentSaveState].objlist[i] = ObjectLists[i];
+			this->slots[currentSaveState].ObjectList[i] = ObjectLists[i];
 		}
 	}
-
-
-	return;
 }
 
 void SaveStates::restoreGameInfo() {
@@ -90,31 +89,64 @@ void SaveStates::restorePlayerInfo() {
 	co2->HeldObject = this->slots[currentSaveState].HeldObject;
 	co2->HoldTarget = this->slots[currentSaveState].HoldTarget;
 	co2->Powerups = this->slots[currentSaveState].Powerups;
+	co2->MechHP = this->slots[currentSaveState].MechHP;
 	return;
 }
 
 void SaveStates::restoreCameraInfo() {
 
-	CameraData = this->slots[currentSaveState].cam;
-	CameraData.Position.x = this->slots[currentSaveState].camposX;
-	CameraData.Position.y = this->slots[currentSaveState].camposY;
-	CameraData.Position.z = this->slots[currentSaveState].camposZ;
+
+	CameraData.Position = this->slots[currentSaveState].camInfo.Position;
+	CameraData.Rotation = this->slots[currentSaveState].camInfo.Rotation;
+	CameraData.field_0 = this->slots[currentSaveState].camInfo.field_0;
+	CameraData.field_4 = this->slots[currentSaveState].camInfo.field_4;
+	CameraData.field_8 = this->slots[currentSaveState].camInfo.field_8;
 
 	return;
 }
 
 
 void SaveStates::restoreObjectState() {
+	ResetSetDataFlag();
 
-	for (int i = 0; i < ObjectLists_Length; ++i)
+	for (int i = 2; i < 6; i++)
 	{
-		if (ObjectLists[i]) {
-			ObjectLists[i] = this->slots[currentSaveState].objlist[i];
+		ObjectMaster* obj = ObjectLists[i];
+		ObjectMaster* obj_orig = obj;
+
+		if (obj)
+		{
+			while (1)
+			{
+				ObjectMaster* previous = obj->PrevObject;
+
+				if (obj->SETData)
+				{
+					obj->MainSub = DeleteObject_;
+				}
+
+				if (obj->Child)
+				{
+					DeleteChildObjects(obj);
+				}
+
+				if (previous == obj_orig)
+				{
+					break;
+				}
+
+				obj_orig = ObjectLists[i];
+
+				if (!obj_orig)
+				{
+					break;
+				}
+
+				obj = previous;
+			}
 		}
 	}
 }
-
-
 
 void SaveStates::displaySaveText() {
 
@@ -143,11 +175,10 @@ void SaveStates::saveOnSlot() {
 		return;
 	}
 
-
 	this->timerMessage = 60;
+	this->getCameraInfo();
 	this->getGameInfo();
 	this->getPlayerInfo();
-	this->getCameraInfo();
 	this->getObjectsState();
 	SetDebugFontColor(0xFF1dcf01);
 	this->message = "Saved on slot: %d";
@@ -155,71 +186,148 @@ void SaveStates::saveOnSlot() {
 	return;
 }
 
-void SaveStates::loadSlot() {
+void SaveStates::loadSlot(ObjectMaster* obj) {
 
 	if (!MainCharObj1[0] || CurrentLevel != this->slots[currentSaveState].level) {
 		timerMessage = 60;
 		SetDebugFontColor(0xFFFF0000);
 		this->message = "ERROR, FAILED TO LOAD SAVE ON SLOT: %d";
+		if (obj)
+			obj->Data1.Entity->NextAction = 0;
+
 		return;
 	}
-
 
 	this->timerMessage = 60;
 	this->restoreGameInfo();
 	this->restorePlayerInfo();
-	this->restoreCameraInfo();
 	this->restoreObjectState();
 	SetDebugFontColor(0xFF29c8e1);
 	this->message = "Loaded Save State on slot %d";
+
+	if (obj)
+		obj->Data1.Entity->NextAction = 1;
 
 	return;
 }
 
 void SaveStates::changeSlot() {
 
+	SetDebugFontColor(0xFFBFBFBF);
+	timerMessage = 60;
 
-	if (this->timerSlotDelay != 0)
-	{
-		timerSlotDelay--;
+	if (currentSaveState < slot_count) {
+		currentSaveState++;
+
+		this->message = "Current Slot %d";
+		return;
 	}
 	else {
-		SetDebugFontColor(0xFFBFBFBF);
-		timerMessage = 60;
+		currentSaveState = 0;
 
-		if (currentSaveState < slot_count) {
-			currentSaveState++;
-			timerSlotDelay = 5;
-			this->message = "Current Slot %d";
-			return;
-		}
-		else {
-			currentSaveState = 0;
-			timerSlotDelay = 5;
-			this->message = "Current Slot %d";
-			return;
-		}
+		this->message = "Current Slot %d";
+		return;
 	}
 }
 
 
-void SavestatesCheckInput() {
+void SavestatesCheckInput(ObjectMaster* obj) {
+
+	EntityData1* data = obj->Data1.Entity;
 
 	if (!obj1 || Controllers[0].on & Buttons_Y)
 		return;
 
-	if (Controllers[0].on & Buttons_Left) {
-		obj1->saveOnSlot();
+	if (Controllers[0].press & Buttons_Left) {
+		data->Action = SaveStateMode;
+		return;
 	}
 
-	if (Controllers[0].on & Buttons_Right) {
-		obj1->loadSlot();
+	if (Controllers[0].press & Buttons_Right) {
+		data->Action = LoadSaveMode;
+		return;
 	}
 
-	if (Controllers[0].on & Buttons_Up) {
-		obj1->changeSlot();
+	if (Controllers[0].press & Buttons_Up) {
+		data->Action = ChangeMode;
+		return;
 	}
+}
 
+ObjectMaster* savestateObj;
+
+void DeleteSaveManager(ObjectMaster* obj) {
+	if (savestateObj) {
+		savestateObj = nullptr;
+	}
+}
+
+void SaveStateDisplay(ObjectMaster* obj) {
+	if (!obj1)
+		return;
 
 	obj1->displaySaveText();
+}
+
+void SaveStateManager(ObjectMaster* obj) {
+
+	EntityData1* data = obj->Data1.Entity;
+
+	switch (data->Action) {
+	case InitSaveManager:
+		obj->DisplaySub = SaveStateDisplay;
+		obj->DeleteSub = DeleteSaveManager;
+		data->Action = CheckInputs;
+		break;
+	case CheckInputs:
+		data->field_6 = 0;
+		data->Index = 0;
+		data->NextAction = 0;
+		SavestatesCheckInput(obj);
+		break;
+	case SaveStateMode:
+		obj1->saveOnSlot();
+		data->Action = SaveDelay;
+		break;
+	case LoadSaveMode:
+		obj1->loadSlot(obj);
+		data->Action = SaveDelay;
+		break;
+	case ChangeMode:
+		obj1->changeSlot();
+		data->Action = SaveDelay;
+		break;
+	case SaveDelay:
+		if (data->NextAction == 1)
+			obj1->restoreCameraInfo(); //for some reason, this needs to be called multiple times to restore the camera properly, funny game.
+
+		if (++data->field_6 == 8) {
+			data->Action = CheckInputs;
+		}
+		break;
+	}
+}
+
+
+void LoadObjSaveState() {
+	if (!savestateObj) {
+		savestateObj = LoadObject(0, "saveState", SaveStateManager, LoadObj_Data1);
+	}
+}
+
+//fix non sense crash with Mech Character.
+void __cdecl MechEggman_ChecksDamage_r(EntityData1* a1, EntityData2* a3, CharObj2Base* a4, CharObj2Base* a2) {
+
+	if (savestateObj) {
+		if (savestateObj->Data1.Entity->Action >= LoadSaveMode) {
+			return;
+		}
+	}
+
+	FunctionPointer(void, original, (EntityData1 * a1, EntityData2 * a3, CharObj2Base * a4, CharObj2Base * a2), MechEggman_chkDmg_t->Target());
+	original(a1, a3, a4, a2);
+}
+
+void init_SaveState() {
+	MechEggman_chkDmg_t = new Trampoline((int)0x742C10, (int)0x742C17, MechEggman_ChecksDamage_r);
 }

@@ -21,14 +21,11 @@ struct save_struct {
     NJS_POINT3 acc;
     NJS_VECTOR spd;
     NJS_VECTOR grv;
+    float MechHP;
     ObjectMaster* HeldObject;
     ObjectMaster* HoldTarget;
-    CameraInfo cam;
-    Float camposX;
-    Float camposY;
-    Float camposZ;
-    ObjectMaster* objlist[8];
-    ObjectMaster* SetPtr;
+    CameraInfo camInfo;
+    ObjectMaster* ObjectList[8];
 };
 
 
@@ -43,9 +40,7 @@ private:
     void getObjectsState();
     void restoreGameInfo();
     void restorePlayerInfo();
-    void restoreCameraInfo();
     void restoreObjectState();
-    int timerSlotDelay;
     int timerMessage;
     const char* message;
 
@@ -58,8 +53,18 @@ public:
     }
 
     void saveOnSlot();
-    void loadSlot();
+    void loadSlot(ObjectMaster* obj);
     void changeSlot();
     void displaySaveText();
+    void restoreCameraInfo();
 
+};
+
+enum SaveManager {
+    InitSaveManager,
+    CheckInputs,
+    SaveStateMode,
+    LoadSaveMode,
+    ChangeMode,
+    SaveDelay
 };

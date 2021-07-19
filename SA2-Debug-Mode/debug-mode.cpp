@@ -90,5 +90,9 @@ void Debugging_InputCheck() {
 	CheckFreeMovements();
 	CheckController_ColDebug();
 	DebugTextUpdateCurrentPage();
-	SavestatesCheckInput();
+}
+
+void LoadDebuggingObjects() {
+	LoadObjDrawBG();
+	LoadObjSaveState();
 }

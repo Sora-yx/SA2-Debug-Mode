@@ -11,13 +11,14 @@ extern "C" {
 		Collisions_Init();
 		initializeDebugText();
 		init_treasureHuntingDebug();
+		init_SaveState();
 	}
 
 
 	__declspec(dllexport) void __cdecl OnFrame() {
 
 		if (GameState == GameStates_LoadItems) {
-			LoadObjDrawBG();
+			LoadDebuggingObjects();
 		}
 
 		if (GameState != GameStates_Ingame && GameState != GameStates_Pause && GameMode != 14)

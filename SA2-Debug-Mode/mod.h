@@ -6,9 +6,13 @@ void Collisions_Init();
 void Debugging_InputCheck();
 void CheckController_ColDebug();
 void DebugTextUpdateCurrentPage();
-void SavestatesCheckInput();
-void Init_DZ();
+
 void DisplayDebugTextInfo();
-void InitBGTex();
 void LoadObjDrawBG();
+void LoadObjSaveState();
+void LoadDebuggingObjects();
 void init_treasureHuntingDebug();
+void init_SaveState();
+
+VoidFunc(ResetSetDataFlag, 0x488AD0);
+VoidFunc(DeleteMostObjects, 0x470AE0);
