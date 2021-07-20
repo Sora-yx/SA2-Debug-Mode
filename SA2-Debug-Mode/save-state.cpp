@@ -113,7 +113,7 @@ void SaveStates::restoreCameraInfo() {
 	return;
 }
 
-int bannedLevel[3] = { LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall, };
+int bannedLevel[7] = { LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall, LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush };
 ObjectFuncPtr bannedObj[2] = { (ObjectFuncPtr)0x6A79E0, NULL };
 
 bool bannedLvlException() {
