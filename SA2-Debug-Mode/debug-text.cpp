@@ -119,7 +119,7 @@ void DisplayCameraInfo()
 	if (!MainCharObj1[0])
 	{
 		SetDebugFontColor(0xFFFF0000);
-		DisplayDebugStringFormatted(NJM_LOCATION(2, 1), "- CAM INFO UNAVAILABLE -");
+		DisplayDebugStringFormatted(NJM_LOCATION(2, 1), "- CAM UNAVAILABLE -");
 		return;
 	}
 
@@ -132,11 +132,6 @@ void DisplayCameraInfo()
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "POS X: %.2f", CameraData.Position.x);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "POS Y: %.2f", CameraData.Position.y);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 11), "POS Z: %.2f", CameraData.Position.z);
-
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 13), "ROT X: %.2f", CameraData.field_154);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 14), "ROT Y: %.2f", CameraData.field_158);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 15), "ROT Z: %.2f", CameraData.field_15C);
-
 
 	return;
 }
