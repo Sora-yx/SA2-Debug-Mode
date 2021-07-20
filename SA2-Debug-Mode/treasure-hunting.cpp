@@ -65,8 +65,8 @@ void EmeraldPiece_Load_r(NJS_VECTOR* a1, unsigned __int8 a2, unsigned __int8 a3)
 }
 
 void init_treasureHuntingDebug() {
-	EmeraldPiece_main_t = new Trampoline((int)EmeraldPiece_Main, (int)EmeraldPiece_Main + 0x5, EmeraldPiece_main_r);
+	//EmeraldPiece_main_t = new Trampoline((int)EmeraldPiece_Main, (int)EmeraldPiece_Main + 0x5, EmeraldPiece_main_r);
 	DrawEmeraldPiece_t = new Trampoline((int)0x6D0160, 0x6D016A, DrawEmeraldPiece_r);
 
-	WriteData<10>((int*)0x6a27c0, 0x90); //test lol
+	//WriteData<10>((int*)0x6a27c0, 0x90); //test lol
 }

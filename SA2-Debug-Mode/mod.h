@@ -2,7 +2,6 @@
 
 extern bool isSave;
 extern bool isDebugTxt;
-extern bool isFreemov;
 
 extern HelperFunctions HelperFunctionsGlobal;
 void Collisions_Init();

@@ -2,9 +2,21 @@
 
 bool isSave;
 bool isDebugTxt;
-bool isFreemov;
 
 HelperFunctions HelperFunctionsGlobal;
+
+int  __cdecl sub_799120(float a1, float a2, float* a3)
+{
+	return 0;
+}
+
+
+ObjectMaster* __cdecl test()
+{
+	return nullptr;
+}
+
+DataPointer(int, dword_174B078, 0x174B078);
 
 extern "C" {
 
@@ -14,7 +26,6 @@ extern "C" {
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
 		isSave = config->getBool("General", "isSave", true);
 		isDebugTxt = config->getBool("General", "isDebugTxt", true);
-		isFreemov = config->getBool("General", "isFreemov", true);
 		delete config;
 
 		Collisions_Init();
@@ -30,6 +41,7 @@ extern "C" {
 
 
 	__declspec(dllexport) void __cdecl OnFrame() {
+
 
 		if (GameState == GameStates_LoadItems) {
 			LoadDebuggingObjects();
