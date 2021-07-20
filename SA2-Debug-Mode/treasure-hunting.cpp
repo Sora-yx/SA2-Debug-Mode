@@ -3,7 +3,6 @@
 Trampoline* EmeraldPiece_main_t;
 Trampoline* EmeraldManager_Main_t;
 Trampoline* EmeraldPiece_Load_t;
-Trampoline* idk_t;
 Trampoline* DrawEmeraldPiece_t;
 
 DataPointer(NJS_CNK_MODEL, EmeraldModel, 0xB42DF4);
@@ -25,18 +24,10 @@ void EmeraldPiece_Display_r(ObjectMaster* obj) {
 	njPopMatrix(1u);
 }
 
-NJS_VECTOR* emerald1Pos;
-int id = 0;
-
-
-DataArray(int, dword_B43448, 0xB43448, 1024);
 void EmeraldPiece_main_r(ObjectMaster* obj) {
 
 	if (obj->DisplaySub_Delayed4 == nullptr)
 		obj->DisplaySub_Delayed4 = EmeraldPiece_Display_r;
-
-	id = dword_B43448[9 * (obj->Data1.Entity->Rotation.x) % 11];
-
 
 	ObjectFunc(origin, EmeraldPiece_main_t->Target());
 	origin(obj);
@@ -57,8 +48,6 @@ void __cdecl DrawEmeraldPiece_r(NJS_VECTOR* pos, signed int* a2, int arg)
 
 
 void EmeraldPiece_Load_r(NJS_VECTOR* a1, unsigned __int8 a2, unsigned __int8 a3) {
-
-
 
 	FunctionPointer(void, original, (NJS_VECTOR* a1, unsigned __int8 a2, unsigned __int8 a3), EmeraldPiece_Load_t->Target());
 	original(a1, a2, a3);

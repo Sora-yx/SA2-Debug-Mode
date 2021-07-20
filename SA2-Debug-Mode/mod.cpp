@@ -2,21 +2,9 @@
 
 bool isSave;
 bool isDebugTxt;
+bool objSave;
 
 HelperFunctions HelperFunctionsGlobal;
-
-int  __cdecl sub_799120(float a1, float a2, float* a3)
-{
-	return 0;
-}
-
-
-ObjectMaster* __cdecl test()
-{
-	return nullptr;
-}
-
-DataPointer(int, dword_174B078, 0x174B078);
 
 extern "C" {
 
@@ -25,7 +13,10 @@ extern "C" {
 		HelperFunctionsGlobal = helperFunctions;
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
 		isSave = config->getBool("General", "isSave", true);
+		objSave = config->getBool("General", "objSave", true);
 		isDebugTxt = config->getBool("General", "isDebugTxt", true);
+
+
 		delete config;
 
 		Collisions_Init();
@@ -39,7 +30,6 @@ extern "C" {
 			init_SaveState();
 	}
 
-
 	__declspec(dllexport) void __cdecl OnFrame() {
 
 
@@ -51,7 +41,6 @@ extern "C" {
 			return;
 
 		DisplayDebugTextInfo();
-		//DrawRecMaybe((int)dword_1A55924, 191.0, 145.0, 256.0, 256.0, 0.99989998, 0.0, 0.0, 1.0, 1.0, -1);
 
 	}
 

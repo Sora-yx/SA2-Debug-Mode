@@ -6,6 +6,7 @@ SaveStates* SaveStates::instance = 0;
 SaveStates* obj1 = obj1->getInstance();
 bool canDisplayMSG = false;
 Trampoline* MechEggman_chkDmg_t;
+Trampoline* sub_461F10_t;
 
 
 void SaveStates::getGameInfo() {
@@ -24,6 +25,9 @@ void SaveStates::getPlayerInfo() {
 	EntityData1* data = MainCharObj1[0];
 	CharObj2Base* co2 = MainCharObj2[0];
 
+	if (!co2 || !data)
+		return;
+
 	this->slots[currentSaveState].pos = data->Position;
 	this->slots[currentSaveState].rot = data->Rotation;
 	this->slots[currentSaveState].spd = co2->Speed;
@@ -35,8 +39,8 @@ void SaveStates::getPlayerInfo() {
 	this->slots[currentSaveState].Status = data->Status;
 	this->slots[currentSaveState].hoverFrames = MainCharObj2[0]->field_12;
 
-	this->slots[currentSaveState].HeldObject = co2->HeldObject;
-	this->slots[currentSaveState].HoldTarget = co2->HoldTarget;
+	/*this->slots[currentSaveState].HeldObject = co2->HeldObject;
+	this->slots[currentSaveState].HoldTarget = co2->HoldTarget;*/
 	this->slots[currentSaveState].Powerups = co2->Powerups;
 	this->slots[currentSaveState].MechHP = co2->MechHP;
 	return;
@@ -74,22 +78,28 @@ void SaveStates::restorePlayerInfo() {
 	EntityData1* data = MainCharObj1[0];
 	CharObj2Base* co2 = MainCharObj2[0];
 
+	if (!co2 || !data)
+		return;
+
 	data->Action = this->slots[currentSaveState].action;
 	co2->AnimInfo.Next = this->slots[currentSaveState].anim;
 	co2->field_12 = this->slots[currentSaveState].hoverFrames;
 
 	data->Position = this->slots[currentSaveState].pos;
 	data->Rotation = this->slots[currentSaveState].rot;
+
+
 	data->Status = this->slots[currentSaveState].Status;
 	co2->Speed = this->slots[currentSaveState].spd;
 	co2->Acceleration = this->slots[currentSaveState].acc;
 
 	Gravity = this->slots[currentSaveState].grv;
 
-	co2->HeldObject = this->slots[currentSaveState].HeldObject;
-	co2->HoldTarget = this->slots[currentSaveState].HoldTarget;
+	/*co2->HeldObject = this->slots[currentSaveState].HeldObject;
+	co2->HoldTarget = this->slots[currentSaveState].HoldTarget;*/
 	co2->Powerups = this->slots[currentSaveState].Powerups;
 	co2->MechHP = this->slots[currentSaveState].MechHP;
+
 	return;
 }
 
@@ -103,9 +113,45 @@ void SaveStates::restoreCameraInfo() {
 	return;
 }
 
+int bannedLevel[3] = { LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall, };
+ObjectFuncPtr bannedObj[2] = { (ObjectFuncPtr)0x6A79E0, NULL };
+
+bool bannedLvlException() {
+
+	for (int i = 0; i < LengthOfArray(bannedLevel); i++)
+	{
+		if (CurrentLevel == bannedLevel[i])
+			return true;
+	}
+
+	return false;
+
+}
+
+bool ObjException(ObjectMaster* obj) {
+
+	if (!obj)
+		return false;
+
+	for (int i = 0; i < LengthOfArray(bannedObj); i++)
+	{
+		if (obj->MainSub == bannedObj[i])
+			return true;
+
+	}
+
+	return false;
+}
 
 void SaveStates::restoreObjectState() {
+
+	if (!objSave)
+		return;
+
 	ResetSetDataFlag();
+
+	if (bannedLvlException())
+		return;
 
 	for (int i = 2; i < 6; i++)
 	{
@@ -117,6 +163,9 @@ void SaveStates::restoreObjectState() {
 			while (1)
 			{
 				ObjectMaster* previous = obj->PrevObject;
+
+				if (ObjException(obj))
+					break;
 
 				if (obj->SETData)
 				{
@@ -165,7 +214,7 @@ void SaveStates::displaySaveText() {
 
 void SaveStates::saveOnSlot() {
 
-	if (!MainCharObj1[0] || CurrentLevel == LevelIDs_ChaoWorld) {
+	if (!MainCharObj1[0] || CurrentLevel >= LevelIDs_Route101280) {
 
 		this->timerMessage = 60;
 		SetDebugFontColor(0xFFFF0000);
@@ -186,7 +235,7 @@ void SaveStates::saveOnSlot() {
 
 void SaveStates::loadSlot(ObjectMaster* obj) {
 
-	if (!MainCharObj1[0] || CurrentLevel != this->slots[currentSaveState].level || CurrentLevel == LevelIDs_ChaoWorld) {
+	if (!MainCharObj1[0] || CurrentLevel != this->slots[currentSaveState].level || CurrentLevel >= LevelIDs_Route101280) {
 		timerMessage = 60;
 		SetDebugFontColor(0xFFFF0000);
 		this->message = "ERROR, FAILED TO LOAD SAVE ON SLOT: %d";
@@ -329,6 +378,8 @@ void __cdecl MechEggman_ChecksDamage_r(EntityData1* a1, EntityData2* a3, CharObj
 	FunctionPointer(void, original, (EntityData1 * a1, EntityData2 * a3, CharObj2Base * a4, CharObj2Base * a2), MechEggman_chkDmg_t->Target());
 	original(a1, a3, a4, a2);
 }
+
+
 
 void init_SaveState() {
 	MechEggman_chkDmg_t = new Trampoline((int)0x742C10, (int)0x742C17, MechEggman_ChecksDamage_r);
