@@ -29,9 +29,9 @@ extern "C" {
 		delete config;
 
 		Collisions_Init();
+		initializeDebugText();
 
 		if (isDebugTxt) {
-			initializeDebugText();
 			init_treasureHuntingDebug();
 		}
 
