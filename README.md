@@ -1,6 +1,6 @@
 # SA2 Debug Mode
 
-Debug Mode is a mod for Sonic Adventure 2 Battle on PC that displays various debug information on screen. The mod is based on [PKR's Debug Mode for SADX].(https://github.com/PiKeyAr/sadx-debug-mode)
+Debug Mode is a mod for Sonic Adventure 2 Battle on PC that displays various debug information on screen. The mod is based on [PKR's Debug Mode for SADX.](https://github.com/PiKeyAr/sadx-debug-mode)
 
 1. Basics:
 
