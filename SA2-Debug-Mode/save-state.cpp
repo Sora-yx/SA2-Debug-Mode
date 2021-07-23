@@ -306,12 +306,16 @@ void SavestatesCheckInput(ObjectMaster* obj) {
 ObjectMaster* savestateObj;
 
 void DeleteSaveManager(ObjectMaster* obj) {
+
 	if (savestateObj) {
 		savestateObj = nullptr;
 	}
 }
 
+
+
 void SaveStateDisplay(ObjectMaster* obj) {
+
 	if (!obj1)
 		return;
 
@@ -371,12 +375,14 @@ void __cdecl MechEggman_ChecksDamage_r(EntityData1* a1, EntityData2* a3, CharObj
 	original(a1, a3, a4, a2);
 }
 
+DataPointer(int, PauseCheck, 0x1A558BC);
+
 //since object doesn't run when the pause menu is active, we manually allow the player to save when the game is paused.
 void Save_Pause() {
 	if (GameState != GameStates_Pause)
 		return;
 
-	if (Controllers[0].press & Buttons_Left) {
+	if (Controllers[0].press & Buttons_Left && PauseCheck != 1) {
 		obj1->saveOnSlot();
 	}
 }
