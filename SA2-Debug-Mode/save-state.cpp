@@ -39,20 +39,20 @@ void SaveStates::getPlayerInfo() {
 	this->slots[currentSaveState].Status = data->Status;
 	this->slots[currentSaveState].hoverFrames = MainCharObj2[0]->field_12;
 
-	/*this->slots[currentSaveState].HeldObject = co2->HeldObject;
-	this->slots[currentSaveState].HoldTarget = co2->HoldTarget;*/
+	memcpy(&this->slots[currentSaveState].physics, &co2->PhysData, sizeof(PhysicsData));
 	this->slots[currentSaveState].Powerups = co2->Powerups;
 	this->slots[currentSaveState].MechHP = co2->MechHP;
 	return;
 }
 
+//Copy camera stuff credits: OnVar
 void SaveStates::getCameraInfo() {
-	this->slots[currentSaveState].camInfo.Position = CameraData.Position;
-	this->slots[currentSaveState].camInfo.Rotation = CameraData.Rotation;
-	this->slots[currentSaveState].camInfo.field_0 = CameraData.field_0;
-	this->slots[currentSaveState].camInfo.field_4 = CameraData.field_4;
-	this->slots[currentSaveState].camInfo.field_8 = CameraData.field_8;
-
+	memcpy(&this->slots[currentSaveState].CameraUnit.camera, (void*)0x1dcff00, 0x2518);
+	memcpy(&this->slots[currentSaveState].CameraUnit.camPos, (void*)0x1a5a234, sizeof(byte*));
+	memcpy(&this->slots[currentSaveState].CameraUnit.camRot, (void*)0x1a5a238, sizeof(byte*));
+	memcpy(&this->slots[currentSaveState].CameraUnit.posRotBuffer, PosRotBufferIndex, 0x2);
+	memcpy(&this->slots[currentSaveState].CameraUnit.pastpos, (void*)0x19f1740, 0xc00);
+	memcpy(&this->slots[currentSaveState].CameraUnit.idk2, &camConstPastPosIDX, sizeof(byte*));
 	return;
 }
 
@@ -88,27 +88,26 @@ void SaveStates::restorePlayerInfo() {
 	data->Position = this->slots[currentSaveState].pos;
 	data->Rotation = this->slots[currentSaveState].rot;
 
-
 	data->Status = this->slots[currentSaveState].Status;
 	co2->Speed = this->slots[currentSaveState].spd;
 	co2->Acceleration = this->slots[currentSaveState].acc;
 
 	Gravity = this->slots[currentSaveState].grv;
-
-	/*co2->HeldObject = this->slots[currentSaveState].HeldObject;
-	co2->HoldTarget = this->slots[currentSaveState].HoldTarget;*/
+	memcpy(&co2->PhysData, &this->slots[currentSaveState].physics, sizeof(PhysicsData));
 	co2->Powerups = this->slots[currentSaveState].Powerups;
 	co2->MechHP = this->slots[currentSaveState].MechHP;
 
 	return;
 }
 
+
 void SaveStates::restoreCameraInfo() {
-	CameraData.Position = this->slots[currentSaveState].camInfo.Position;
-	CameraData.Rotation = this->slots[currentSaveState].camInfo.Rotation;
-	CameraData.field_0 = this->slots[currentSaveState].camInfo.field_0;
-	CameraData.field_4 = this->slots[currentSaveState].camInfo.field_4;
-	CameraData.field_8 = this->slots[currentSaveState].camInfo.field_8;
+	memcpy((void*)0x1dcff00, &this->slots[currentSaveState].CameraUnit.camera, 0x2518);
+	memcpy((void*)0x1a5a234, &this->slots[currentSaveState].CameraUnit.camPos, sizeof(byte*));
+	memcpy((void*)0x1a5a238, &this->slots[currentSaveState].CameraUnit.camRot, sizeof(byte*));
+	memcpy(PosRotBufferIndex, &this->slots[currentSaveState].CameraUnit.posRotBuffer, 0x2);
+	memcpy((void*)0x19f1740, &this->slots[currentSaveState].CameraUnit.pastpos, 0xc00);
+	memcpy(&camConstPastPosIDX, &this->slots[currentSaveState].CameraUnit.idk2, sizeof(byte*));
 
 	return;
 }
@@ -125,7 +124,6 @@ bool bannedLvlException() {
 	}
 
 	return false;
-
 }
 
 bool ObjException(ObjectMaster* obj) {
@@ -246,6 +244,7 @@ void SaveStates::loadSlot(ObjectMaster* obj) {
 	}
 
 	this->timerMessage = 60;
+	obj1->restoreCameraInfo();
 	this->restoreGameInfo();
 	this->restorePlayerInfo();
 	this->restoreObjectState();
@@ -349,8 +348,6 @@ void SaveStateManager(ObjectMaster* obj) {
 		data->Action = SaveDelay;
 		break;
 	case SaveDelay:
-		if (data->NextAction == 1)
-			obj1->restoreCameraInfo(); //for some reason, this needs to be called multiple times to restore the camera properly, funny game.
 
 		if (++data->field_6 == 8) {
 			data->Action = CheckInputs;

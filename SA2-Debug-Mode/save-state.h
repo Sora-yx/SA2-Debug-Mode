@@ -2,6 +2,15 @@
 
 #define slot_count 8
 
+struct CameraUnit {
+    byte camera[0x2518];
+    byte* camPos;
+    byte* camRot;
+    char* posRotBuffer;
+    byte pastpos[0xc00];
+    char* idk2;
+};
+
 struct save_struct {
     unsigned short level;
     unsigned char character;
@@ -25,6 +34,11 @@ struct save_struct {
     ObjectMaster* HeldObject;
     ObjectMaster* HoldTarget;
     CameraInfo camInfo;
+    CameraUnit CameraUnit;
+    int camHandle;
+    PhysicsData physics;
+    char PosRotBufferIndex[2];
+
     ObjectMaster* ObjectList[8];
 };
 

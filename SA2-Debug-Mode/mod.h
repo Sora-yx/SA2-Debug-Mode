@@ -19,3 +19,6 @@ void init_SaveState();
 
 VoidFunc(ResetSetDataFlag, 0x488AD0);
 VoidFunc(DeleteMostObjects, 0x470AE0);
+
+DataArray(char, PosRotBufferIndex, 0x1945910, 2);
+DataPointer(char, camConstPastPosIDX, 0x19f173c);
