@@ -1,6 +1,5 @@
 #pragma once
 
-#define slot_count 8
 
 struct CameraUnit {
     byte camera[0x2518];
@@ -47,7 +46,7 @@ class SaveStates {
 private:
     SaveStates() {}
     static SaveStates* instance;
-    save_struct slots[slot_count];
+    save_struct slots[8];
     void getGameInfo();
     void getPlayerInfo();
     void getCameraInfo();

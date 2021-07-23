@@ -43,7 +43,7 @@ extern "C" {
 			return;
 
 		DisplayDebugTextInfo();
-		PauseSave();
+		Save_Pause();
 
 	}
 

@@ -89,23 +89,23 @@ void DisplayTreasureHuntingInfo()
 	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
 	DisplayDebugStringFormatted(NJM_LOCATION(5, 7), "- HUNTING -");
 	SetDebugFontColor(0xFFBFBFBF);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "Piece Collected: %d", EmeraldManagerObj2->Status);	
+	//DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "Piece Collected: %d", EmeraldManagerObj2->Status);	
 
 	char* hint = (char*)HintsArray[0];
 	if (hint) {
 		hint = hint + 3;
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "Piece Hint 1:  %.12s .", hint);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "Piece Hint 1:%.12s.", hint);
 	}
 	hint = (char*)HintsArray[1];
 	if (hint) {
 		hint = hint + 3;
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 11), "Piece Hint 2:  %.12s .", hint);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "Piece Hint 2:%.12s.", hint);
 	}
 
 	hint = (char*)HintsArray[2];
 	if (hint) {
 		hint = hint + 3;
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 12), "Piece Hint 3:  %.12s .", hint);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 11), "Piece Hint 3:%.12s.", hint);
 	}
 	//DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "FRAME LVL: %08d", FrameCountIngame);
 	return;

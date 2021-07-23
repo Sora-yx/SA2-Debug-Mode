@@ -7,6 +7,7 @@ SaveStates* obj1 = obj1->getInstance();
 bool canDisplayMSG = false;
 Trampoline* MechEggman_chkDmg_t;
 Trampoline* sub_461F10_t;
+const char slot_count = 7;
 
 
 void SaveStates::getGameInfo() {
@@ -111,8 +112,8 @@ void SaveStates::restoreCameraInfo() {
 	return;
 }
 
-int bannedLevel[7] = { LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall, LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush };
-ObjectFuncPtr bannedObj[2] = { (ObjectFuncPtr)0x6A79E0,(ObjectFuncPtr)0x6F7AF0}; 
+int bannedLevel[8] = { LevelIDs_AquaticMine, LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall, LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush };
+ObjectFuncPtr bannedObj[2] = { (ObjectFuncPtr)0x6A79E0,(ObjectFuncPtr)0x6F7AF0 };
 
 bool bannedLvlException() {
 
@@ -197,16 +198,12 @@ void SaveStates::displaySaveText() {
 	if (this->timerMessage != 0 && this->message != nullptr)
 	{
 		timerMessage--;
-		if (currentSaveState < slot_count)
-			DisplayDebugStringFormatted(NJM_LOCATION(10, 7), this->message, currentSaveState + 1);
-		else
-			DisplayDebugStringFormatted(NJM_LOCATION(10, 7), this->message, currentSaveState);
+		DisplayDebugStringFormatted(NJM_LOCATION(10, 7), this->message, currentSaveState);
 	}
 	else {
 		return;
 	}
 }
-
 
 void SaveStates::saveOnSlot() {
 
@@ -258,19 +255,21 @@ void SaveStates::loadSlot(ObjectMaster* obj) {
 void SaveStates::changeSlot(Buttons input) {
 
 	SetDebugFontColor(0xFFBFBFBF);
-	timerMessage = 60;
 
-	if (input == Buttons_Up)
+	if (input == Buttons_Up) {
 		currentSaveState++;
-
-	if (input == Buttons_Down)
+	} 
+	else if (input == Buttons_Down) {
 		currentSaveState--;
+	}
 
 	if (currentSaveState > slot_count)
 		currentSaveState = 0;
-	else if (currentSaveState < 0)
+
+	if (currentSaveState < 0)
 		currentSaveState = slot_count;
 
+	timerMessage = 60;
 	this->message = "Current Slot %d";
 	return;
 }
@@ -319,14 +318,6 @@ void SaveStateDisplay(ObjectMaster* obj) {
 	obj1->displaySaveText();
 }
 
-void PauseSave() {
-	if (GameState != GameStates_Pause)
-		return;
-
-	if (Controllers[0].press & Buttons_Left) {
-		obj1->saveOnSlot();
-	}
-}
 
 void SaveStateManager(ObjectMaster* obj) {
 
@@ -380,6 +371,15 @@ void __cdecl MechEggman_ChecksDamage_r(EntityData1* a1, EntityData2* a3, CharObj
 	original(a1, a3, a4, a2);
 }
 
+//since object doesn't run when the pause menu is active, we manually allow the player to save when the game is paused.
+void Save_Pause() {
+	if (GameState != GameStates_Pause)
+		return;
+
+	if (Controllers[0].press & Buttons_Left) {
+		obj1->saveOnSlot();
+	}
+}
 
 
 void init_SaveState() {
