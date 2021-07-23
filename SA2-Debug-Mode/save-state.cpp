@@ -100,7 +100,6 @@ void SaveStates::restorePlayerInfo() {
 	return;
 }
 
-
 void SaveStates::restoreCameraInfo() {
 	memcpy((void*)0x1dcff00, &this->slots[currentSaveState].CameraUnit.camera, 0x2518);
 	memcpy((void*)0x1a5a234, &this->slots[currentSaveState].CameraUnit.camPos, sizeof(byte*));
@@ -113,7 +112,7 @@ void SaveStates::restoreCameraInfo() {
 }
 
 int bannedLevel[7] = { LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall, LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush };
-ObjectFuncPtr bannedObj[2] = { (ObjectFuncPtr)0x6A79E0, NULL };
+ObjectFuncPtr bannedObj[2] = { (ObjectFuncPtr)0x6A79E0,(ObjectFuncPtr)0x6F7AF0}; 
 
 bool bannedLvlException() {
 
@@ -195,7 +194,6 @@ void SaveStates::restoreObjectState() {
 
 void SaveStates::displaySaveText() {
 
-
 	if (this->timerMessage != 0 && this->message != nullptr)
 	{
 		timerMessage--;
@@ -262,13 +260,11 @@ void SaveStates::changeSlot(Buttons input) {
 	SetDebugFontColor(0xFFBFBFBF);
 	timerMessage = 60;
 
-
 	if (input == Buttons_Up)
 		currentSaveState++;
 
 	if (input == Buttons_Down)
 		currentSaveState--;
-
 
 	if (currentSaveState > slot_count)
 		currentSaveState = 0;
@@ -323,6 +319,15 @@ void SaveStateDisplay(ObjectMaster* obj) {
 	obj1->displaySaveText();
 }
 
+void PauseSave() {
+	if (GameState != GameStates_Pause)
+		return;
+
+	if (Controllers[0].press & Buttons_Left) {
+		obj1->saveOnSlot();
+	}
+}
+
 void SaveStateManager(ObjectMaster* obj) {
 
 	EntityData1* data = obj->Data1.Entity;
@@ -355,7 +360,6 @@ void SaveStateManager(ObjectMaster* obj) {
 		break;
 	}
 }
-
 
 void LoadObjSaveState() {
 	if (!savestateObj && isSave) {
