@@ -1,11 +1,18 @@
 #pragma once
 
+struct CharaStruct {
+    char data[sizeof(EntityData1)];
+    char charobj[sizeof(CharObj2Base)];
+    char data2[sizeof(EntityData2)];
+    char sonicCO2[sizeof(SonicCharObj2)];
+    char col[sizeof(CollisionInfo)];
+};
 
 struct CameraUnit {
     byte camera[0x2518];
     byte* camPos;
     byte* camRot;
-    char* posRotBuffer;
+    char posRotBuffer[2];
     byte pastpos[0xc00];
     char* idk2;
 };
@@ -19,25 +26,11 @@ struct save_struct {
     char timeF;
     char timeS;
     char timeM;
-    int action;
-    int anim;
-    __int16 Status;
-    __int16 Powerups;
-    short hoverFrames;
-    NJS_VECTOR pos;
-    Rotation rot;
-    NJS_POINT3 acc;
-    NJS_VECTOR spd;
     NJS_VECTOR grv;
-    float MechHP;
-    ObjectMaster* HeldObject;
-    ObjectMaster* HoldTarget;
-    CameraInfo camInfo;
+    CharaStruct charData;
+    int activeLandColCount;
+    DynColInfo* dyncol;
     CameraUnit CameraUnit;
-    int camHandle;
-    PhysicsData physics;
-    char PosRotBufferIndex[2];
-
     ObjectMaster* ObjectList[8];
 };
 

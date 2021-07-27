@@ -22,4 +22,5 @@ VoidFunc(DeleteMostObjects, 0x470AE0);
 
 DataArray(char, PosRotBufferIndex, 0x1945910, 2);
 DataPointer(char, camConstPastPosIDX, 0x19f173c);
+DataPointer(__int16, ActiveLandTableColCount, 0x1DE9484);
 void Save_Pause();

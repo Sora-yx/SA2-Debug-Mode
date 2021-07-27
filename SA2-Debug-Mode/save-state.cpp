@@ -29,20 +29,11 @@ void SaveStates::getPlayerInfo() {
 	if (!co2 || !data)
 		return;
 
-	this->slots[currentSaveState].pos = data->Position;
-	this->slots[currentSaveState].rot = data->Rotation;
-	this->slots[currentSaveState].spd = co2->Speed;
-	this->slots[currentSaveState].acc = co2->Acceleration;
+	memcpy(&this->slots[currentSaveState].charData.data, MainCharObj1[0], sizeof(EntityData1));
+	memcpy(&this->slots[currentSaveState].charData.data2, MainCharData2[0], sizeof(EntityData2));
+	memcpy(&this->slots[currentSaveState].charData.charobj, MainCharObj2[0], sizeof(CharObj2Base));
 	this->slots[currentSaveState].grv = Gravity;
 
-	this->slots[currentSaveState].action = data->Action;
-	this->slots[currentSaveState].anim = co2->AnimInfo.Current;
-	this->slots[currentSaveState].Status = data->Status;
-	this->slots[currentSaveState].hoverFrames = MainCharObj2[0]->field_12;
-
-	memcpy(&this->slots[currentSaveState].physics, &co2->PhysData, sizeof(PhysicsData));
-	this->slots[currentSaveState].Powerups = co2->Powerups;
-	this->slots[currentSaveState].MechHP = co2->MechHP;
 	return;
 }
 
@@ -51,7 +42,8 @@ void SaveStates::getCameraInfo() {
 	memcpy(&this->slots[currentSaveState].CameraUnit.camera, (void*)0x1dcff00, 0x2518);
 	memcpy(&this->slots[currentSaveState].CameraUnit.camPos, (void*)0x1a5a234, sizeof(byte*));
 	memcpy(&this->slots[currentSaveState].CameraUnit.camRot, (void*)0x1a5a238, sizeof(byte*));
-	memcpy(&this->slots[currentSaveState].CameraUnit.posRotBuffer, PosRotBufferIndex, 0x2);
+	this->slots[currentSaveState].CameraUnit.posRotBuffer[0] = PosRotBufferIndex[0];
+	this->slots[currentSaveState].CameraUnit.posRotBuffer[1] = PosRotBufferIndex[1];
 	memcpy(&this->slots[currentSaveState].CameraUnit.pastpos, (void*)0x19f1740, 0xc00);
 	memcpy(&this->slots[currentSaveState].CameraUnit.idk2, &camConstPastPosIDX, sizeof(byte*));
 	return;
@@ -81,22 +73,11 @@ void SaveStates::restorePlayerInfo() {
 
 	if (!co2 || !data)
 		return;
-
-	data->Action = this->slots[currentSaveState].action;
-	co2->AnimInfo.Next = this->slots[currentSaveState].anim;
-	co2->field_12 = this->slots[currentSaveState].hoverFrames;
-
-	data->Position = this->slots[currentSaveState].pos;
-	data->Rotation = this->slots[currentSaveState].rot;
-
-	data->Status = this->slots[currentSaveState].Status;
-	co2->Speed = this->slots[currentSaveState].spd;
-	co2->Acceleration = this->slots[currentSaveState].acc;
-
+	
+	memcpy(MainCharObj1[0], &this->slots[currentSaveState].charData.data, sizeof(EntityData1));
+	memcpy(MainCharData2[0], &this->slots[currentSaveState].charData.data2, sizeof(EntityData2));
+	memcpy(MainCharObj2[0], &this->slots[currentSaveState].charData.charobj, sizeof(CharObj2Base));
 	Gravity = this->slots[currentSaveState].grv;
-	memcpy(&co2->PhysData, &this->slots[currentSaveState].physics, sizeof(PhysicsData));
-	co2->Powerups = this->slots[currentSaveState].Powerups;
-	co2->MechHP = this->slots[currentSaveState].MechHP;
 
 	return;
 }
@@ -105,14 +86,15 @@ void SaveStates::restoreCameraInfo() {
 	memcpy((void*)0x1dcff00, &this->slots[currentSaveState].CameraUnit.camera, 0x2518);
 	memcpy((void*)0x1a5a234, &this->slots[currentSaveState].CameraUnit.camPos, sizeof(byte*));
 	memcpy((void*)0x1a5a238, &this->slots[currentSaveState].CameraUnit.camRot, sizeof(byte*));
-	memcpy(PosRotBufferIndex, &this->slots[currentSaveState].CameraUnit.posRotBuffer, 0x2);
+	PosRotBufferIndex[0] = this->slots[currentSaveState].CameraUnit.posRotBuffer[0];
+	PosRotBufferIndex[1] = this->slots[currentSaveState].CameraUnit.posRotBuffer[1];
 	memcpy((void*)0x19f1740, &this->slots[currentSaveState].CameraUnit.pastpos, 0xc00);
 	memcpy(&camConstPastPosIDX, &this->slots[currentSaveState].CameraUnit.idk2, sizeof(byte*));
 
 	return;
 }
 
-int bannedLevel[8] = { LevelIDs_AquaticMine, LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall, LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush };
+int bannedLevel[9] = { LevelIDs_PyramidCave, LevelIDs_AquaticMine, LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall, LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush };
 ObjectFuncPtr bannedObj[2] = { (ObjectFuncPtr)0x6A79E0,(ObjectFuncPtr)0x6F7AF0 };
 
 bool bannedLvlException() {
@@ -207,7 +189,7 @@ void SaveStates::displaySaveText() {
 
 void SaveStates::saveOnSlot() {
 
-	if (!MainCharObj1[0] || CurrentLevel >= LevelIDs_Route101280) {
+	if (!MainCharObj1[0] || CurrentLevel >= LevelIDs_BigFoot) {
 
 		this->timerMessage = 60;
 		SetDebugFontColor(0xFFFF0000);
@@ -228,7 +210,7 @@ void SaveStates::saveOnSlot() {
 
 void SaveStates::loadSlot(ObjectMaster* obj) {
 
-	if (!MainCharObj1[0] || CurrentLevel != this->slots[currentSaveState].level || CurrentLevel >= LevelIDs_Route101280) {
+	if (!MainCharObj1[0] || CurrentLevel != this->slots[currentSaveState].level || CurrentLevel >= LevelIDs_BigFoot) {
 		timerMessage = 60;
 		SetDebugFontColor(0xFFFF0000);
 		this->message = "ERROR, FAILED TO LOAD SAVE ON SLOT: %d";
@@ -239,13 +221,12 @@ void SaveStates::loadSlot(ObjectMaster* obj) {
 	}
 
 	this->timerMessage = 60;
-	obj1->restoreCameraInfo();
+	this->restoreObjectState();
 	this->restoreGameInfo();
 	this->restorePlayerInfo();
-	this->restoreObjectState();
+	obj1->restoreCameraInfo();
 	SetDebugFontColor(0xFF29c8e1);
 	this->message = "Loaded Save State on slot %d";
-
 	if (obj)
 		obj->Data1.Entity->NextAction = 1;
 

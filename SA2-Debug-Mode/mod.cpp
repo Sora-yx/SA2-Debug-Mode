@@ -38,7 +38,6 @@ extern "C" {
 		}
 
 
-
 		if (GameState != GameStates_Ingame && GameState != GameStates_Pause && GameMode != 14)
 			return;
 
@@ -49,6 +48,9 @@ extern "C" {
 
 	__declspec(dllexport) void __cdecl OnInput()
 	{
+		/*if (Controllers[0].press & Buttons_Y) {
+			MainCharObj1[0]->Position = { 301, -6470, 9702 };
+		}*/
 		Debugging_InputCheck();
 	}
 
