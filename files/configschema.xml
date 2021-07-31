@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
 <ConfigSchema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonicretro.org">
 	<Groups>
-		<Group name="general" display="General">
+		<Group name="General" display="General">
 			<Property name="isSave" display="Allow Save State" type="bool" defaultvalue="True">
 				<HelpText>Allow save state.</HelpText>
+			</Property>			
+			<Property name="objSave" display="Restore Objects" type="bool" defaultvalue="True">
+				<HelpText>(EXPERIMENTAL) Restore objects when loading save states.</HelpText>
 			</Property>
 			<Property name="isDebugTxt" display="Display Debug Text" type="bool" defaultvalue="True">
 				<HelpText>Hold Y + Down to display Debug Text information.</HelpText>

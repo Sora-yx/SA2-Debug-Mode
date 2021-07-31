@@ -8,7 +8,7 @@ various debug information. Here’s the current features :
 **Display Debug Text** so you can see your current speed, action, position, but also
 game information like Camera position and extra stuff.
 
-**"Free movements"**, a feature that allows you to move everywhere in the stage,
+**Free movements**, a feature that allows you to move everywhere in the stage,
 when this is on, physics and gravity no longer apply so you can clip everything. Also
 death zones can no longer kill you. Another thing is it can teleport yourself to the last
 checkpoint you grabbed. As a small bonus : it gives you 99 lives. This feature was
