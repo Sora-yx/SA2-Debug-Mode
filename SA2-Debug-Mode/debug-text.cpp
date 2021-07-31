@@ -136,8 +136,6 @@ void DisplayCameraInfo()
 	return;
 }
 
-
-
 void DebugTextUpdateCurrentPage() {
 
 	if (!isDebugTxt)

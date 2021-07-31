@@ -2,12 +2,15 @@
 
 bool isFreeMov = false;
 
+int timerFree = 100;
 void DrawFreeMovementText() {
 
 	if (!isFreeMov)
 		return;
 
-	DisplayDebugStringFormatted(NJM_LOCATION(22, 10), "FREE MOVEMENT ENABLED");
+	if (--timerFree > 0) {
+		DisplayDebugStringFormatted(NJM_LOCATION(22, 10), "FREE MOVEMENT ENABLED");
+	}
 	return;
 }
 
@@ -45,6 +48,7 @@ void SetFreeMovements() {
 
 		if ( (Controllers[i].on & Buttons_L && Controllers[i].on & Buttons_R && Controllers[i].on & Buttons_Y)) {
 
+			timerFree = 100;
 			isFreeMov = true;
 			DeathZoneDebug = 1; //death zone can no longer kill player
 			Life_Count[i] = 99;
@@ -67,6 +71,7 @@ void UnsetFreeMovements() {
 	for (int i = 0; i < 2; i++) {
 
 		if (Controllers[i].press & Buttons_A) {
+			timerFree = 100;
 			isFreeMov = false;
 			DeathZoneDebug = 0;
 			MainCharObj1[i]->Action = Action_Jump;
