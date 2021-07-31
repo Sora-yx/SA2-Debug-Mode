@@ -5,6 +5,11 @@ struct CharaStruct {
     char charobj[sizeof(CharObj2Base)];
     char data2[sizeof(EntityData2)];
     char sonicCO2[sizeof(SonicCharObj2)];
+    char tailsCO2[sizeof(TailsCharObj2)];
+    char eggmanCO2[sizeof(EggmanCharObj2)];
+    char knuxCO2[sizeof(KnucklesCharObj2)];
+    char mechCO2[sizeof(MechEggmanCharObj2)];
+    char superCO2[sizeof(SuperSonicCharObj2)];
     char col[sizeof(CollisionInfo)];
 };
 

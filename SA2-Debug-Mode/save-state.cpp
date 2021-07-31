@@ -29,11 +29,11 @@ void SaveStates::getPlayerInfo() {
 	if (!co2 || !data)
 		return;
 
+	memcpy(&this->slots[currentSaveState].charData.col, MainCharObj1[0]->Collision , sizeof(CollisionInfo));
 	memcpy(&this->slots[currentSaveState].charData.data, MainCharObj1[0], sizeof(EntityData1));
 	memcpy(&this->slots[currentSaveState].charData.data2, MainCharData2[0], sizeof(EntityData2));
 	memcpy(&this->slots[currentSaveState].charData.charobj, MainCharObj2[0], sizeof(CharObj2Base));
 	this->slots[currentSaveState].grv = Gravity;
-
 	return;
 }
 
@@ -74,11 +74,11 @@ void SaveStates::restorePlayerInfo() {
 	if (!co2 || !data)
 		return;
 	
-	memcpy(MainCharObj1[0], &this->slots[currentSaveState].charData.data, sizeof(EntityData1));
-	memcpy(MainCharData2[0], &this->slots[currentSaveState].charData.data2, sizeof(EntityData2));
 	memcpy(MainCharObj2[0], &this->slots[currentSaveState].charData.charobj, sizeof(CharObj2Base));
+	memcpy(MainCharObj1[0]->Collision, &this->slots[currentSaveState].charData.col, sizeof(CollisionInfo));
+	memcpy(MainCharData2[0], &this->slots[currentSaveState].charData.data2, sizeof(EntityData2));
+	memcpy(MainCharObj1[0], &this->slots[currentSaveState].charData.data, sizeof(EntityData1));
 	Gravity = this->slots[currentSaveState].grv;
-
 	return;
 }
 
@@ -90,7 +90,6 @@ void SaveStates::restoreCameraInfo() {
 	PosRotBufferIndex[1] = this->slots[currentSaveState].CameraUnit.posRotBuffer[1];
 	memcpy((void*)0x19f1740, &this->slots[currentSaveState].CameraUnit.pastpos, 0xc00);
 	memcpy(&camConstPastPosIDX, &this->slots[currentSaveState].CameraUnit.idk2, sizeof(byte*));
-
 	return;
 }
 
@@ -204,7 +203,6 @@ void SaveStates::saveOnSlot() {
 	this->getObjectsState();
 	SetDebugFontColor(0xFF1dcf01);
 	this->message = "Saved on slot: %d";
-
 	return;
 }
 
@@ -221,10 +219,10 @@ void SaveStates::loadSlot(ObjectMaster* obj) {
 	}
 
 	this->timerMessage = 60;
-	this->restoreObjectState();
+	obj1->restoreCameraInfo();
 	this->restoreGameInfo();
 	this->restorePlayerInfo();
-	obj1->restoreCameraInfo();
+	this->restoreObjectState();
 	SetDebugFontColor(0xFF29c8e1);
 	this->message = "Loaded Save State on slot %d";
 	if (obj)
