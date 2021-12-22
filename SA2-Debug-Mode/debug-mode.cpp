@@ -90,12 +90,13 @@ void CheckFreeMovements() {
 
 void Debugging_InputCheck() {
 
+	DebugTextUpdateCurrentPage();
+
 	if (GameState != GameStates_Ingame)
 		return;
 
 	CheckFreeMovements();
 	CheckController_ColDebug();
-	DebugTextUpdateCurrentPage();
 }
 
 void LoadDebuggingObjects() {

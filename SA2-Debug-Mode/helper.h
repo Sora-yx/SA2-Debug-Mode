@@ -13,7 +13,6 @@ struct DebugStringInfo
 #pragma pack(pop)
 
 
-
 void __cdecl DrawDebugCollision(ObjectMaster* a1);
 void __cdecl DrawCol(CollisionData* Col, EntityData1* a2);
 
@@ -22,3 +21,6 @@ void DisplayDebugStringFormatted(Int loc, const char* Format, ...);
 void DisplayPlayerInformation();
 void SetDebugFontColor(int color);
 void DisplayEmeraeldLocation();
+void init_CartHack();
+cartStruct* getCartPointer();
+void SaveCartPointer();

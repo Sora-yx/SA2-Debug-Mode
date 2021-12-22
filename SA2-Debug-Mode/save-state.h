@@ -2,15 +2,12 @@
 
 struct CharaStruct {
     char data[sizeof(EntityData1)];
-    char charobj[sizeof(CharObj2Base)];
     char data2[sizeof(EntityData2)];
     char sonicCO2[sizeof(SonicCharObj2)];
     char tailsCO2[sizeof(TailsCharObj2)];
     char eggmanCO2[sizeof(EggmanCharObj2)];
     char knuxCO2[sizeof(KnucklesCharObj2)];
     char mechCO2[sizeof(MechEggmanCharObj2)];
-    char superCO2[sizeof(SuperSonicCharObj2)];
-    char col[sizeof(CollisionInfo)];
 };
 
 struct CameraUnit {
@@ -31,9 +28,9 @@ struct save_struct {
     char timeF;
     char timeS;
     char timeM;
+    int timerCart;
     NJS_VECTOR grv;
     CharaStruct charData;
-    int activeLandColCount;
     DynColInfo* dyncol;
     CameraUnit CameraUnit;
     ObjectMaster* ObjectList[8];

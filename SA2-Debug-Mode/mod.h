@@ -24,3 +24,23 @@ DataArray(char, PosRotBufferIndex, 0x1945910, 2);
 DataPointer(char, camConstPastPosIDX, 0x19f173c);
 DataPointer(__int16, ActiveLandTableColCount, 0x1DE9484);
 void Save_Pause();
+
+#define TARGET_DYNAMIC(name) ((decltype(name##_r)*)name##_t->Target()) //sf94
+
+#pragma pack(push, 1)
+struct cartStruct
+{
+	NJS_POINT3 Velocity;
+	Float idk;
+	Float idk2;
+	NJS_VECTOR Position;
+	Rotation Forward;
+	Angle X;
+	Angle Y;
+	Float idk3;
+	Float SpeedY;
+	Float SpeedX;
+	Float Accel;
+	Float idk5;
+};
+#pragma pack(pop)

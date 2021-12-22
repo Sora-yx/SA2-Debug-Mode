@@ -12,11 +12,11 @@
 #include "ModelInfo.h"
 #include "AnimationFile.h"
 #include "Trampoline.h"
+#include "mod.h"
 #include "helper.h"
 #include "IniFile.hpp"
 #include "hud.h"
 #include "utils.h"
 #include "sound.h"
 
-#include "mod.h"
 

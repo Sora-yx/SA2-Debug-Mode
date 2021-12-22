@@ -13,9 +13,8 @@ extern "C" {
 		HelperFunctionsGlobal = helperFunctions;
 		const IniFile* config = new IniFile(std::string(path) + "\\config.ini");
 		isSave = config->getBool("General", "isSave", true);
-		objSave = config->getBool("General", "objSave", true);
+		objSave = config->getBool("General", "objSave", false);
 		isDebugTxt = config->getBool("General", "isDebugTxt", true);
-
 
 		delete config;
 
@@ -26,8 +25,10 @@ extern "C" {
 			init_treasureHuntingDebug();
 		}
 
-		if (isSave)
+		if (isSave) {
 			init_SaveState();
+			init_CartHack();
+		}
 	}
 
 	__declspec(dllexport) void __cdecl OnFrame() {
@@ -36,10 +37,6 @@ extern "C" {
 		if (GameState == GameStates_LoadItems) {
 			LoadDebuggingObjects();
 		}
-
-
-		if (GameState != GameStates_Ingame && GameState != GameStates_Pause && GameMode != 14)
-			return;
 
 		DisplayDebugTextInfo();
 		Save_Pause();

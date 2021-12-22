@@ -35,3 +35,5 @@ static inline void DrawChunkModel(NJS_CNK_MODEL* a1)
 }
 
 signed char GetCharacterLevel();
+
+DataPointer(int, CartTimer, 0x1D94428);

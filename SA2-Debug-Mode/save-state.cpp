@@ -16,23 +16,60 @@ void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].lives = Life_Count[0];
 	this->slots[currentSaveState].rings = RingCount[0];
 	this->slots[currentSaveState].score = ScoreP1;
+
+	this->slots[currentSaveState].timerCart = CartTimer;
 	this->slots[currentSaveState].timeF = TimerFrames;
 	this->slots[currentSaveState].timeS = TimerSeconds;
 	this->slots[currentSaveState].timeM = TimerMinutes;
 	return;
 }
 
+
+bool isCartSaved = false;
+
 void SaveStates::getPlayerInfo() {
+
 	EntityData1* data = MainCharObj1[0];
 	CharObj2Base* co2 = MainCharObj2[0];
 
-	if (!co2 || !data)
+	if (!data)
 		return;
 
-	memcpy(&this->slots[currentSaveState].charData.col, MainCharObj1[0]->Collision , sizeof(CollisionInfo));
+	//memcpy(&this->slots[currentSaveState].charData.col, MainCharObj1[0]->Collision , sizeof(CollisionInfo));
 	memcpy(&this->slots[currentSaveState].charData.data, MainCharObj1[0], sizeof(EntityData1));
+
+	SaveCartPointer();
+
+	if (!co2 || getCartPointer())
+		return;
+
 	memcpy(&this->slots[currentSaveState].charData.data2, MainCharData2[0], sizeof(EntityData2));
-	memcpy(&this->slots[currentSaveState].charData.charobj, MainCharObj2[0], sizeof(CharObj2Base));
+
+	if (co2->CharID <= Characters_Shadow)
+	{
+		memcpy(&this->slots[currentSaveState].charData.sonicCO2, MainCharacter[0]->Data2.Character, sizeof(SonicCharObj2));
+	}
+
+	if (co2->CharID == Characters_Tails)
+	{
+		memcpy(&this->slots[currentSaveState].charData.tailsCO2, MainCharacter[0]->Data2.Character, sizeof(TailsCharObj2));
+	}
+
+	if (co2->CharID == Characters_Eggman)
+	{
+		memcpy(&this->slots[currentSaveState].charData.eggmanCO2, MainCharacter[0]->Data2.Character, sizeof(EggmanCharObj2));
+	}
+
+	if (co2->CharID == Characters_MechEggman || co2->CharID == Characters_MechTails)
+	{
+		memcpy(&this->slots[currentSaveState].charData.mechCO2, MainCharacter[0]->Data2.Character, sizeof(MechEggmanCharObj2));
+	}
+
+	if (co2->CharID == Characters_Knuckles || co2->CharID == Characters_Rouge)
+	{
+		memcpy(&this->slots[currentSaveState].charData.knuxCO2, MainCharacter[0]->Data2.Character, sizeof(KnucklesCharObj2));
+	}
+
 	this->slots[currentSaveState].grv = Gravity;
 	return;
 }
@@ -50,6 +87,10 @@ void SaveStates::getCameraInfo() {
 }
 
 void SaveStates::getObjectsState() {
+
+	if (!objSave)
+		return;
+
 	for (int i = 2; i < 6; i++) {
 		if (ObjectLists[i]) {
 			this->slots[currentSaveState].ObjectList[i] = ObjectLists[i];
@@ -61,24 +102,59 @@ void SaveStates::restoreGameInfo() {
 	Life_Count[0] = this->slots[currentSaveState].lives;
 	RingCount[0] = this->slots[currentSaveState].rings;
 	ScoreP1 = this->slots[currentSaveState].score;
+
 	TimerFrames = this->slots[currentSaveState].timeF;
 	TimerSeconds = this->slots[currentSaveState].timeS;
 	TimerMinutes = this->slots[currentSaveState].timeM;
+	CartTimer = this->slots[currentSaveState].timerCart;
+
 	return;
 }
+
 
 void SaveStates::restorePlayerInfo() {
 	EntityData1* data = MainCharObj1[0];
 	CharObj2Base* co2 = MainCharObj2[0];
 
-	if (!co2 || !data)
+	if (!data)
 		return;
-	
-	memcpy(MainCharObj2[0], &this->slots[currentSaveState].charData.charobj, sizeof(CharObj2Base));
-	memcpy(MainCharObj1[0]->Collision, &this->slots[currentSaveState].charData.col, sizeof(CollisionInfo));
-	memcpy(MainCharData2[0], &this->slots[currentSaveState].charData.data2, sizeof(EntityData2));
+
 	memcpy(MainCharObj1[0], &this->slots[currentSaveState].charData.data, sizeof(EntityData1));
 	Gravity = this->slots[currentSaveState].grv;
+
+	if (getCartPointer())
+	{
+		isCartSaved = true;
+		return;
+	}
+
+	memcpy(MainCharData2[0], &this->slots[currentSaveState].charData.data2, sizeof(EntityData2));
+
+	if (co2->CharID <= Characters_Shadow)
+	{
+		memcpy(MainCharacter[0]->Data2.Character, &this->slots[currentSaveState].charData.sonicCO2, sizeof(SonicCharObj2));
+	}
+
+	if (co2->CharID == Characters_Tails)
+	{
+		memcpy(MainCharacter[0]->Data2.Character, &this->slots[currentSaveState].charData.tailsCO2, sizeof(TailsCharObj2));
+	}
+
+	if (co2->CharID == Characters_Eggman)
+	{
+		memcpy(MainCharacter[0]->Data2.Character, &this->slots[currentSaveState].charData.eggmanCO2, sizeof(EggmanCharObj2));
+	}
+
+	if (co2->CharID == Characters_MechEggman || co2->CharID == Characters_MechTails)
+	{
+		memcpy(MainCharacter[0]->Data2.Character, &this->slots[currentSaveState].charData.mechCO2, sizeof(MechEggmanCharObj2));
+	}
+
+	if (co2->CharID == Characters_Knuckles || co2->CharID == Characters_Rouge)
+	{
+		memcpy(MainCharacter[0]->Data2.Character, &this->slots[currentSaveState].charData.knuxCO2, sizeof(KnucklesCharObj2));
+	}
+
 	return;
 }
 
@@ -188,7 +264,7 @@ void SaveStates::displaySaveText() {
 
 void SaveStates::saveOnSlot() {
 
-	if (!MainCharObj1[0] || CurrentLevel >= LevelIDs_BigFoot) {
+	if (!MainCharObj1[0] || CurrentLevel >= LevelIDs_BigFoot && !getCartPointer()) {
 
 		this->timerMessage = 60;
 		SetDebugFontColor(0xFFFF0000);
@@ -208,7 +284,7 @@ void SaveStates::saveOnSlot() {
 
 void SaveStates::loadSlot(ObjectMaster* obj) {
 
-	if (!MainCharObj1[0] || CurrentLevel != this->slots[currentSaveState].level || CurrentLevel >= LevelIDs_BigFoot) {
+	if (!MainCharObj1[0] || CurrentLevel != this->slots[currentSaveState].level || CurrentLevel >= LevelIDs_BigFoot && !getCartPointer()) {
 		timerMessage = 60;
 		SetDebugFontColor(0xFFFF0000);
 		this->message = "ERROR, FAILED TO LOAD SAVE ON SLOT: %d";
@@ -225,6 +301,7 @@ void SaveStates::loadSlot(ObjectMaster* obj) {
 	this->restoreObjectState();
 	SetDebugFontColor(0xFF29c8e1);
 	this->message = "Loaded Save State on slot %d";
+
 	if (obj)
 		obj->Data1.Entity->NextAction = 1;
 
@@ -237,7 +314,7 @@ void SaveStates::changeSlot(Buttons input) {
 
 	if (input == Buttons_Up) {
 		currentSaveState++;
-	} 
+	}
 	else if (input == Buttons_Down) {
 		currentSaveState--;
 	}
@@ -290,8 +367,6 @@ void DeleteSaveManager(ObjectMaster* obj) {
 		savestateObj = nullptr;
 	}
 }
-
-
 
 void SaveStateDisplay(ObjectMaster* obj) {
 

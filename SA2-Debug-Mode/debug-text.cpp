@@ -21,24 +21,45 @@ void DisplayPlayerInformation() {
 	if (currentPage != pPlayerInfo)
 		return;
 
-	if (MainCharObj1[0] == nullptr || MainCharObj2[0] == nullptr)
+	char texPosY = 0;
+
+	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280)
+		texPosY = 5.0f;
+
+	if (MainCharObj1[0] == nullptr)
 	{
 		SetDebugFontColor(0xFFFF0000);
-		DisplayDebugStringFormatted(NJM_LOCATION(2, 1), "- PLAYER INFO UNAVAILABLE -");
+		DisplayDebugStringFormatted(NJM_LOCATION(2, 1 + texPosY), "- PLAYER INFO UNAVAILABLE -");
 		return;
 	}
 
-
 	SetDebugFontColor(0xFF88FFAA);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 7), "- PLAYER INFO -");
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 7 + texPosY), "- PLAYER INFO -");
 	SetDebugFontColor(0xFFBFBFBF);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "POS X: %.2f", MainCharObj1[0]->Position.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "POS Y: %.2f", MainCharObj1[0]->Position.y);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 11), "POS Z: %.2f", MainCharObj1[0]->Position.z);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "POS X: %.2f", MainCharObj1[0]->Position.x);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "POS Y: %.2f", MainCharObj1[0]->Position.y);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "POS Z: %.2f", MainCharObj1[0]->Position.z);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 13), "ACTION: %d", MainCharObj1[0]->Action);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 14), "NEXT ACTION: %d", MainCharObj1[0]->NextAction);
+	cartStruct* cartPointer = getCartPointer();
+
+	if (!cartPointer)
+	{
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 13), "ACTION: %d", MainCharObj1[0]->Action);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 14), "NEXT ACTION: %d", MainCharObj1[0]->NextAction);
+	} 
+	else {
+
+		float spdX = cartPointer[1].SpeedX;
+
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "CART SPEED X: %.2f", spdX);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "CART SPEED Y: %.2f", cartPointer[1].SpeedY);
+		return;
+	}
+
+	if (MainCharObj2[0] == nullptr)
+		return;
+
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 15), "HOVER FRAMES: %d", MainCharObj2[0]->field_12);
 
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 17), "NEXT ANIM: %d", MainCharObj2[0]->AnimInfo.Next);
@@ -174,9 +195,12 @@ void SetDebugFontColor(int color) {
 	return HelperFunctionsGlobal.SetDebugFontColor(color);
 }
 
+
 void initializeDebugText() {
 
 	SetDebugFontColor(0xFFBFBFBF);
-	ScaleDebugFont(16);
+	ScaleDebugFont(15);
+
+
 	return;
 }

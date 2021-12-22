@@ -44,16 +44,24 @@ void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 		break;
 	}
 
+	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280)
+		SA2_HUD_SPRITE.p = { 1.75f * FontScale * 1.5f,  0.75f * FontScale * 85.0f, 0 };
+	else
+		SA2_HUD_SPRITE.p = { 1.75f * FontScale * 1.5f,  0.75f * FontScale * 55.0f, 0 };
 
-	SA2_HUD_SPRITE.p = { 1.75f * FontScale * 1.5f,  0.75f * FontScale * 45.0f, 0 };
 	SA2_HUD_SPRITE.sx = { x * FontScale * 1.80f };
-	SA2_HUD_SPRITE.sy = { y * FontScale * 10.0f };
-	njDrawSprite2D(&SA2_HUD_SPRITE, 1, 1, NJD_SPRITE_ALPHA | NJD_SPRITE_COLOR);
 
+	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280)
+		SA2_HUD_SPRITE.sy = { y * FontScale * 7.0f };
+	else
+		SA2_HUD_SPRITE.sy = { y * FontScale * 10.0f };
+
+
+	njDrawSprite2D(&SA2_HUD_SPRITE, 1, 1, NJD_SPRITE_ALPHA | NJD_SPRITE_COLOR);
 }
+
 void DrawDebugRectangle(ObjectMaster* obj)
 {
-
 	if (!currentPage)
 		return;
 
@@ -66,8 +74,12 @@ void DrawDebugRectangle(ObjectMaster* obj)
 	else
 		FontScale = floor((float)HorizontalResolution / 640.0f);
 
+	if (FontScale <= 1.0)
+		FontScale += 0.5f;
+
 
 	CalcAndDrawRec(SA2_HUD_SPRITE, FontScale);
+	ResetMaterial();
 }
 
 void DrawDebugObjMain(ObjectMaster* obj) {
