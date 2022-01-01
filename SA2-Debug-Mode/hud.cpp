@@ -16,6 +16,7 @@ NJS_SPRITE SA2_HUD_SPRITE = { { 0, 0, 0 }, 1.0, 1.0, 0, &RecBG_TEXLIST , SA2_HUD
 
 void DeleteDebugManager(ObjectMaster* obj) {
 	DrawBGObj = nullptr;
+	DeleteKartPointer();
 }
 
 

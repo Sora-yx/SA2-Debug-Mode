@@ -23,4 +23,5 @@ void SetDebugFontColor(int color);
 void DisplayEmeraeldLocation();
 void init_CartHack();
 cartStruct* getCartPointer();
+void DeleteKartPointer();
 void SaveCartPointer();

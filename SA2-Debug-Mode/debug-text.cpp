@@ -21,12 +21,12 @@ void DisplayPlayerInformation() {
 	if (currentPage != pPlayerInfo)
 		return;
 
-	char texPosY = 0;
+	char texPosY = 2.0f;
 
-	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280)
+	if (CurrentLevel == LevelIDs_Route101280)
 		texPosY = 5.0f;
 
-	if (MainCharObj1[0] == nullptr)
+	if (MainCharObj1[0] == nullptr || CurrentLevel == LevelIDs_KartRace)
 	{
 		SetDebugFontColor(0xFFFF0000);
 		DisplayDebugStringFormatted(NJM_LOCATION(2, 1 + texPosY), "- PLAYER INFO UNAVAILABLE -");
@@ -45,29 +45,29 @@ void DisplayPlayerInformation() {
 
 	if (!cartPointer)
 	{
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 13), "ACTION: %d", MainCharObj1[0]->Action);
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 14), "NEXT ACTION: %d", MainCharObj1[0]->NextAction);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "ACTION: %d", MainCharObj1[0]->Action);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "NEXT ACTION: %d", MainCharObj1[0]->NextAction);
 	} 
 	else {
 
-		float spdX = cartPointer[1].SpeedX;
-
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "CART SPEED X: %.2f", spdX);
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "CART SPEED Y: %.2f", cartPointer[1].SpeedY);
+		float spdX = fabs(cartPointer[1].SpeedX);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "ACTION: %d", cartPointer->KartAction);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "CART SPEED X: %.2f", spdX);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 15 + texPosY), "CART SPEED Y: %.2f", cartPointer[1].SpeedY);
 		return;
 	}
 
 	if (MainCharObj2[0] == nullptr)
 		return;
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 15), "HOVER FRAMES: %d", MainCharObj2[0]->field_12);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "HOVER FRAMES: %d", MainCharObj2[0]->field_12);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 17), "NEXT ANIM: %d", MainCharObj2[0]->AnimInfo.Next);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 18), "CURRENT ANIM: %d", MainCharObj2[0]->AnimInfo.Current);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 17 + texPosY), "NEXT ANIM: %d", MainCharObj2[0]->AnimInfo.Next);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 18 + texPosY), "CURRENT ANIM: %d", MainCharObj2[0]->AnimInfo.Current);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 20), "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 21), "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 22), "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 20 + texPosY), "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 21 + texPosY), "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 22 + texPosY), "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
 	return;
 }
 
@@ -76,19 +76,24 @@ void DisplayGameInfo()
 	if (currentPage != pGameInfo)
 		return;
 
+	char texPosY = 2.0f;
+
+	if (CurrentLevel == LevelIDs_Route101280)
+		texPosY = 5.0f;
+
 	SetDebugFontColor(0xFF88FFAA);
 	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
-	DisplayDebugStringFormatted(NJM_LOCATION(5, 7), "- GAME STATS -");
+	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- GAME STATS -");
 	SetDebugFontColor(0xFFBFBFBF);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "FRAME: %08d", FrameCount);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "FRAME LVL: %08d", FrameCountIngame);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "FRAME: %08d", FrameCount);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "FRAME LVL: %08d", FrameCountIngame);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 12), "GAME MODE: %02d", GameMode);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 13), "GAME STATE: %02d", GameState);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "GAME MODE: %02d", GameMode);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "GAME STATE: %02d", GameState);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 15), "CHARACTER: %01d", CurrentCharacter);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 16), "LEVEL: %02d", CurrentLevel);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 17), "CHAO AREA: %02d", CurrentChaoArea);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 15 + texPosY), "CHARACTER: %01d", CurrentCharacter);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "LEVEL: %02d", CurrentLevel);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 17 + texPosY), "CHAO AREA: %02d", CurrentChaoArea);
 	return;
 }
 
@@ -99,34 +104,40 @@ void DisplayTreasureHuntingInfo()
 	if (currentPage != pHuntingInfo)
 		return;
 
+
+	char texPosY = 2.0f;
+
+	if (CurrentLevel == LevelIDs_Route101280)
+		texPosY = 5.0f;
+
 	if (GetCharacterLevel() != Characters_Knuckles && GetCharacterLevel() != Characters_Rouge || !EmeraldManagerObj2)
 	{
 		SetDebugFontColor(0xFFFF0000);
-		DisplayDebugStringFormatted(NJM_LOCATION(2, 7), "- HUNTING UNAVAILABLE -");
+		DisplayDebugStringFormatted(NJM_LOCATION(2, 7 + texPosY), "- HUNTING UNAVAILABLE -");
 		return;
 	}
 
 	SetDebugFontColor(0xFF88FFAA);
 	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
-	DisplayDebugStringFormatted(NJM_LOCATION(5, 7), "- HUNTING -");
+	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 +texPosY), "- HUNTING -");
 	SetDebugFontColor(0xFFBFBFBF);
 	//DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "Piece Collected: %d", EmeraldManagerObj2->Status);	
 
 	char* hint = (char*)HintsArray[0];
 	if (hint) {
 		hint = hint + 3;
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "Piece Hint 1:%.12s.", hint);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "Piece Hint 1:%.12s.", hint);
 	}
 	hint = (char*)HintsArray[1];
 	if (hint) {
 		hint = hint + 3;
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "Piece Hint 2:%.12s.", hint);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "Piece Hint 2:%.12s.", hint);
 	}
 
 	hint = (char*)HintsArray[2];
 	if (hint) {
 		hint = hint + 3;
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 11), "Piece Hint 3:%.12s.", hint);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "Piece Hint 3:%.12s.", hint);
 	}
 	//DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "FRAME LVL: %08d", FrameCountIngame);
 	return;
@@ -137,22 +148,28 @@ void DisplayCameraInfo()
 	if (currentPage != pCameraInfo)
 		return;
 
+
+	char texPosY = 2.0f;
+
+	if (CurrentLevel == LevelIDs_Route101280)
+		texPosY = 5.0f;
+
 	if (!MainCharObj1[0])
 	{
 		SetDebugFontColor(0xFFFF0000);
-		DisplayDebugStringFormatted(NJM_LOCATION(2, 1), "- CAM UNAVAILABLE -");
+		DisplayDebugStringFormatted(NJM_LOCATION(2, 1 + texPosY), "- CAM UNAVAILABLE -");
 		return;
 	}
 
 	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
 
 	SetDebugFontColor(0xFF88FFAA);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 7), "- CAMERA INFO -");
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 7 + texPosY), "- CAMERA INFO -");
 	SetDebugFontColor(0xFFBFBFBF);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "POS X: %.2f", CameraData.Position.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "POS Y: %.2f", CameraData.Position.y);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 11), "POS Z: %.2f", CameraData.Position.z);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "POS X: %.2f", CameraData.Position.x);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "POS Y: %.2f", CameraData.Position.y);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "POS Z: %.2f", CameraData.Position.z);
 
 	return;
 }
@@ -195,11 +212,10 @@ void SetDebugFontColor(int color) {
 	return HelperFunctionsGlobal.SetDebugFontColor(color);
 }
 
-
 void initializeDebugText() {
 
 	SetDebugFontColor(0xFFBFBFBF);
-	ScaleDebugFont(15);
+	ScaleDebugFont(14);
 
 
 	return;

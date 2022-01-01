@@ -35,8 +35,8 @@ struct cartStruct
 	Float idk2;
 	NJS_VECTOR Position;
 	Rotation Forward;
-	Angle X;
-	Angle Y;
+	Float DistanceWall;
+	int KartAction;
 	Float idk3;
 	Float SpeedY;
 	Float SpeedX;
@@ -44,3 +44,4 @@ struct cartStruct
 	Float idk5;
 };
 #pragma pack(pop)
+

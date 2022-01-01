@@ -6,6 +6,16 @@ cartStruct* cartPointer;
 char cartCO2Copy[0x2F8];
 extern bool isCartSaved;
 
+void DeleteKartPointer() {
+
+	if (cartPointer)
+	{
+		delete(cartPointer);
+	}
+
+	cartPointer = nullptr;
+}
+
 void SaveCartPointer() {
 
 	if (cartPointer)
@@ -17,14 +27,19 @@ void SaveCartPointer() {
 
 void __cdecl CartExecuter_Main_r(ObjectMaster* obj)
 {
-	if (isCartSaved)
-	{
-		obj->EntityData2 = (UnknownData2*)cartCO2Copy;
-		isCartSaved = false;
-	}
 
 	TARGET_DYNAMIC(CartExecuter_Main)(obj);
-	cartPointer = (cartStruct*)obj->EntityData2;
+
+	if (CurrentLevel != LevelIDs_KartRace) {
+
+		if (isCartSaved)
+		{
+			obj->EntityData2 = (UnknownData2*)cartCO2Copy;
+			isCartSaved = false;
+		}
+
+		cartPointer = (cartStruct*)obj->EntityData2;
+	}
 }
 
 cartStruct* getCartPointer() {

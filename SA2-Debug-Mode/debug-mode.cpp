@@ -81,6 +81,10 @@ void UnsetFreeMovements() {
 }
 
 void CheckFreeMovements() {
+
+	if (getCartPointer())
+		return;
+
 	SetFreeMovements();
 	UnsetFreeMovements();
 	DrawFreeMovementText();
