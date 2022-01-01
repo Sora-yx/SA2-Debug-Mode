@@ -21,6 +21,8 @@ void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].timeF = TimerFrames;
 	this->slots[currentSaveState].timeS = TimerSeconds;
 	this->slots[currentSaveState].timeM = TimerMinutes;
+	this->slots[currentSaveState].pauseEnabled = PauseEnabled;
+	this->slots[currentSaveState].timerStopped = TimerStopped;
 	return;
 }
 
@@ -99,6 +101,7 @@ void SaveStates::getObjectsState() {
 }
 
 void SaveStates::restoreGameInfo() {
+	DeathZoneDebug = 1;
 	Life_Count[0] = this->slots[currentSaveState].lives;
 	RingCount[0] = this->slots[currentSaveState].rings;
 	ScoreP1 = this->slots[currentSaveState].score;
@@ -107,7 +110,8 @@ void SaveStates::restoreGameInfo() {
 	TimerSeconds = this->slots[currentSaveState].timeS;
 	TimerMinutes = this->slots[currentSaveState].timeM;
 	CartTimer = this->slots[currentSaveState].timerCart;
-
+	PauseEnabled = this->slots[currentSaveState].pauseEnabled;
+	TimerStopped = this->slots[currentSaveState].timerStopped;
 	return;
 }
 
@@ -118,6 +122,8 @@ void SaveStates::restorePlayerInfo() {
 
 	if (!data)
 		return;
+
+	co2->Powerups &= ~Powerups_Dead;
 
 	memcpy(MainCharObj1[0], &this->slots[currentSaveState].charData.data, sizeof(EntityData1));
 	Gravity = this->slots[currentSaveState].grv;
@@ -154,6 +160,7 @@ void SaveStates::restorePlayerInfo() {
 	{
 		memcpy(MainCharacter[0]->Data2.Character, &this->slots[currentSaveState].charData.knuxCO2, sizeof(KnucklesCharObj2));
 	}
+
 
 	return;
 }
@@ -376,7 +383,7 @@ void SaveStateDisplay(ObjectMaster* obj) {
 	obj1->displaySaveText();
 }
 
-
+extern bool isFreeMov;
 void SaveStateManager(ObjectMaster* obj) {
 
 	EntityData1* data = obj->Data1.Entity;
@@ -405,6 +412,8 @@ void SaveStateManager(ObjectMaster* obj) {
 
 		if (++data->field_6 == 8) {
 			data->Action = CheckInputs;
+			if (!isFreeMov)
+				DeathZoneDebug = 0;
 		}
 		break;
 	}

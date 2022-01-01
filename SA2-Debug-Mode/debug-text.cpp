@@ -2,7 +2,6 @@
 
 int currentPage = None;
 
-
 void ScaleDebugFont(int scale)
 {
 	float FontScale;
@@ -181,7 +180,7 @@ void DebugTextUpdateCurrentPage() {
 
 	for (int i = 0; i < 2; i++) {
 
-		if ((Controllers[i].on & Buttons_Y && Controllers[i].press & Buttons_Down)) {
+		if ((ControllerPointers[i]->on & Buttons_Y && ControllerPointers[i]->press & Buttons_Down)) {
 			if (currentPage < MaxPage) {
 				currentPage++;
 				return;

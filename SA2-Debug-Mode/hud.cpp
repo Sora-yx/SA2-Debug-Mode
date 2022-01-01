@@ -67,6 +67,7 @@ void DrawDebugRectangle(ObjectMaster* obj)
 		return;
 
 	SetMaterial(1, 1, 1, 1);
+	njSetTexture(&RecBG_TEXLIST);
 
 	float FontScale;
 
