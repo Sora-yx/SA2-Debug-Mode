@@ -6,9 +6,9 @@ void ScaleDebugFont(int scale)
 {
 	float FontScale;
 
-	if ((float)HorizontalResolution / (float)VerticalResolution > 1.33f) 
+	if ((float)HorizontalResolution / (float)VerticalResolution > 1.33f)
 		FontScale = floor((float)VerticalResolution / 480.0f);
-	else 
+	else
 		FontScale = floor((float)HorizontalResolution / 640.0f);
 
 	HelperFunctionsGlobal.SetDebugFontSize(FontScale * scale);
@@ -46,7 +46,7 @@ void DisplayPlayerInformation() {
 	{
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "ACTION: %d", MainCharObj1[0]->Action);
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "NEXT ACTION: %d", MainCharObj1[0]->NextAction);
-	} 
+	}
 	else {
 
 		float spdX = fabs(cartPointer[1].SpeedX);
@@ -98,6 +98,42 @@ void DisplayGameInfo()
 
 DataArray(const char*, HintsArray, 0x1AEFF54, 3);
 
+ThiscallFunctionPointer(const char*, getHintText, (), 0x73B880);
+
+void GetNextEmeraldPosition() {
+
+	if (!EmeraldManagerObj2)
+		return;
+
+	char texPosY = 2.0f;
+
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "Piece(s) Left: %d", EmeraldManagerObj2->byte5);
+
+	if (!EmeraldManagerObj2->byte5)
+		return;
+
+	if (EmeraldManagerObj2->byte2C[0].byte1 > 0)
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "Distance P1: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[0].v, &MainCharObj1[0]->Position));
+
+	if (EmeraldManagerObj2->byte2C[1].byte1 > 0)
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "Distance P2: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[1].v, &MainCharObj1[0]->Position));
+
+	if (EmeraldManagerObj2->byte2C[2].byte1 > 0)
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "Distance P3: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[2].v, &MainCharObj1[0]->Position));
+	
+	for (int i = 0; i < 3; i++) {
+
+		if (EmeraldManagerObj2->byte2C[i].byte1 > 0) {
+
+			DisplayDebugStringFormatted(NJM_LOCATION(3, 15 + texPosY), "Piece X: %.2f", EmeraldManagerObj2->byte2C[i].v.x);
+			DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "Piece Y: %.2f", EmeraldManagerObj2->byte2C[i].v.y);
+			DisplayDebugStringFormatted(NJM_LOCATION(3, 17 + texPosY), "Piece Z: %.2f", EmeraldManagerObj2->byte2C[i].v.z);
+			break;
+		}
+	}
+
+}
+
 void DisplayTreasureHuntingInfo()
 {
 	if (currentPage != pHuntingInfo)
@@ -105,9 +141,6 @@ void DisplayTreasureHuntingInfo()
 
 
 	char texPosY = 2.0f;
-
-	if (CurrentLevel == LevelIDs_Route101280)
-		texPosY = 5.0f;
 
 	if (GetCharacterLevel() != Characters_Knuckles && GetCharacterLevel() != Characters_Rouge || !EmeraldManagerObj2)
 	{
@@ -118,26 +151,12 @@ void DisplayTreasureHuntingInfo()
 
 	SetDebugFontColor(0xFF88FFAA);
 	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
-	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 +texPosY), "- HUNTING -");
+	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- HUNTING -");
 	SetDebugFontColor(0xFFBFBFBF);
-	//DisplayDebugStringFormatted(NJM_LOCATION(3, 9), "Piece Collected: %d", EmeraldManagerObj2->Status);	
 
-	char* hint = (char*)HintsArray[0];
-	if (hint) {
-		hint = hint + 3;
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "Piece Hint 1:%.12s.", hint);
-	}
-	hint = (char*)HintsArray[1];
-	if (hint) {
-		hint = hint + 3;
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "Piece Hint 2:%.12s.", hint);
-	}
+	GetNextEmeraldPosition();
 
-	hint = (char*)HintsArray[2];
-	if (hint) {
-		hint = hint + 3;
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "Piece Hint 3:%.12s.", hint);
-	}
+
 	//DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "FRAME LVL: %08d", FrameCountIngame);
 	return;
 }

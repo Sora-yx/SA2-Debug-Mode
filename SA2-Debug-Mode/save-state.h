@@ -78,3 +78,6 @@ enum SaveManager {
     ChangeMode,
     SaveDelay
 };
+
+void SaveCartPointer();
+void SaveEmePtr();

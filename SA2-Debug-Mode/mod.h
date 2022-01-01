@@ -25,6 +25,7 @@ DataPointer(char, camConstPastPosIDX, 0x19f173c);
 DataPointer(__int16, ActiveLandTableColCount, 0x1DE9484);
 void Save_Pause();
 
+
 #define TARGET_DYNAMIC(name) ((decltype(name##_r)*)name##_t->Target()) //sf94
 
 #pragma pack(push, 1)

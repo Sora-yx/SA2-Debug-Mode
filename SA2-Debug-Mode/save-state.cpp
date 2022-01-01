@@ -28,6 +28,8 @@ void SaveStates::getGameInfo() {
 
 
 bool isCartSaved = false;
+bool isEmePtrSaved = false;
+
 
 void SaveStates::getPlayerInfo() {
 
@@ -98,9 +100,12 @@ void SaveStates::getObjectsState() {
 			this->slots[currentSaveState].ObjectList[i] = ObjectLists[i];
 		}
 	}
+
+	SaveEmePtr();
 }
 
 void SaveStates::restoreGameInfo() {
+
 	DeathZoneDebug = 1;
 	Life_Count[0] = this->slots[currentSaveState].lives;
 	RingCount[0] = this->slots[currentSaveState].rings;
@@ -110,7 +115,7 @@ void SaveStates::restoreGameInfo() {
 	TimerSeconds = this->slots[currentSaveState].timeS;
 	TimerMinutes = this->slots[currentSaveState].timeM;
 	CartTimer = this->slots[currentSaveState].timerCart;
-	PauseEnabled = this->slots[currentSaveState].pauseEnabled;
+
 	TimerStopped = this->slots[currentSaveState].timerStopped;
 	return;
 }
@@ -210,7 +215,10 @@ void SaveStates::restoreObjectState() {
 	if (!objSave)
 		return;
 
+	isEmePtrSaved = true;
+
 	ResetSetDataFlag();
+
 
 	if (bannedLvlException())
 		return;
@@ -255,6 +263,7 @@ void SaveStates::restoreObjectState() {
 			}
 		}
 	}
+
 }
 
 void SaveStates::displaySaveText() {
@@ -412,8 +421,11 @@ void SaveStateManager(ObjectMaster* obj) {
 
 		if (++data->field_6 == 8) {
 			data->Action = CheckInputs;
-			if (!isFreeMov)
+
+			if (!isFreeMov) {
 				DeathZoneDebug = 0;
+				PauseEnabled = 1;
+			}
 		}
 		break;
 	}
