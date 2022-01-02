@@ -101,7 +101,6 @@ void SaveStates::getObjectsState() {
 		}
 	}
 
-	SaveEmePtr();
 }
 
 void SaveStates::restoreGameInfo() {
@@ -215,10 +214,8 @@ void SaveStates::restoreObjectState() {
 	if (!objSave)
 		return;
 
-	isEmePtrSaved = true;
 
 	ResetSetDataFlag();
-
 
 	if (bannedLvlException())
 		return;
