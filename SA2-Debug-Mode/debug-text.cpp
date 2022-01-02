@@ -121,18 +121,18 @@ void GetNextEmeraldPosition() {
 
 	EmeManThing piece = EmeraldManagerObj2->byte2C[0];
 
-	if (piece.byte1 > 0 || piece.byte0 > 0) {
+	if (piece.byte1 > 0 || piece.byte0 >= 0) {
 
 		text = (char*)getHintText_r(NULL, 0);
 
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 15 + texPosY), "P1: %.15s.", text);
-
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "Distance P1: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[0].v, &MainCharObj1[0]->Position));
 	}
 
 	piece = EmeraldManagerObj2->byte2C[1];
 
-	if (piece.byte1 > 0 || piece.byte0 > 0) {
+	if (piece.byte1 > 0 || piece.byte0 >= 0) {
+
 		text = (char*)getHintText_r(NULL, 1);
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "P2: %.15s.", text);
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "Distance P2: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[1].v, &MainCharObj1[0]->Position));
@@ -140,7 +140,7 @@ void GetNextEmeraldPosition() {
 
 	piece = EmeraldManagerObj2->byte2C[2];
 
-	if (piece.byte1 > 0 || piece.byte0 > 0) {
+	if (piece.byte1 > 0 || piece.byte0 >= 0) {
 		text = (char*)getHintText_r(NULL, 2);
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 17 + texPosY), "P3: %.15s.", text);
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "Distance P3: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[2].v, &MainCharObj1[0]->Position));
