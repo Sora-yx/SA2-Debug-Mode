@@ -8,6 +8,6 @@ enum curPage {
 	None,
 	pPlayerInfo,
 	pGameInfo,
-	pHuntingInfo,
+	pCharacterInfo,
 	pCameraInfo
 };

@@ -35,7 +35,7 @@ void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 		x = 1.90f;
 		y = 0.70f;
 		break;
-	case pHuntingInfo:
+	case pCharacterInfo:
 		x = 2.40f;
 		y = 0.70f;
 		break;
@@ -53,7 +53,7 @@ void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 	SA2_HUD_SPRITE.sx = { x * FontScale * 1.80f };
 
 	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280)
-		SA2_HUD_SPRITE.sy = { y * FontScale * 7.0f };
+		SA2_HUD_SPRITE.sy = { y * FontScale * 8.5f };
 	else
 		SA2_HUD_SPRITE.sy = { y * FontScale * 10.0f };
 

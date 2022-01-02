@@ -22,13 +22,13 @@ void DisplayPlayerInformation() {
 
 	char texPosY = 2.0f;
 
-	if (CurrentLevel == LevelIDs_Route101280)
-		texPosY = 5.0f;
+	if (CurrentLevel == LevelIDs_Route101280 || CurrentLevel == LevelIDs_KartRace)
+		texPosY = 6.0f;
 
 	if (MainCharObj1[0] == nullptr || CurrentLevel == LevelIDs_KartRace)
 	{
 		SetDebugFontColor(0xFFFF0000);
-		DisplayDebugStringFormatted(NJM_LOCATION(2, 1 + texPosY), "- PLAYER INFO UNAVAILABLE -");
+		DisplayDebugStringFormatted(NJM_LOCATION(2, 7 + texPosY), "- PLAYER INFO UNAVAILABLE -");
 		return;
 	}
 
@@ -77,7 +77,7 @@ void DisplayGameInfo()
 
 	char texPosY = 2.0f;
 
-	if (CurrentLevel == LevelIDs_Route101280)
+	if (CurrentLevel == LevelIDs_Route101280 || CurrentLevel == LevelIDs_KartRace)
 		texPosY = 5.0f;
 
 	SetDebugFontColor(0xFF88FFAA);
@@ -112,7 +112,7 @@ void GetNextEmeraldPosition() {
 
 	char texPosY = 2.0f;
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "Piece(s) Left: %d", EmeraldManagerObj2->byte5);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "PIECE(S) LEFT: %d", EmeraldManagerObj2->byte5);
 
 	if (!EmeraldManagerObj2->byte5)
 		return;
@@ -126,7 +126,7 @@ void GetNextEmeraldPosition() {
 		text = (char*)getHintText_r(NULL, 0);
 
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 15 + texPosY), "P1: %.15s.", text);
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "Distance P1: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[0].v, &MainCharObj1[0]->Position));
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "P1 DISTANCE: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[0].v, &MainCharObj1[0]->Position));
 	}
 
 	piece = EmeraldManagerObj2->byte2C[1];
@@ -135,7 +135,7 @@ void GetNextEmeraldPosition() {
 
 		text = (char*)getHintText_r(NULL, 1);
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "P2: %.15s.", text);
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "Distance P2: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[1].v, &MainCharObj1[0]->Position));
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "P2 DISTANCE: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[1].v, &MainCharObj1[0]->Position));
 	}
 
 	piece = EmeraldManagerObj2->byte2C[2];
@@ -143,16 +143,12 @@ void GetNextEmeraldPosition() {
 	if (piece.byte1 > 0 || piece.byte0 >= 0) {
 		text = (char*)getHintText_r(NULL, 2);
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 17 + texPosY), "P3: %.15s.", text);
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "Distance P3: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[2].v, &MainCharObj1[0]->Position));
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "P3 DISTANCE: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[2].v, &MainCharObj1[0]->Position));
 	}
-
 }
 
 void DisplayTreasureHuntingInfo()
 {
-	if (currentPage != pHuntingInfo)
-		return;
-
 
 	char texPosY = 2.0f;
 
@@ -170,8 +166,80 @@ void DisplayTreasureHuntingInfo()
 
 	GetNextEmeraldPosition();
 
+	return;
+}
 
-	//DisplayDebugStringFormatted(NJM_LOCATION(3, 10), "FRAME LVL: %08d", FrameCountIngame);
+void DisplaySpeedCharInfo() {
+
+	char texPosY = 2.0f;
+
+	SetDebugFontColor(0xFF88FFAA);
+	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
+	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- SPEED CHAR INFO -");
+	SetDebugFontColor(0xFFBFBFBF);
+
+	SonicCharObj2* sonicCO2 = (SonicCharObj2*)MainCharacter[0]->Data2.Undefined;
+
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "SOMERSAULT TIMER: %d", sonicCO2->SomersaultTime);
+
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "SPIN DASH COUNTER: %d", sonicCO2->SpindashCounter);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "HOVER FRAMES: %d", MainCharObj2[0]->field_12);
+
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
+}
+
+void DisplayMechCharInfo() {
+
+	char texPosY = 2.0f;
+
+	SetDebugFontColor(0xFF88FFAA);
+	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
+	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- MECH CHAR INFO -");
+	SetDebugFontColor(0xFFBFBFBF);
+
+	auto mechCO2 = (MechEggmanCharObj2*)MainCharacter[0]->Data2.Undefined;
+
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "MECH HP: %.2f", mechCO2->base.MechHP);	
+
+
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
+}
+
+void DisplayCharacterInfo() {
+
+	if (currentPage != pCharacterInfo)
+		return;
+
+	char texPosY = 2.0f;
+
+	if (!MainCharObj1[0] || getCartPointer() || CurrentLevel == LevelIDs_KartRace) {
+		currentPage++;
+		return;
+	}
+
+	if (MainCharObj2[0]->CharID <= Characters_Shadow && !EmeraldManagerObj2)
+	{
+		DisplaySpeedCharInfo();
+		return;
+	}
+
+	if (MainCharObj2[0]->CharID == Characters_MechTails || MainCharObj2[0]->CharID == Characters_MechEggman)
+	{
+		DisplayMechCharInfo();
+		return;
+	}
+
+	if (MainCharObj2[0]->CharID == Characters_Knuckles || MainCharObj2[0]->CharID == Characters_Rouge || EmeraldManagerObj2)
+	{
+		DisplayTreasureHuntingInfo();
+		return;
+	}
+
+	currentPage++;
 	return;
 }
 
@@ -183,13 +251,13 @@ void DisplayCameraInfo()
 
 	char texPosY = 2.0f;
 
-	if (CurrentLevel == LevelIDs_Route101280)
+	if (CurrentLevel == LevelIDs_Route101280 || CurrentLevel == LevelIDs_KartRace)
 		texPosY = 5.0f;
 
 	if (!MainCharObj1[0])
 	{
 		SetDebugFontColor(0xFFFF0000);
-		DisplayDebugStringFormatted(NJM_LOCATION(2, 1 + texPosY), "- CAM UNAVAILABLE -");
+		DisplayDebugStringFormatted(NJM_LOCATION(2, 7 + texPosY), "- CAM UNAVAILABLE -");
 		return;
 	}
 
@@ -230,7 +298,7 @@ void DisplayDebugTextInfo() {
 
 	DisplayPlayerInformation();
 	DisplayGameInfo();
-	DisplayTreasureHuntingInfo();
+	DisplayCharacterInfo();
 	DisplayCameraInfo();
 	return;
 }
@@ -248,7 +316,6 @@ void initializeDebugText() {
 
 	SetDebugFontColor(0xFFBFBFBF);
 	ScaleDebugFont(14);
-
 
 	return;
 }
