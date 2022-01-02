@@ -21,7 +21,6 @@ void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].timeF = TimerFrames;
 	this->slots[currentSaveState].timeS = TimerSeconds;
 	this->slots[currentSaveState].timeM = TimerMinutes;
-	this->slots[currentSaveState].pauseEnabled = PauseEnabled;
 	this->slots[currentSaveState].timerStopped = TimerStopped;
 	return;
 }
@@ -421,7 +420,7 @@ void SaveStateManager(ObjectMaster* obj) {
 
 			if (!isFreeMov) {
 				DeathZoneDebug = 0;
-				PauseEnabled = 1;
+				PauseEnabled = 0;
 			}
 		}
 		break;

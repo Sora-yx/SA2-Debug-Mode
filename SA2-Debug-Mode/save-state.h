@@ -29,7 +29,6 @@ struct save_struct {
     char timeS;
     char timeM;
     int timerCart;
-    char pauseEnabled;
     char timerStopped;
     NJS_VECTOR grv;
     CharaStruct charData;
