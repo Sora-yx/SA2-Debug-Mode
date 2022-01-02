@@ -24,4 +24,4 @@ void DisplayEmeraeldLocation();
 void init_CartHack();
 cartStruct* getCartPointer();
 void DeleteKartPointer();
-const char* getHintText_r(void* a1, char hintID);
+char* getHintText_r(void* a1, char hintID);

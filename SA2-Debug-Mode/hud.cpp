@@ -36,7 +36,7 @@ void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 		y = 0.70f;
 		break;
 	case pHuntingInfo:
-		x = 2.90f;
+		x = 2.40f;
 		y = 0.70f;
 		break;
 	default:

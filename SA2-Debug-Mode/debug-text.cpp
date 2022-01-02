@@ -100,6 +100,11 @@ DataArray(const char*, HintsArray, 0x1AEFF54, 3);
 
 ThiscallFunctionPointer(const char*, getHintText, (), 0x73B880);
 
+DataPointer(char*, somethingAboutHint, 0x1AF016C);
+DataPointer(int, curHintFileIdk, 0x01AF0170);
+
+
+
 void GetNextEmeraldPosition() {
 
 	if (!EmeraldManagerObj2)
@@ -112,24 +117,24 @@ void GetNextEmeraldPosition() {
 	if (!EmeraldManagerObj2->byte5)
 		return;
 
-	if (EmeraldManagerObj2->byte2C[0].byte1 > 0)
+	char* text;
+
+	if (EmeraldManagerObj2->byte2C[0].byte1 > 0) {
+		text = (char*)getHintText_r(NULL, 0);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 15 + texPosY), "P1: %.14s.", text);
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "Distance P1: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[0].v, &MainCharObj1[0]->Position));
+	}
 
-	if (EmeraldManagerObj2->byte2C[1].byte1 > 0)
+	if (EmeraldManagerObj2->byte2C[1].byte1 > 0) {
+		text = (char*)getHintText_r(NULL, 1);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "P2: %.14s.", text);
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "Distance P2: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[1].v, &MainCharObj1[0]->Position));
+	}
 
-	if (EmeraldManagerObj2->byte2C[2].byte1 > 0)
+	if (EmeraldManagerObj2->byte2C[2].byte1 > 0) {
+		text = (char*)getHintText_r(NULL, 2);
+		DisplayDebugStringFormatted(NJM_LOCATION(3, 17 + texPosY), "P3: %.14s.", text);
 		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "Distance P3: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[2].v, &MainCharObj1[0]->Position));
-	
-	for (int i = 0; i < 3; i++) {
-
-		if (EmeraldManagerObj2->byte2C[i].byte1 > 0) {
-
-			DisplayDebugStringFormatted(NJM_LOCATION(3, 15 + texPosY), "Piece X: %.2f", EmeraldManagerObj2->byte2C[i].v.x);
-			DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "Piece Y: %.2f", EmeraldManagerObj2->byte2C[i].v.y);
-			DisplayDebugStringFormatted(NJM_LOCATION(3, 17 + texPosY), "Piece Z: %.2f", EmeraldManagerObj2->byte2C[i].v.z);
-			break;
-		}
 	}
 
 }
