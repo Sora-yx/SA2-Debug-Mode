@@ -144,7 +144,13 @@ char* getHintText_r(void* a1, char pieceID)
 	else
 	{
 		result = &copyHintFile->byte0 + *((DWORD*)&copyHintFile->byte0 + *(__int16*)&v2[2 * hintCount]);
-		result = result + 3;
+
+		result = result + 3; //remove the first characters (fix empty space, special etc.)
+
+		if (result[0] == '\a') //some hint start with "\a" we remove it to display the text properly.
+		{
+			result = result + 1;
+		}
 	}
 
 	return result;
