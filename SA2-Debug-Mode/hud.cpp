@@ -19,6 +19,8 @@ void DeleteDebugManager(ObjectMaster* obj) {
 	DeleteKartPointer();
 }
 
+DataPointer(float, HorizontalStretch, 0x1A559E4);
+DataPointer(float, VerticalStretch, 0x1733ABC);
 
 void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 
@@ -45,12 +47,17 @@ void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 		break;
 	}
 
-	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280)
-		SA2_HUD_SPRITE.p = { 1.75f * FontScale * 1.5f,  0.75f * FontScale * 85.0f, 0 };
-	else
-		SA2_HUD_SPRITE.p = { 1.75f * FontScale * 1.5f,  0.75f * FontScale * 55.0f, 0 };
+	SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 10.0;
 
-	SA2_HUD_SPRITE.sx = { x * FontScale * 1.80f };
+	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280) {
+		SA2_HUD_SPRITE.p.y = VerticalStretch + 120.0f;
+	}
+	else {
+		SA2_HUD_SPRITE.p.y = VerticalStretch + 100.0f;
+
+	}
+
+	SA2_HUD_SPRITE.sx = { x * FontScale * 1.70f };
 
 	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280)
 		SA2_HUD_SPRITE.sy = { y * FontScale * 8.5f };
@@ -77,8 +84,7 @@ void DrawDebugRectangle(ObjectMaster* obj)
 		FontScale = floor((float)HorizontalResolution / 640.0f);
 
 	if (FontScale <= 1.0)
-		FontScale += 0.5f;
-
+		FontScale *= 1.5;
 
 	CalcAndDrawRec(SA2_HUD_SPRITE, FontScale);
 	ResetMaterial();

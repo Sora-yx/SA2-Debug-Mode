@@ -1,6 +1,8 @@
 #include "stdafx.h"
 
 int currentPage = None;
+char texPosY = 4;
+char resPosY = 0;
 
 void ScaleDebugFont(int scale)
 {
@@ -12,6 +14,21 @@ void ScaleDebugFont(int scale)
 		FontScale = floor((float)HorizontalResolution / 640.0f);
 
 	HelperFunctionsGlobal.SetDebugFontSize(FontScale * scale);
+
+
+	if (HorizontalResolution <= 1280)
+		resPosY = 5;
+
+	return;
+}
+
+void setTexPosY() {
+
+	if (CurrentLevel == LevelIDs_Route101280 || CurrentLevel == LevelIDs_KartRace)
+		texPosY = 6.0f + resPosY;
+	else
+		texPosY = 4.0f + resPosY;
+
 	return;
 }
 
@@ -20,10 +37,6 @@ void DisplayPlayerInformation() {
 	if (currentPage != pPlayerInfo)
 		return;
 
-	char texPosY = 2.0f;
-
-	if (CurrentLevel == LevelIDs_Route101280 || CurrentLevel == LevelIDs_KartRace)
-		texPosY = 6.0f;
 
 	if (MainCharObj1[0] == nullptr || CurrentLevel == LevelIDs_KartRace)
 	{
@@ -75,11 +88,6 @@ void DisplayGameInfo()
 	if (currentPage != pGameInfo)
 		return;
 
-	char texPosY = 2.0f;
-
-	if (CurrentLevel == LevelIDs_Route101280 || CurrentLevel == LevelIDs_KartRace)
-		texPosY = 5.0f;
-
 	SetDebugFontColor(0xFF88FFAA);
 	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
 	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- GAME STATS -");
@@ -110,7 +118,6 @@ void GetNextEmeraldPosition() {
 	if (!EmeraldManagerObj2)
 		return;
 
-	char texPosY = 2.0f;
 
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "PIECE(S) LEFT: %d", EmeraldManagerObj2->byte5);
 
@@ -150,7 +157,6 @@ void GetNextEmeraldPosition() {
 void DisplayTreasureHuntingInfo()
 {
 
-	char texPosY = 2.0f;
 
 	if (GetCharacterLevel() != Characters_Knuckles && GetCharacterLevel() != Characters_Rouge || !EmeraldManagerObj2)
 	{
@@ -171,7 +177,6 @@ void DisplayTreasureHuntingInfo()
 
 void DisplaySpeedCharInfo() {
 
-	char texPosY = 2.0f;
 
 	SetDebugFontColor(0xFF88FFAA);
 	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
@@ -192,7 +197,6 @@ void DisplaySpeedCharInfo() {
 
 void DisplayMechCharInfo() {
 
-	char texPosY = 2.0f;
 
 	SetDebugFontColor(0xFF88FFAA);
 	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
@@ -214,12 +218,11 @@ void DisplayCharacterInfo() {
 	if (currentPage != pCharacterInfo)
 		return;
 
-	char texPosY = 2.0f;
-
 	if (!MainCharObj1[0] || getCartPointer() || CurrentLevel == LevelIDs_KartRace) {
 		currentPage++;
 		return;
 	}
+
 
 	if (MainCharObj2[0]->CharID <= Characters_Shadow && !EmeraldManagerObj2)
 	{
@@ -248,11 +251,6 @@ void DisplayCameraInfo()
 	if (currentPage != pCameraInfo)
 		return;
 
-
-	char texPosY = 2.0f;
-
-	if (CurrentLevel == LevelIDs_Route101280 || CurrentLevel == LevelIDs_KartRace)
-		texPosY = 5.0f;
 
 	if (!MainCharObj1[0])
 	{
@@ -296,6 +294,8 @@ void DebugTextUpdateCurrentPage() {
 
 void DisplayDebugTextInfo() {
 
+
+	setTexPosY();
 	DisplayPlayerInformation();
 	DisplayGameInfo();
 	DisplayCharacterInfo();
