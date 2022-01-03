@@ -176,7 +176,7 @@ void DisplaySpeedCharInfo() {
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "SOMERSAULT TIMER: %d", sonicCO2->SomersaultTime);
 
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "SPIN DASH COUNTER: %d", sonicCO2->SpindashCounter);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "HOVER FRAMES: %d", MainCharObj2[0]->field_12);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "HOVER FRAMES: %d", MainCharObj2[0]->field_12);	
 
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
