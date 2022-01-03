@@ -37,7 +37,6 @@ void DisplayPlayerInformation() {
 	if (currentPage != pPlayerInfo)
 		return;
 
-
 	if (MainCharObj1[0] == nullptr || CurrentLevel == LevelIDs_KartRace)
 	{
 		SetDebugFontColor(0xFFFF0000);
@@ -89,9 +88,9 @@ void DisplayGameInfo()
 		return;
 
 	SetDebugFontColor(0xFF88FFAA);
-	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
 	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- GAME STATS -");
 	SetDebugFontColor(0xFFBFBFBF);
+
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "FRAME: %08d", FrameCount);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "FRAME LVL: %08d", FrameCountIngame);
 
@@ -104,20 +103,10 @@ void DisplayGameInfo()
 	return;
 }
 
-DataArray(const char*, HintsArray, 0x1AEFF54, 3);
-
-ThiscallFunctionPointer(const char*, getHintText, (), 0x73B880);
-
-DataPointer(char*, somethingAboutHint, 0x1AF016C);
-DataPointer(int, curHintFileIdk, 0x01AF0170);
-
-
-
 void GetNextEmeraldPosition() {
 
 	if (!EmeraldManagerObj2)
 		return;
-
 
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "PIECE(S) LEFT: %d", EmeraldManagerObj2->byte5);
 
@@ -156,8 +145,6 @@ void GetNextEmeraldPosition() {
 
 void DisplayTreasureHuntingInfo()
 {
-
-
 	if (GetCharacterLevel() != Characters_Knuckles && GetCharacterLevel() != Characters_Rouge || !EmeraldManagerObj2)
 	{
 		SetDebugFontColor(0xFFFF0000);
@@ -166,20 +153,16 @@ void DisplayTreasureHuntingInfo()
 	}
 
 	SetDebugFontColor(0xFF88FFAA);
-	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
 	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- HUNTING -");
 	SetDebugFontColor(0xFFBFBFBF);
 
 	GetNextEmeraldPosition();
-
 	return;
 }
 
 void DisplaySpeedCharInfo() {
 
-
 	SetDebugFontColor(0xFF88FFAA);
-	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
 	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- SPEED CHAR INFO -");
 	SetDebugFontColor(0xFFBFBFBF);
 
@@ -197,16 +180,13 @@ void DisplaySpeedCharInfo() {
 
 void DisplayMechCharInfo() {
 
-
 	SetDebugFontColor(0xFF88FFAA);
-	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
 	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- MECH CHAR INFO -");
 	SetDebugFontColor(0xFFBFBFBF);
 
 	auto mechCO2 = (MechEggmanCharObj2*)MainCharacter[0]->Data2.Undefined;
 
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "MECH HP: %.2f", mechCO2->base.MechHP);	
-
 
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
@@ -222,7 +202,6 @@ void DisplayCharacterInfo() {
 		currentPage++;
 		return;
 	}
-
 
 	if (MainCharObj2[0]->CharID <= Characters_Shadow && !EmeraldManagerObj2)
 	{
@@ -251,15 +230,12 @@ void DisplayCameraInfo()
 	if (currentPage != pCameraInfo)
 		return;
 
-
 	if (!MainCharObj1[0])
 	{
 		SetDebugFontColor(0xFFFF0000);
 		DisplayDebugStringFormatted(NJM_LOCATION(2, 7 + texPosY), "- CAM UNAVAILABLE -");
 		return;
 	}
-
-	//DrawDebugRectangle(1.75f, 0.75f, 22, 21.5f);
 
 	SetDebugFontColor(0xFF88FFAA);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 7 + texPosY), "- CAMERA INFO -");
@@ -294,7 +270,6 @@ void DebugTextUpdateCurrentPage() {
 
 void DisplayDebugTextInfo() {
 
-
 	setTexPosY();
 	DisplayPlayerInformation();
 	DisplayGameInfo();
@@ -316,6 +291,5 @@ void initializeDebugText() {
 
 	SetDebugFontColor(0xFFBFBFBF);
 	ScaleDebugFont(14);
-
 	return;
 }

@@ -19,8 +19,6 @@ void DeleteDebugManager(ObjectMaster* obj) {
 	DeleteKartPointer();
 }
 
-DataPointer(float, HorizontalStretch, 0x1A559E4);
-DataPointer(float, VerticalStretch, 0x1733ABC);
 
 void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 

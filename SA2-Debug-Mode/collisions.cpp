@@ -10,7 +10,6 @@ Trampoline* addCol_t;
 
 bool isColDebug = false;
 
-
 //set color according to the type of col (blue = not solid/player detection, green = solid, red = hurt)
 void CheckAndSetColColor(CollisionData* Col) {
 
@@ -93,7 +92,6 @@ void AddCollision_ori(ObjectMaster* obj) {
 	AddToCollisionlist_original(obj);
 	CheckAndDisplayCol(obj);
 }
-
 
 static void __declspec(naked) AddCollisionDataASM()
 {

@@ -126,16 +126,17 @@ void SaveStates::restorePlayerInfo() {
 	if (!data)
 		return;
 
-	co2->Powerups &= ~Powerups_Dead;
-
 	memcpy(MainCharObj1[0], &this->slots[currentSaveState].charData.data, sizeof(EntityData1));
-	Gravity = this->slots[currentSaveState].grv;
 
 	if (getCartPointer())
 	{
 		isCartSaved = true;
 		return;
 	}
+
+
+	co2->Powerups &= ~Powerups_Dead;
+	Gravity = this->slots[currentSaveState].grv;
 
 	memcpy(MainCharData2[0], &this->slots[currentSaveState].charData.data2, sizeof(EntityData2));
 
@@ -179,7 +180,8 @@ void SaveStates::restoreCameraInfo() {
 	return;
 }
 
-int bannedLevel[9] = { LevelIDs_PyramidCave, LevelIDs_AquaticMine, LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall, LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush };
+int bannedLevel[9] = { LevelIDs_PyramidCave, LevelIDs_AquaticMine, LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall, 
+LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush };
 ObjectFuncPtr bannedObj[2] = { (ObjectFuncPtr)0x6A79E0,(ObjectFuncPtr)0x6F7AF0 };
 
 bool bannedLvlException() {
@@ -210,9 +212,8 @@ bool ObjException(ObjectMaster* obj) {
 
 void SaveStates::restoreObjectState() {
 
-	if (!objSave)
+	if (!objSave || CurrentLevel == LevelIDs_Route101280)
 		return;
-
 
 	ResetSetDataFlag();
 
