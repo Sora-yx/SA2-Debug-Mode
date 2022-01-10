@@ -13,11 +13,17 @@ void ScaleDebugFont(int scale)
 	else
 		FontScale = floor((float)HorizontalResolution / 640.0f);
 
+	if (HorizontalResolution < 800)
+		scale -= 1;
+
 	HelperFunctionsGlobal.SetDebugFontSize(FontScale * scale);
 
 
 	if (HorizontalResolution <= 1280)
 		resPosY = 5;
+
+	if (HorizontalResolution <= 800)
+		resPosY = 0;
 
 	return;
 }

@@ -61,7 +61,7 @@ void __cdecl DrawCollisionInfo(CollisionInfo* ColInfo)
 void __cdecl DrawDebugCollision(ObjectMaster* a1)
 {
 
-	if (a1->Data1.Entity->Collision == nullptr || !isColDebug || a1->MainSub == (ObjectFuncPtr)0x7bb01030)
+	if (a1->Data1.Entity->Collision == nullptr || !isColDebug || a1->MainSub == (ObjectFuncPtr)0x7af81030) //don't display the giant collision in Chao Garden
 		return;
 
 	DrawCollisionInfo(a1->Data1.Entity->Collision);

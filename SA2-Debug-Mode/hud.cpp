@@ -46,13 +46,27 @@ void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 	}
 
 	if (HorizontalResolution >= 1920)
-		SA2_HUD_SPRITE.p.x = HorizontalStretch;
-	else
-		SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 20.0;
+		SA2_HUD_SPRITE.p.x = HorizontalStretch - 10.0f;
 
+	if (HorizontalResolution == 1280)
+	{
+		SA2_HUD_SPRITE.p.x = HorizontalStretch - 30.0f;
+	}
+
+	if (HorizontalResolution < 1280 && HorizontalResolution > 800)
+	{
+		SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 20;
+	}
+
+
+	if (HorizontalResolution <= 800)
+		SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 50.0;
 
 
 	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280) {
+		if (HorizontalResolution >= 1920)
+			SA2_HUD_SPRITE.p.x = SA2_HUD_SPRITE.p.x + 40.0f;
+
 		SA2_HUD_SPRITE.p.y = VerticalStretch + 120.0f;
 	}
 	else {
@@ -60,12 +74,31 @@ void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 
 	}
 
-	SA2_HUD_SPRITE.sx = { x * FontScale * 1.70f };
 
-	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280)
+	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280) {
+
+		SA2_HUD_SPRITE.sx = { x * FontScale * 1.70f };
 		SA2_HUD_SPRITE.sy = { y * FontScale * 8.5f };
-	else
+	}
+	else {
+
+		SA2_HUD_SPRITE.sx = { x * FontScale * 1.70f };
 		SA2_HUD_SPRITE.sy = { y * FontScale * 10.0f };
+	}
+
+
+	if (HorizontalResolution <= 800)
+	{
+		SA2_HUD_SPRITE.sx = SA2_HUD_SPRITE.sx + 0.3f;
+	}
+
+	if (HorizontalResolution == 800)
+	{
+		SA2_HUD_SPRITE.p.y = SA2_HUD_SPRITE.p.y - 15.0;
+	}
+
+	if (HorizontalResolution < 800)
+		SA2_HUD_SPRITE.sy = SA2_HUD_SPRITE.sy + 0.8f;
 
 
 	njDrawSprite2D(&SA2_HUD_SPRITE, 1, 1, NJD_SPRITE_ALPHA | NJD_SPRITE_COLOR);
@@ -88,6 +121,9 @@ void DrawDebugRectangle(ObjectMaster* obj)
 
 	if (FontScale <= 1.0)
 		FontScale *= 1.5;
+
+	if (HorizontalResolution <= 800)
+		FontScale += 0.3;
 
 	CalcAndDrawRec(SA2_HUD_SPRITE, FontScale);
 	ResetMaterial();
