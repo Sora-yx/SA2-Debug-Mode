@@ -45,22 +45,34 @@ void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 		break;
 	}
 
-	if (HorizontalResolution >= 1920)
-		SA2_HUD_SPRITE.p.x = HorizontalStretch - 10.0f;
+	if (CurrentLevel == LevelIDs_ChaoWorld) {
+		if (HorizontalResolution >= 1920)
+			SA2_HUD_SPRITE.p.x = HorizontalStretch - 10.0f;
 
-	if (HorizontalResolution == 1280)
-	{
-		SA2_HUD_SPRITE.p.x = HorizontalStretch - 30.0f;
+		if (HorizontalResolution == 1280)
+		{
+			SA2_HUD_SPRITE.p.x = HorizontalStretch - 30.0f;
+		}
+
+		if (HorizontalResolution < 1280 && HorizontalResolution > 800)
+		{
+			SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 20;
+		}
+
+		if (HorizontalResolution <= 800)
+			SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 50.0;
 	}
+	else {
 
-	if (HorizontalResolution < 1280 && HorizontalResolution > 800)
-	{
-		SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 20;
+		if (HorizontalResolution >= 1280)
+		{
+			SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 20;
+		}
+
+		if (HorizontalResolution <= 800)
+			SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 50.0;
+
 	}
-
-
-	if (HorizontalResolution <= 800)
-		SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 50.0;
 
 
 	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280) {
