@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-
-
 float GetDistance(NJS_VECTOR* orig, NJS_VECTOR* dest)
 {
 	return sqrtf(powf(dest->x - orig->x, 2) + powf(dest->y - orig->y, 2) + powf(dest->z - orig->z, 2));
@@ -64,7 +62,6 @@ ModelInfo* LoadMDL(const char* name, ModelFormat format) {
 	return temp;
 }
 
-
 void FreeMDL(ModelInfo* pointer)
 {
 	if (pointer) delete(pointer);
@@ -75,51 +72,6 @@ void FreeAnim(AnimationFile* pointer)
 	if (pointer) delete pointer;
 }
 
-
-
-NJS_COLOR DebugFontColor = { 0xffffffff };
-char* DebugTextBuffer;
-DebugStringInfo* DebugMessages;
-
-Trampoline* deathzoneobj_t;
-
-
-struct RenderInfoThing
-{
-	char gap0[8];
-	int texparplus4;
-	int Thing;
-	int unknown2;
-	int texparbuf;
-	int unknown3;
-	int unknown4;
-	NJS_TEXLIST* CurrentTexlist;
-	int unknown;
-	int CurrentTexid;
-};
-
-DataPointer(RenderInfoThing*, RenderInfo, 0x2670544);
-
-PolygonPoint testSquare[4] = { 0 };
-
-static const void* const DrawGameText_ptr = (void*)0x667410;
-static inline void DrawGameTextASM(const char* str_in, const NJS_VECTOR* pos, float scale, const NJS_COLOR* color)
-{
-	__asm
-	{
-		push[color]
-		push[scale]
-		mov eax, [pos]
-		mov ecx, [str_in]
-		call DrawGameText_ptr
-		add esp, 0x8
-	}
-}
-
-
-void DrawGameText(const char* str_in, const NJS_VECTOR* pos, float scale, const NJS_COLOR* color) {
-	return DrawGameTextASM(str_in, pos, scale, color);
-}
 
 void SetMaterialColorOffset(float r, float g, float b, float a)
 {
@@ -156,4 +108,14 @@ signed char GetCharacterLevel() {
 	}
 
 	return -1;
+}
+
+
+//just so I don't have to type "HelperFunctions.X"
+void DisplayDebugStringFormatted(Int loc, const char* Format, ...) {
+	return HelperFunctionsGlobal.DisplayDebugStringFormatted(loc, Format);
+}
+
+void SetDebugFontColor(int color) {
+	return HelperFunctionsGlobal.SetDebugFontColor(color);
 }

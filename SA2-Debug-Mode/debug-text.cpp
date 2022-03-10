@@ -258,10 +258,10 @@ void DisplayCameraInfo()
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "POS Y: %.2f", CameraData.Position.y);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "POS Z: %.2f", CameraData.Position.z);	
 	
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "Ang X: %d", (Uint16)CameraData.Rotation.x, (360.0f / 65535.0f) * (Uint16)CameraData.Rotation.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "Ang Y: %d", (Uint16)CameraData.Rotation.y, (360.0f / 65535.0f) * (Uint16)CameraData.Rotation.y);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "ANG X: %d", (Uint16)CameraData.Rotation.x, (360.0f / 65535.0f) * (Uint16)CameraData.Rotation.x);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "ANG Y: %d", (Uint16)CameraData.Rotation.y, (360.0f / 65535.0f) * (Uint16)CameraData.Rotation.y);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "Free Cam Mode: %d", FreeCamMode);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "FREECAM MODE: %d", FreeCamMode);
 
 	return;
 }
@@ -295,15 +295,6 @@ void DisplayDebugTextInfo() {
 	DisplayCharacterInfo();
 	DisplayCameraInfo();
 	return;
-}
-
-//just so I don't have to type "HelperFunctions.X"
-void DisplayDebugStringFormatted(Int loc, const char* Format, ...) {
-	return HelperFunctionsGlobal.DisplayDebugStringFormatted(loc, Format);
-}
-
-void SetDebugFontColor(int color) {
-	return HelperFunctionsGlobal.SetDebugFontColor(color);
 }
 
 void initializeDebugText() {

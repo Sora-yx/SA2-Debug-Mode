@@ -19,7 +19,6 @@ void DeleteDebugManager(ObjectMaster* obj) {
 	DeleteKartPointer();
 }
 
-
 void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 
 	float x;
@@ -66,12 +65,11 @@ void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 
 		if (HorizontalResolution >= 1280)
 		{
-			SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 20;
+			SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 5;
 		}
 
 		if (HorizontalResolution <= 800)
 			SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 50.0;
-
 	}
 
 
@@ -82,7 +80,7 @@ void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 		SA2_HUD_SPRITE.p.y = VerticalStretch + 120.0f;
 	}
 	else {
-		SA2_HUD_SPRITE.p.y = VerticalStretch + 100.0f;
+		SA2_HUD_SPRITE.p.y = VerticalStretch + 90.0f;
 
 	}
 
