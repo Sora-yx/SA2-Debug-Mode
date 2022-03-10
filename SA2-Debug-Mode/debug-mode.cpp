@@ -2,18 +2,6 @@
 
 bool isFreeMov = false;
 
-int timerFree = 100;
-void DrawFreeMovementText() {
-
-	if (!isFreeMov)
-		return;
-
-	if (--timerFree > 0) {
-		DisplayDebugStringFormatted(NJM_LOCATION(22, 10), "FREE MOVEMENT ENABLED");
-	}
-	return;
-}
-
 //The hunters originally can't use free movements since their action is shared with something else, so we force a different action and manually call the function.
 void Hunters_FreeMovements() {
 
@@ -48,10 +36,11 @@ void SetFreeMovements() {
 
 		if ( (Controllers[i].on & Buttons_L && Controllers[i].on & Buttons_R && Controllers[i].on & Buttons_Y)) {
 
-			timerFree = 100;
+
 			isFreeMov = true;
 			DeathZoneDebug = 1; //death zone can no longer kill player
 			Life_Count[i] = 99;
+			SendTimedDebugMessage("FREE MOVEMENTS ENABLED", 60);
 
 			if (MainCharObj2[i]->CharID == Characters_Knuckles || MainCharObj2[i]->CharID == Characters_Rouge)
 				MainCharObj1[i]->Action = 120;
@@ -71,7 +60,7 @@ void UnsetFreeMovements() {
 	for (int i = 0; i < 2; i++) {
 
 		if (Controllers[i].press & Buttons_A) {
-			timerFree = 100;
+			SendTimedDebugMessage("FREE MOVEMENTS DISABLED", 60);
 			isFreeMov = false;
 			DeathZoneDebug = 0;
 			MainCharObj1[i]->Action = Action_Jump;
@@ -87,7 +76,6 @@ void CheckFreeMovements() {
 
 	SetFreeMovements();
 	UnsetFreeMovements();
-	DrawFreeMovementText();
 	Hunters_FreeMovements();
 	return;
 }

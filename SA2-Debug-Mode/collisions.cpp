@@ -676,6 +676,7 @@ void CheckController_ColDebug() {
 
 		if (Controllers[i].on & Buttons_Y && Controllers[i].on & Buttons_Up) {
 			isColDebug = !isColDebug;
+			SendTimedDebugMessage(isColDebug ? "COLLI DRAW: ON " : "COLLI DRAW: OFF", 60);
 			inputDelay = 20;
 			return;
 		}

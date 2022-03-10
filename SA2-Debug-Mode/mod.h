@@ -19,8 +19,7 @@ void init_SaveState();
 
 void FreeCam_CheckInput();
 void FreeCam_OnInput();
-
 void Save_Pause();
-
+void SendTimedDebugMessage(std::string msg, int timer);
 
 #define TARGET_DYNAMIC(name) ((decltype(name##_r)*)name##_t->Target()) //sf94

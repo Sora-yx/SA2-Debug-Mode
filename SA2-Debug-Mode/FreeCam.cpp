@@ -3,7 +3,6 @@
 
 //Free Cam: Credit PKR and Speeps (SADX Debug Mode)
 
-bool FreeCamPause = false;
 int FreeCamMode = 0;
 float FreeCamSpeed = 2.0f;
 long double FreeCamMoveX;
@@ -11,6 +10,7 @@ long double FreeCamMoveY;
 POINT MouseCursorPosition;
 bool FreeCamLockCheck = false;
 bool FreeCamEnabled = false;
+int delayCam = 0;
 
 enum FreeCamModes
 {
@@ -23,15 +23,15 @@ enum FreeCamModes
 
 auto DoSomethingWithCam = GenerateUsercallWrapper<void (*)(int a1, int a2, int a3)>(noret, 0x4EBCD0, rEAX, rECX, rEDI);
 
+
 void FreeCam_OnInput()
 {
-	// Stop if free camera mode is disabled, the game is paused/inactive or camera data is unavailable
-	if (FreeCamPause || !FreeCamEnabled)
+	// Stop if free camera mode is disabled
+	if (!FreeCamEnabled)
 		return;
 
-	DisplayDebugStringFormatted(NJM_LOCATION(22, 10), "FREE CAM ENABLED");
-
 	while (ShowCursor(false) >= 0); // Decrease cursor view value until it disappears
+
 
 	// Toggle camera lock
 	if (GetKeyState(VK_CONTROL) & 0x8000 && GetKeyState(VK_LSHIFT) & 0x8000)
@@ -140,17 +140,21 @@ void FreeCam_OnInput()
 	}
 }
 
-int delayCam = 0;
+
 void FreeCam_CheckInput()
 {
-	if (GetKeyState('Y') & 0x8000)
-	{
-		if (delayCam > 0) {
-			delayCam--;		
-			return;
-		}
+	FreeCam_OnInput();
 
+	if (delayCam > 0) {
+		delayCam--;
+		return;
+	}
+
+	if (GetKeyState('Y') & 0x8000 && ControllerEnabled[0])
+	{
 		FreeCamEnabled = !FreeCamEnabled;
+
+		SendTimedDebugMessage(FreeCamEnabled ? "FREE CAM ENABLED" : "FREE CAM DISABLED", 60);
 
 		while (ShowCursor(true) < 0); // Increase cursor visibility until it shows
 
@@ -171,14 +175,25 @@ void FreeCam_CheckInput()
 			CamEventPos = CameraData.Position;
 			CamEventAngleY = CameraData.Rotation.y;
 			CamEventAngleZ = CameraData.Rotation.z;
+
 		}
 		else {
+			TimeStopped = 0;
+			ShowHud = 1;
 			ResetCam(CameraData.gap1AC[168], 0);
+			Controllers[0].press |= Buttons_L;
 		}
 
-		delayCam = 10;
+		delayCam = 35;
 		return;
 	}
 
-	FreeCam_OnInput();
+	//hide UI and stop time
+	if (GetKeyState('P') & 0x8000 && !delayCam)
+	{
+		TimeStopped = !TimeStopped;
+		ShowHud = !ShowHud;
+		SendTimedDebugMessage(ShowHud ? "HUD ENABLED" : "HUD DISABLED", 40);
+		delayCam = 60;
+	}
 }

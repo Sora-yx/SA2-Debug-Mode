@@ -82,3 +82,4 @@ DataPointer(char, cam_handle, 0x01DCFF00);
 DataPointer(NJS_VECTOR, CamEventPos, 0x1DCFE10);
 DataPointer(int, CamEventAngleZ, 0x1DCFDF8);
 DataPointer(int, CamEventAngleY, 0x1DCFDFC);
+DataPointer(char, ShowHud, 0x0174AFCC);

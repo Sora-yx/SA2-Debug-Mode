@@ -4,6 +4,8 @@ int currentPage = None;
 char texPosY = 4;
 char resPosY = 0;
 const char scaleText = 14;
+std::string debugText = "";
+int DebugMessageTimer = 0;
 
 void ScaleDebugFont(int scale)
 {
@@ -286,6 +288,24 @@ void DebugTextUpdateCurrentPage() {
 	}
 }
 
+void DisplayTimed_DebugMessage_OnFrames()
+{
+	if (DebugMessageTimer && debugText != "")
+	{
+		SetDebugFontColor(0xFFBFBFBF);
+
+		DisplayDebugStringFormatted(NJM_LOCATION(25, 10), debugText.c_str());
+		SetDebugFontColor(0xFFBFBFBF);
+		DebugMessageTimer--;
+	}
+}
+
+void SendTimedDebugMessage(std::string msg, int timer)
+{
+	DebugMessageTimer = timer;
+	debugText = msg;
+}
+
 void DisplayDebugTextInfo() {
 
 	ScaleDebugFont(scaleText);
@@ -294,6 +314,7 @@ void DisplayDebugTextInfo() {
 	DisplayGameInfo();
 	DisplayCharacterInfo();
 	DisplayCameraInfo();
+	DisplayTimed_DebugMessage_OnFrames();
 	return;
 }
 
