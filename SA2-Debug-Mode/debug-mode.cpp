@@ -101,6 +101,8 @@ void Debugging_InputCheck() {
 
 	CheckFreeMovements();
 	CheckController_ColDebug();
+	FreeCam_CheckInput();
+
 }
 
 void LoadDebuggingObjects() {

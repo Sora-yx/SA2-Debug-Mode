@@ -98,7 +98,6 @@ void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
 		SA2_HUD_SPRITE.sy = { y * FontScale * 10.0f };
 	}
 
-
 	if (HorizontalResolution <= 800)
 	{
 		SA2_HUD_SPRITE.sx = SA2_HUD_SPRITE.sx + 0.3f;

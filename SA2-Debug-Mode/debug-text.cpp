@@ -3,6 +3,7 @@
 int currentPage = None;
 char texPosY = 4;
 char resPosY = 0;
+const char scaleText = 14;
 
 void ScaleDebugFont(int scale)
 {
@@ -236,6 +237,7 @@ void DisplayCharacterInfo() {
 	return;
 }
 
+extern int FreeCamMode;
 void DisplayCameraInfo()
 {
 	if (currentPage != pCameraInfo)
@@ -254,7 +256,12 @@ void DisplayCameraInfo()
 
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "POS X: %.2f", CameraData.Position.x);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "POS Y: %.2f", CameraData.Position.y);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "POS Z: %.2f", CameraData.Position.z);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "POS Z: %.2f", CameraData.Position.z);	
+	
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "Ang X: %d", (Uint16)CameraData.Rotation.x, (360.0f / 65535.0f) * (Uint16)CameraData.Rotation.x);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "Ang Y: %d", (Uint16)CameraData.Rotation.y, (360.0f / 65535.0f) * (Uint16)CameraData.Rotation.y);
+
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "Free Cam Mode: %d", FreeCamMode);
 
 	return;
 }
@@ -281,6 +288,7 @@ void DebugTextUpdateCurrentPage() {
 
 void DisplayDebugTextInfo() {
 
+	ScaleDebugFont(scaleText);
 	setTexPosY();
 	DisplayPlayerInformation();
 	DisplayGameInfo();
@@ -301,6 +309,6 @@ void SetDebugFontColor(int color) {
 void initializeDebugText() {
 
 	SetDebugFontColor(0xFFBFBFBF);
-	ScaleDebugFont(14);
+	ScaleDebugFont(scaleText);
 	return;
 }
