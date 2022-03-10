@@ -150,7 +150,7 @@ void FreeCam_CheckInput()
 		return;
 	}
 
-	if (GetKeyState('Y') & 0x8000 && ControllerEnabled[0])
+	if (GetKeyState('Y') & 0x8000)
 	{
 		FreeCamEnabled = !FreeCamEnabled;
 
@@ -181,7 +181,6 @@ void FreeCam_CheckInput()
 			TimeStopped = 0;
 			ShowHud = 1;
 			ResetCam(CameraData.gap1AC[168], 0);
-			Controllers[0].press |= Buttons_L;
 		}
 
 		delayCam = 35;
@@ -189,7 +188,7 @@ void FreeCam_CheckInput()
 	}
 
 	//hide UI and stop time
-	if (GetKeyState('P') & 0x8000 && !delayCam)
+	if (GetKeyState('P') & 0x8000 && !delayCam && FreeCamEnabled)
 	{
 		TimeStopped = !TimeStopped;
 		ShowHud = !ShowHud;
