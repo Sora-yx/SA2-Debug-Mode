@@ -139,9 +139,13 @@ void FreeCam_OnInput()
 	}
 }
 
+bool isGamePaused = false;
 
 void FreeCam_CheckInput()
 {
+	if (GameState < GameStates_Ingame || GameState > GameStates_Pause)
+		return;
+
 	FreeCam_OnInput();
 
 	if (delayCam > 0) {
@@ -173,14 +177,18 @@ void FreeCam_CheckInput()
 			*(int*)0x1DCFDE8 = 0;
 			CamEventPos = CameraData.Position;
 			CamEventAngleY = CameraData.Rotation.y;
-			CamEventAngleZ = CameraData.Rotation.z;
-			TimeStopped = 1;
+			CamEventAngleZ = CameraData.Rotation.z;	
 			ShowHud = 0;
+			HudSpecialEnabled = 0;
+			isGamePaused = true;
 
 		}
 		else {
-			TimeStopped = 0;
 			ShowHud = 1;
+			HudSpecialEnabled = 1;
+			IsNotPauseHide = 1;
+			isGamePaused = false;
+			PauseEnabled = 0;
 			ResetCam(CameraData.gap1AC[168], 0);
 		}
 
@@ -191,9 +199,22 @@ void FreeCam_CheckInput()
 	//hide UI and stop time
 	if (GetKeyState('P') & 0x8000 && !delayCam && FreeCamEnabled)
 	{
-		TimeStopped = !TimeStopped;
 		ShowHud = !ShowHud;
+		isGamePaused = !isGamePaused;
 		SendTimedDebugMessage(ShowHud ? "HUD ENABLED" : "HUD DISABLED", 40);
 		delayCam = 60;
 	}
+}
+
+void RunObjectIndex_r(int index)
+{
+	if (isGamePaused && FreeCamEnabled && index > 0)
+		return;
+
+	RunObjectIndex(index);
+}
+
+void init_FreeCamHack()
+{
+	WriteCall((void*)0x43CF77, RunObjectIndex_r);
 }

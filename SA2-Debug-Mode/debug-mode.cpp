@@ -83,13 +83,14 @@ void CheckFreeMovements() {
 void Debugging_InputCheck() {
 
 	DebugTextUpdateCurrentPage();
+	FreeCam_CheckInput();
 
 	if (GameState != GameStates_Ingame)
 		return;
 
 	CheckFreeMovements();
 	CheckController_ColDebug();
-	FreeCam_CheckInput();
+
 }
 
 void LoadDebuggingObjects() {

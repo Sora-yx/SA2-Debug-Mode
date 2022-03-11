@@ -20,6 +20,7 @@ extern "C" {
 
 		Collisions_Init();
 		initializeDebugText();
+		init_FreeCamHack();
 
 		if (isDebugTxt) {
 			init_treasureHuntingDebug();

@@ -3,6 +3,7 @@
 
 DataPointer(int, CartTimer, 0x1D94428);
 DataPointer(char, PauseEnabled, 0x174AFD6);
+DataPointer(char, HudSpecialEnabled, 0x0174AFCB);
 DataPointer(float, HorizontalStretch, 0x1A559E4);
 DataPointer(float, VerticalStretch, 0x1733ABC);
 
