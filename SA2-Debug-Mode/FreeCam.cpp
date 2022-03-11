@@ -211,9 +211,17 @@ void FreeCam_CheckInput()
 	//hide UI and stop time
 	if (GetKeyState('P') & 0x8000 && !delayCam && FreeCamEnabled)
 	{
-		ShowHud = !ShowHud;
+		if (!isCheatDisableHud) 
+			ShowHud = !ShowHud;
+
+		if (!isCheatDisableExtraHud)
+			HudSpecialEnabled = !HudSpecialEnabled;
+
 		isGamePaused = !isGamePaused;
-		SendTimedDebugMessage(ShowHud ? "HUD ENABLED" : "HUD DISABLED", 40);
+
+		if (!isCheatDisableHud && !isCheatDisableExtraHud)
+			SendTimedDebugMessage(ShowHud ? "HUD ENABLED" : "HUD DISABLED", 40);
+
 		delayCam = 60;
 	}
 }
