@@ -174,6 +174,8 @@ void FreeCam_CheckInput()
 			CamEventPos = CameraData.Position;
 			CamEventAngleY = CameraData.Rotation.y;
 			CamEventAngleZ = CameraData.Rotation.z;
+			TimeStopped = 1;
+			ShowHud = 0;
 
 		}
 		else {
