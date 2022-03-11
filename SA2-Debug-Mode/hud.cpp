@@ -155,4 +155,10 @@ void LoadObjDrawBG() {
 		LoadTextureList("BlueRec", &RecBG_TEXLIST);
 		DrawBGObj = LoadObject(0, "DrawBG", DrawDebugObjMain, LoadObj_Data1 | LoadObj_Data2);
 	}
+
+	if (!ShowHud && !isCheatDisableHud)
+		isCheatDisableHud = true;
+
+	if (!HudSpecialEnabled && !isCheatDisableExtraHud)
+		isCheatDisableExtraHud = true;
 }

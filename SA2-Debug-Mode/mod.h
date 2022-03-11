@@ -24,3 +24,6 @@ void SendTimedDebugMessage(std::string msg, int timer);
 void init_FreeCamHack();
 
 #define TARGET_DYNAMIC(name) ((decltype(name##_r)*)name##_t->Target()) //sf94
+
+extern bool isCheatDisableHud;
+extern bool isCheatDisableExtraHud;

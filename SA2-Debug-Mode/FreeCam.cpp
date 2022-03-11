@@ -12,6 +12,11 @@ bool FreeCamLockCheck = false;
 bool FreeCamEnabled = false;
 int delayCam = 0;
 
+//hud stuff
+bool isGamePaused = false;
+bool isCheatDisableHud = false;
+bool isCheatDisableExtraHud = false;
+
 enum FreeCamModes
 {
 	Camera_None = 0,
@@ -139,7 +144,7 @@ void FreeCam_OnInput()
 	}
 }
 
-bool isGamePaused = false;
+
 
 void FreeCam_CheckInput()
 {
@@ -178,14 +183,21 @@ void FreeCam_CheckInput()
 			CamEventPos = CameraData.Position;
 			CamEventAngleY = CameraData.Rotation.y;
 			CamEventAngleZ = CameraData.Rotation.z;	
+
 			ShowHud = 0;
 			HudSpecialEnabled = 0;
 			isGamePaused = true;
 
 		}
 		else {
-			ShowHud = 1;
-			HudSpecialEnabled = 1;
+			if (CurrentLevel != LevelIDs_ChaoWorld) {
+
+				if (!isCheatDisableHud)
+					ShowHud = 1;
+			}
+			if (!isCheatDisableExtraHud)
+				HudSpecialEnabled = 1;
+
 			IsNotPauseHide = 1;
 			isGamePaused = false;
 			PauseEnabled = 0;
