@@ -1,14 +1,5 @@
 #pragma once
 
-static const void* const DrawSpritePtr = (void*)0x44EB00;
-static inline void Draw2DSprite(NJS_SPRITE* a1)
-{
-	__asm
-	{
-		mov eax, [a1]
-		call DrawChunkModelPtr
-	}
-}
 
 DataPointer(int, CartTimer, 0x1D94428);
 DataPointer(char, PauseEnabled, 0x174AFD6);
@@ -49,27 +40,6 @@ struct cartStruct
 };
 #pragma pack(pop)
 
-
-
-struct CameraInfo_
-{
-	int field_0;
-	int field_4;
-	int field_8;
-	char gapC[328];
-	float field_154;
-	float field_158;
-	float field_15C;
-	int field_160;
-	char gap164[48];
-	NJS_VECTOR Position;
-	Rotation Rotation;
-	NJS_VECTOR idk;
-	NJS_VECTOR idk2;
-	NJS_VECTOR PosAgain;
-	char gap1AC[8964];
-	int field_24D4;
-};
 
 DataPointer(float, flt_1DCFF3C, 0x1DCFF3C);
 DataPointer(NJS_VECTOR, camPosR, 0x1DCFF0C);

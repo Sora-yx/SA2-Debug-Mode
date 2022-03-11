@@ -23,7 +23,6 @@ enum FreeCamModes
 
 auto DoSomethingWithCam = GenerateUsercallWrapper<void (*)(int a1, int a2, int a3)>(noret, 0x4EBCD0, rEAX, rECX, rEDI);
 
-
 void FreeCam_OnInput()
 {
 	// Stop if free camera mode is disabled
