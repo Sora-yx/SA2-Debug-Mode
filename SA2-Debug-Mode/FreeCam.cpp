@@ -109,6 +109,34 @@ void FreeCam_OnInput()
 		if (FreeCamMoveX < 0) {
 			CamEventAngleY = (int)(CamEventAngleY + (movementSpeed_CurX * number));
 		}
+		
+		if (isGamePaused) {
+			if (MenuButtons_Held[0] & Buttons_Up)
+			{
+				CamEventPos.x -= njSin(CamEventAngleY) * 2;
+				CamEventPos.z -= njCos(CamEventAngleY) * 2;
+
+				CamEventPos.y += njSin(CamEventAngleZ) * 2;
+			}
+			if (MenuButtons_Held[0] & Buttons_Down)
+			{
+				CamEventPos.x += njSin(CamEventAngleY) * 2;
+				CamEventPos.z += njCos(CamEventAngleY) * 2;
+
+				CamEventPos.y += njSin(-CamEventAngleZ) * 2;
+			}
+			if (MenuButtons_Held[0] & Buttons_Left)
+			{
+				CamEventPos.x -= njCos(-CamEventAngleY) * 2;
+				CamEventPos.z -= njSin(-CamEventAngleY) * 2;
+			}
+			if (MenuButtons_Held[0] & Buttons_Right)
+			{
+				CamEventPos.x += njCos(-CamEventAngleY) * 2;
+				CamEventPos.z += njSin(-CamEventAngleY) * 2;
+			}
+		}
+
 		break;
 	case Camera_Move:
 		if (FreeCamMoveX < 0)
