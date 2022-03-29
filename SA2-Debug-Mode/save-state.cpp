@@ -10,7 +10,6 @@ Trampoline* sub_461F10_t;
 const char slot_count = 7;
 
 
-
 void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].level = CurrentLevel;
 	this->slots[currentSaveState].character = CurrentCharacter;
@@ -112,19 +111,22 @@ void SaveStates::restoreGameInfo() {
 
 	DeathZoneDebug = 1;
 
-	if (GameState == GameStates_Ingame || GameState == GameStates_Pause)
-		GameState = this->slots[currentSaveState].gameState;
+	if (GameState == GameStates_Pause && this->slots[currentSaveState].gameState == GameStates_Ingame)
+	{
+		Menu_Unknown_13(); //restore music and sound effect
+		dword_17472BC = 1;
+		dword_17483FC = 1;
+	}
+	else if (GameState == GameStates_Ingame && this->slots[currentSaveState].gameState == GameStates_Pause)
+	{
+		PauseSound(1);
+	}	
 
 	dword_1A558BC = this->slots[currentSaveState].pauseValue[0];
 	dword_1A558B8 = this->slots[currentSaveState].pauseValue[1];
 	dword_1AEE5AC = this->slots[currentSaveState].pauseValue[2];
 	PlayerPaused = this->slots[currentSaveState].playerPaused;
-
-	if (GameState == GameStates_Ingame)
-	{
-		dword_17472BC = 1;
-		dword_17483FC = 1;
-	}
+	GameState = this->slots[currentSaveState].gameState;
 
 	Life_Count[0] = this->slots[currentSaveState].lives;
 	RingCount[0] = this->slots[currentSaveState].rings;
@@ -154,7 +156,6 @@ void SaveStates::restorePlayerInfo() {
 		isCartSaved = true;
 		return;
 	}
-
 
 	co2->Powerups &= ~Powerups_Dead;
 	Gravity = this->slots[currentSaveState].grv;

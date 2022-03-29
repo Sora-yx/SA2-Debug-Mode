@@ -56,7 +56,7 @@ DataPointer(int, dword_17472BC, 0x17472BC);
 DataPointer(int, dword_1A558B8, 0x1A558B8);
 DataPointer(int, dword_1AEE5AC, 0x1AEE5AC);
 DataPointer(int, dword_17483FC, 0x17483FC);
-
+ThiscallFunctionPointer(int, PauseSound, (UINT this_), 0x436020);
 
 static const void* const sub_426620Ptr = (void*)0x426620;
 static inline void sub_426620(int result, unsigned __int8 a2, unsigned __int8 a3)
