@@ -30,6 +30,7 @@ struct save_struct {
     char timeM;
     int timerCart;
     char timerStopped;
+    short gameState;
     NJS_VECTOR grv;
     CharaStruct charData;
     DynColInfo* dyncol;

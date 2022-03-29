@@ -110,6 +110,7 @@ void FreeCam_OnInput()
 			CamEventAngleY = (int)(CamEventAngleY + (movementSpeed_CurX * number));
 		}
 		
+		//move cam with the stick (by Exant)
 		if (isGamePaused) {
 			if (MenuButtons_Held[0] & Buttons_Up)
 			{
@@ -171,7 +172,6 @@ void FreeCam_OnInput()
 		break;
 	}
 }
-
 
 
 void FreeCam_CheckInput()

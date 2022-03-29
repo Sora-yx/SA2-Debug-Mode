@@ -22,9 +22,9 @@ void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].timeS = TimerSeconds;
 	this->slots[currentSaveState].timeM = TimerMinutes;
 	this->slots[currentSaveState].timerStopped = TimerStopped;
+	this->slots[currentSaveState].gameState = GameState;
 	return;
 }
-
 
 bool isCartSaved = false;
 bool isEmePtrSaved = false;
@@ -115,6 +115,7 @@ void SaveStates::restoreGameInfo() {
 	CartTimer = this->slots[currentSaveState].timerCart;
 
 	TimerStopped = this->slots[currentSaveState].timerStopped;
+	GameState = this->slots[currentSaveState].gameState;
 	return;
 }
 
@@ -277,7 +278,12 @@ void SaveStates::displaySaveText() {
 
 void SaveStates::saveOnSlot() {
 
-	if (!MainCharObj1[0] || CurrentLevel >= LevelIDs_BigFoot && !getCartPointer()) {
+	if (CurrentLevel >= LevelIDs_BigFoot && !getCartPointer())
+	{
+		return;
+	}
+
+	if (!MainCharObj1[0]) {
 
 		this->timerMessage = 60;
 		SetDebugFontColor(0xFFFF0000);
@@ -297,7 +303,13 @@ void SaveStates::saveOnSlot() {
 
 void SaveStates::loadSlot(ObjectMaster* obj) {
 
-	if (!MainCharObj1[0] || CurrentLevel != this->slots[currentSaveState].level || CurrentLevel >= LevelIDs_BigFoot && !getCartPointer()) {
+
+	if (CurrentLevel >= LevelIDs_BigFoot && !getCartPointer())
+	{
+		return;
+	}
+
+	if (!MainCharObj1[0] || CurrentLevel != this->slots[currentSaveState].level) {
 		timerMessage = 60;
 		SetDebugFontColor(0xFFFF0000);
 		this->message = "ERROR, FAILED TO LOAD SAVE ON SLOT: %d";
@@ -322,6 +334,11 @@ void SaveStates::loadSlot(ObjectMaster* obj) {
 }
 
 void SaveStates::changeSlot(Buttons input) {
+
+	if (CurrentLevel >= LevelIDs_BigFoot && !getCartPointer())
+	{
+		return;
+	}
 
 	SetDebugFontColor(0xFFBFBFBF);
 
@@ -447,14 +464,12 @@ void __cdecl MechEggman_ChecksDamage_r(EntityData1* a1, EntityData2* a3, CharObj
 	original(a1, a3, a4, a2);
 }
 
-DataPointer(int, PauseCheck, 0x1A558BC);
-
 //since object doesn't run when the pause menu is active, we manually allow the player to save when the game is paused.
 void Save_Pause() {
 	if (GameState != GameStates_Pause)
 		return;
 
-	if (Controllers[0].press & Buttons_Left && PauseCheck != 1) {
+	if (Controllers[0].press & Buttons_Left && PauseSelection != 1 && PauseSelection != 5) { //don't save if the player is restarting / quiting
 		obj1->saveOnSlot();
 	}
 }
