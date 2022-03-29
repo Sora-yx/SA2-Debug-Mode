@@ -17,6 +17,8 @@ bool isGamePaused = false;
 bool isCheatDisableHud = false;
 bool isCheatDisableExtraHud = false;
 
+auto DoSomethingWithCam = GenerateUsercallWrapper<void (*)(int a1, int a2, int a3)>(noret, 0x4EBCD0, rEAX, rECX, rEDI);
+
 enum FreeCamModes
 {
 	Camera_None = 0,
@@ -25,8 +27,6 @@ enum FreeCamModes
 	Camera_Zoom = 3,
 	Camera_Lock = 4
 };
-
-auto DoSomethingWithCam = GenerateUsercallWrapper<void (*)(int a1, int a2, int a3)>(noret, 0x4EBCD0, rEAX, rECX, rEDI);
 
 void FreeCam_OnInput()
 {
@@ -228,7 +228,6 @@ void FreeCam_CheckInput()
 
 			IsNotPauseHide = 1;
 			isGamePaused = false;
-			PauseEnabled = 0;
 			ResetCam(CameraData.gap1AC[168], 0);
 		}
 

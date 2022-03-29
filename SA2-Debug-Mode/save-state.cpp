@@ -10,6 +10,7 @@ Trampoline* sub_461F10_t;
 const char slot_count = 7;
 
 
+
 void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].level = CurrentLevel;
 	this->slots[currentSaveState].character = CurrentCharacter;
@@ -23,12 +24,16 @@ void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].timeM = TimerMinutes;
 	this->slots[currentSaveState].timerStopped = TimerStopped;
 	this->slots[currentSaveState].gameState = GameState;
+	this->slots[currentSaveState].pauseValue[0] = dword_1A558BC;
+	this->slots[currentSaveState].pauseValue[1] = dword_1A558B8;
+	this->slots[currentSaveState].pauseValue[2] = dword_1AEE5AC;
+	this->slots[currentSaveState].playerPaused = PlayerPaused;
+
 	return;
 }
 
 bool isCartSaved = false;
 bool isEmePtrSaved = false;
-
 
 void SaveStates::getPlayerInfo() {
 
@@ -102,9 +107,25 @@ void SaveStates::getObjectsState() {
 
 }
 
+static const void* const loc_43ADA9 = (void*)0x43ADA9;
 void SaveStates::restoreGameInfo() {
 
 	DeathZoneDebug = 1;
+
+	if (GameState == GameStates_Ingame || GameState == GameStates_Pause)
+		GameState = this->slots[currentSaveState].gameState;
+
+	dword_1A558BC = this->slots[currentSaveState].pauseValue[0];
+	dword_1A558B8 = this->slots[currentSaveState].pauseValue[1];
+	dword_1AEE5AC = this->slots[currentSaveState].pauseValue[2];
+	PlayerPaused = this->slots[currentSaveState].playerPaused;
+
+	if (GameState == GameStates_Ingame)
+	{
+		dword_17472BC = 1;
+		dword_17483FC = 1;
+	}
+
 	Life_Count[0] = this->slots[currentSaveState].lives;
 	RingCount[0] = this->slots[currentSaveState].rings;
 	ScoreP1 = this->slots[currentSaveState].score;
@@ -115,7 +136,6 @@ void SaveStates::restoreGameInfo() {
 	CartTimer = this->slots[currentSaveState].timerCart;
 
 	TimerStopped = this->slots[currentSaveState].timerStopped;
-	GameState = this->slots[currentSaveState].gameState;
 	return;
 }
 
@@ -181,7 +201,7 @@ void SaveStates::restoreCameraInfo() {
 	return;
 }
 
-int bannedLevel[9] = { LevelIDs_PyramidCave, LevelIDs_AquaticMine, LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall, 
+int bannedLevel[9] = { LevelIDs_PyramidCave, LevelIDs_AquaticMine, LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall,
 LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush };
 ObjectFuncPtr bannedObj[2] = { (ObjectFuncPtr)0x6A79E0,(ObjectFuncPtr)0x6F7AF0 };
 
@@ -438,7 +458,6 @@ void SaveStateManager(ObjectMaster* obj) {
 
 			if (!isFreeMov) {
 				DeathZoneDebug = 0;
-				PauseEnabled = 0;
 			}
 		}
 		break;
@@ -466,12 +485,11 @@ void __cdecl MechEggman_ChecksDamage_r(EntityData1* a1, EntityData2* a3, CharObj
 
 //since object doesn't run when the pause menu is active, we manually allow the player to save when the game is paused.
 void Save_Pause() {
-	if (GameState != GameStates_Pause)
+	//don't save if the player is restarting / quiting
+	if (GameState != GameStates_Pause || PauseSelection == 1 || PauseSelection == 5 || !savestateObj)
 		return;
 
-	if (Controllers[0].press & Buttons_Left && PauseSelection != 1 && PauseSelection != 5) { //don't save if the player is restarting / quiting
-		obj1->saveOnSlot();
-	}
+	savestateObj->MainSub(savestateObj);
 }
 
 

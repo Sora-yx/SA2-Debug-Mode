@@ -31,6 +31,9 @@ struct save_struct {
     int timerCart;
     char timerStopped;
     short gameState;
+    char pauseEnabled;
+    int pauseValue[3];
+    char playerPaused;
     NJS_VECTOR grv;
     CharaStruct charData;
     DynColInfo* dyncol;
