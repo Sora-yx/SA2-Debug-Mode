@@ -62,6 +62,30 @@ ModelInfo* LoadMDL(const char* name, ModelFormat format) {
 	return temp;
 }
 
+//Load DZ File
+ModelInfo* LoadDZMDL(const char* name, std::string level) {
+
+	std::string fullPath;
+
+	fullPath = "resource\\gd_PC\\deathzones\\" + level + "\\";
+	fullPath += name;
+	fullPath += ".sa2mdl";
+
+	const char* foo = fullPath.c_str();
+
+	ModelInfo* temp = new ModelInfo(HelperFunctionsGlobal.GetReplaceablePath(foo));
+
+	if (temp->getformat() == ModelFormat_Chunk)
+	{
+		PrintDebug("[SA2 Debug Mode] Loaded %s model: %s.", ModelFormatStrings[(int)ModelFormat_Chunk - 1], name);
+	}
+	else {
+		PrintDebug("[SA2 Debug Mode] Failed loading %s model: %s.", ModelFormatStrings[(int)ModelFormat_Chunk - 1], name);
+	}
+
+	return temp;
+}
+
 void FreeMDL(ModelInfo* pointer)
 {
 	if (pointer) delete(pointer);

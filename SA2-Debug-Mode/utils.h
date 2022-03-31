@@ -18,3 +18,4 @@ void njRotateZXY(Rotation* rot);
 
 signed char GetCharacterLevel();
 bool isBossLevel();
+ModelInfo* LoadDZMDL(const char* name, std::string level);

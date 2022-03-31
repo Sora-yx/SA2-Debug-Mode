@@ -51,6 +51,9 @@
     <ClCompile Include="goalring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="death-zones.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClCompile Include="cart.cpp" />
     <ClCompile Include="collisions.cpp" />
+    <ClCompile Include="death-zones.cpp" />
     <ClCompile Include="debug-mode.cpp" />
     <ClCompile Include="debug-text.cpp" />
     <ClCompile Include="FreeCam.cpp" />

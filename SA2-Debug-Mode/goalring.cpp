@@ -58,14 +58,3 @@ void GetGoalRing()
 
 	GoalRingPosition = { -1, -1, -1 };
 }
-
-void MissionStartVariableSetup_r()
-{
-	GetGoalRing();
-	return MissionStartVariableSetup();
-}
-
-void init_GoalRingHack()
-{
-	WriteCall((void*)0x43CB80, MissionStartVariableSetup_r);
-}

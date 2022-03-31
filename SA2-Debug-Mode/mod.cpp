@@ -6,6 +6,7 @@ bool objSave;
 
 HelperFunctions HelperFunctionsGlobal;
 void GetGoalRing();
+void __cdecl DeathZoneObject_r(ObjectMaster* obj);
 
 extern "C" {
 
@@ -32,19 +33,13 @@ extern "C" {
 			init_CartHack();
 		}
 
-		init_GoalRingHack();
+		init_DebuggingObjHack();
 	}
 
 	__declspec(dllexport) void __cdecl OnFrame() {
 
-
-		if (GameState == GameStates_LoadItems) {
-			LoadDebuggingObjects();
-		}
-
 		DisplayDebugTextInfo();
 		Save_Pause();
-
 	}
 
 	__declspec(dllexport) void __cdecl OnInput()

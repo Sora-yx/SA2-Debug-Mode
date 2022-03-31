@@ -73,3 +73,16 @@ static inline void sub_426620(int result, unsigned __int8 a2, unsigned __int8 a3
 	}
 }
 
+
+static const void* const AddConstantAttrPtr = (void*)0x446CF0;
+static inline void AddConstantAttr(int a1, int a2)
+{
+
+	__asm
+	{
+		mov eax, [a2]
+		mov ecx, [a1]
+		call AddConstantAttrPtr
+	}
+}
+

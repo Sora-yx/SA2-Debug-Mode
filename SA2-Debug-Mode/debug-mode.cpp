@@ -96,4 +96,19 @@ void Debugging_InputCheck() {
 void LoadDebuggingObjects() {
 	LoadObjDrawBG();
 	LoadObjSaveState();
+	LoadDeathZoneObj();
+}
+
+
+void MissionStartVariableSetup_r()
+{
+	LoadDebuggingObjects();
+	GetGoalRing();
+
+	return MissionStartVariableSetup();
+}
+
+void init_DebuggingObjHack()
+{
+	WriteCall((void*)0x43CB80, MissionStartVariableSetup_r);
 }
