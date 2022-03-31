@@ -58,6 +58,8 @@ DataPointer(int, dword_1AEE5AC, 0x1AEE5AC);
 DataPointer(int, dword_17483FC, 0x17483FC);
 ThiscallFunctionPointer(int, PauseSound, (UINT this_), 0x436020);
 
+DataPointer(ObjectListHead*, SETFile_, 0x01DDE274);
+
 static const void* const sub_426620Ptr = (void*)0x426620;
 static inline void sub_426620(int result, unsigned __int8 a2, unsigned __int8 a3)
 {
@@ -70,3 +72,4 @@ static inline void sub_426620(int result, unsigned __int8 a2, unsigned __int8 a3
 		call sub_426620Ptr
 	}
 }
+

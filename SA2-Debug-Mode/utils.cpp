@@ -72,7 +72,6 @@ void FreeAnim(AnimationFile* pointer)
 	if (pointer) delete pointer;
 }
 
-
 void SetMaterialColorOffset(float r, float g, float b, float a)
 {
 	GlobalMatColorR = r;
@@ -118,4 +117,12 @@ void DisplayDebugStringFormatted(Int loc, const char* Format, ...) {
 
 void SetDebugFontColor(int color) {
 	return HelperFunctionsGlobal.SetDebugFontColor(color);
+}
+
+
+bool isBossLevel()
+{
+	return CurrentLevel >= LevelIDs_BigFoot && CurrentLevel <= LevelIDs_EggGolemE ||
+		CurrentLevel == LevelIDs_SonicVsShadow1 || CurrentLevel == LevelIDs_TailsVsEggman1
+		|| CurrentLevel == LevelIDs_TailsVsEggman2 || CurrentLevel == LevelIDs_KnucklesVsRouge || CurrentLevel == LevelIDs_SonicVsShadow2;
 }

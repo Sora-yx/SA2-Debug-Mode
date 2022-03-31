@@ -88,6 +88,7 @@ void DisplayPlayerInformation() {
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 20 + texPosY), "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 21 + texPosY), "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 22 + texPosY), "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
+
 	return;
 }
 
@@ -216,6 +217,8 @@ void DisplayCharacterInfo() {
 		currentPage++;
 		return;
 	}
+
+	DisplayGoalRingPos(17, texPosY);
 
 	if (MainCharObj2[0]->CharID <= Characters_Shadow && !EmeraldManagerObj2)
 	{

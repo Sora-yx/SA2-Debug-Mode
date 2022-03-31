@@ -157,6 +157,7 @@
     <ClCompile Include="FreeCam.cpp" />
     <ClCompile Include="hud.cpp" />
     <ClCompile Include="mod.cpp" />
+    <ClCompile Include="goalring.cpp" />
     <ClCompile Include="save-state.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="treasure-hunting.cpp" />

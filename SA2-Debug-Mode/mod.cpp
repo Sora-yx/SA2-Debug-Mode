@@ -5,6 +5,7 @@ bool isDebugTxt;
 bool objSave;
 
 HelperFunctions HelperFunctionsGlobal;
+void GetGoalRing();
 
 extern "C" {
 
@@ -30,6 +31,8 @@ extern "C" {
 			init_SaveState();
 			init_CartHack();
 		}
+
+		init_GoalRingHack();
 	}
 
 	__declspec(dllexport) void __cdecl OnFrame() {

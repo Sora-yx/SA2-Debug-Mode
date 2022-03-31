@@ -17,3 +17,4 @@ void ResetMaterialColorOffset();
 void njRotateZXY(Rotation* rot);
 
 signed char GetCharacterLevel();
+bool isBossLevel();
