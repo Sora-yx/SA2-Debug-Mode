@@ -38,6 +38,7 @@ extern "C" {
 
 		DisplayDebugTextInfo();
 		Save_Pause();
+		DebugMode_Warning();
 	}
 
 	__declspec(dllexport) void __cdecl OnInput()

@@ -122,3 +122,13 @@ void init_DebuggingObjHack()
 	WriteCall((void*)0x43CB80, MissionStartVariableSetup_r);
 	DeleteMostObjects_t = new Trampoline((int)DeleteMostObjects, (int)DeleteMostObjects + 0x7, DeleteMostObjects_r);
 }
+
+DataPointer(char, runStart, 0x174AFFA);
+
+void DebugMode_Warning() //check for speedrunners so they know if the mod is still enabled
+{
+	if (runStart == 1 && GameMode == 7)
+	{
+		SendTimedDebugMessage("DEBUG MODE ENABLED", 200);	
+	}
+}

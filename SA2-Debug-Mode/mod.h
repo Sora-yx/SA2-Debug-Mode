@@ -30,3 +30,4 @@ extern bool isCheatDisableHud;
 extern bool isCheatDisableExtraHud;
 
 void init_GoalRingHack();
+void DebugMode_Warning();
