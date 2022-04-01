@@ -1,13 +1,15 @@
 #pragma once
 
 struct CharaStruct {
-    char data[sizeof(EntityData1)];
+    char player[sizeof(ObjectMaster)];
     char data2[sizeof(EntityData2)];
     char sonicCO2[sizeof(SonicCharObj2)];
     char tailsCO2[sizeof(TailsCharObj2)];
     char eggmanCO2[sizeof(EggmanCharObj2)];
     char knuxCO2[sizeof(KnucklesCharObj2)];
     char mechCO2[sizeof(MechEggmanCharObj2)];
+    char data[sizeof(EntityData1)];
+    char col[sizeof(CollisionInfo)];
 };
 
 struct CameraUnit {

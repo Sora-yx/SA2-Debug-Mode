@@ -11,6 +11,7 @@ const char slot_count = 7;
 
 
 void SaveStates::getGameInfo() {
+
 	this->slots[currentSaveState].level = CurrentLevel;
 	this->slots[currentSaveState].character = CurrentCharacter;
 	this->slots[currentSaveState].lives = Life_Count[0];
@@ -46,15 +47,16 @@ void SaveStates::getPlayerInfo() {
 	if (!data)
 		return;
 
-	//memcpy(&this->slots[currentSaveState].charData.col, MainCharObj1[0]->Collision , sizeof(CollisionInfo));
-	memcpy(&this->slots[currentSaveState].charData.data, MainCharObj1[0], sizeof(EntityData1));
+	memcpy(&this->slots[currentSaveState].charData.player, MainCharacter[0], sizeof(ObjectMaster));
+	memcpy(&this->slots[currentSaveState].charData.data, MainCharacter[0]->Data1.Entity, sizeof(EntityData1));
+	memcpy(&this->slots[currentSaveState].charData.col, MainCharacter[0]->Data1.Entity->Collision, sizeof(CollisionInfo));
 
 	SaveCartPointer();
 
 	if (!co2 || getCartPointer())
 		return;
 
-	memcpy(&this->slots[currentSaveState].charData.data2, MainCharData2[0], sizeof(EntityData2));
+	//memcpy(&this->slots[currentSaveState].charData.data2, MainCharData2[0], sizeof(EntityData2));
 
 	if (co2->CharID <= Characters_Shadow)
 	{
@@ -136,8 +138,12 @@ void SaveStates::restoreGameInfo() {
 	dword_1A558B8 = this->slots[currentSaveState].pauseValue[1];
 	dword_1AEE5AC = this->slots[currentSaveState].pauseValue[2];
 	PlayerPaused = this->slots[currentSaveState].playerPaused;
-	PauseDisabled = this->slots[currentSaveState].pauseDisabled;
 	GameState = this->slots[currentSaveState].gameState;
+
+	if (GameState == GameStates_Ingame)
+		PauseDisabled = 0;
+	else
+		PauseDisabled = this->slots[currentSaveState].pauseDisabled;
 
 	Life_Count[0] = this->slots[currentSaveState].lives;
 	RingCount[0] = this->slots[currentSaveState].rings;
@@ -150,8 +156,8 @@ void SaveStates::restoreGameInfo() {
 
 	TimerStopped = this->slots[currentSaveState].timerStopped;
 
-	ActiveLandTableColCount = this->slots[currentSaveState].ActiveLandTableColCount;
 	memcpy(&LandColList[0], this->slots[currentSaveState].dyncolinfo, 1024 * sizeof(DynColInfo));
+	ActiveLandTableColCount = this->slots[currentSaveState].ActiveLandTableColCount;
 	return;
 }
 
@@ -163,7 +169,6 @@ void SaveStates::restorePlayerInfo() {
 	if (!data)
 		return;
 
-	memcpy(MainCharObj1[0], &this->slots[currentSaveState].charData.data, sizeof(EntityData1));
 
 	if (getCartPointer())
 	{
@@ -201,6 +206,11 @@ void SaveStates::restorePlayerInfo() {
 		memcpy(MainCharacter[0]->Data2.Character, &this->slots[currentSaveState].charData.knuxCO2, sizeof(KnucklesCharObj2));
 	}
 
+	if (TimeTotal % 1 == 0) //wait 1 frame to re load collision
+	{
+		memcpy(MainCharacter[0]->Data1.Entity, &this->slots[currentSaveState].charData.data, sizeof(EntityData1));
+		memcpy(MainCharacter[0]->Data1.Entity->Collision, &this->slots[currentSaveState].charData.col, sizeof(CollisionInfo));
+	}
 
 	return;
 }
@@ -360,9 +370,9 @@ void SaveStates::loadSlot(ObjectMaster* obj) {
 	}
 
 	this->timerMessage = 60;
-	obj1->restoreCameraInfo();
 	this->restoreGameInfo();
 	this->restorePlayerInfo();
+	obj1->restoreCameraInfo();
 	this->restoreObjectState();
 	SetDebugFontColor(0xFF29c8e1);
 	this->message = "Loaded Save State on slot %d";
