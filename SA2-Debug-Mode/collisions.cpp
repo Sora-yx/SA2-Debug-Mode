@@ -10,6 +10,16 @@ Trampoline* addCol_t;
 
 bool isColDebug = false;
 
+void DeleteColModels()
+{
+	FreeMDL(Cube);
+	FreeMDL(Sphere);
+	FreeMDL(Cylinder);
+	FreeMDL(HalfSphere[0]);
+	FreeMDL(HalfSphere[1]);
+	FreeMDL(Capsule);
+}
+
 //set color according to the type of col (blue = not solid/player detection, green = solid, red = hurt)
 void CheckAndSetColColor(CollisionData* Col) {
 

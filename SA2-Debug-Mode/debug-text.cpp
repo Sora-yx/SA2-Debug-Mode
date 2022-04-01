@@ -6,6 +6,7 @@ char resPosY = 0;
 const char scaleText = 14;
 std::string debugText = "";
 int DebugMessageTimer = 0;
+int DebugFontSize = 0;
 
 void ScaleDebugFont(int scale)
 {
@@ -18,6 +19,9 @@ void ScaleDebugFont(int scale)
 
 	if (HorizontalResolution < 800)
 		scale -= 1;
+
+	if (!DebugFontSize)
+		DebugFontSize = FontScale * scale;
 
 	HelperFunctionsGlobal.SetDebugFontSize(FontScale * scale);
 
@@ -296,7 +300,6 @@ void DisplayTimed_DebugMessage_OnFrames()
 	if (DebugMessageTimer && debugText != "")
 	{
 		SetDebugFontColor(0xFFBFBFBF);
-
 		DisplayDebugStringFormatted(NJM_LOCATION(25, 10), debugText.c_str());
 		SetDebugFontColor(0xFFBFBFBF);
 		DebugMessageTimer--;

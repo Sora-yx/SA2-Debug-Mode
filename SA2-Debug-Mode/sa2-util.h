@@ -20,6 +20,11 @@ DataPointer(char, camConstPastPosIDX, 0x19f173c);
 DataPointer(__int16, ActiveLandTableColCount, 0x1DE9484);
 
 
+DataPointer(NJS_VECTOR, camPos, 0x01DCFF0C);
+DataPointer(NJS_VECTOR, camRot, 0x01DCFF18);
+DataPointer(NJS_VECTOR, camIDK, 0x01DCFF24);
+DataPointer(NJS_VECTOR, camTarget, 0x01DCFF30);
+
 #pragma pack(push, 1)
 struct cartStruct
 {
@@ -40,16 +45,13 @@ struct cartStruct
 
 
 DataPointer(float, flt_1DCFF3C, 0x1DCFF3C);
-DataPointer(NJS_VECTOR, camPosR, 0x1DCFF0C);
-DataPointer(Rotation, camRotR, 0x1DCFF18);
-DataPointer(NJS_VECTOR, camIdk, 0x1DCFF24);
-DataPointer(NJS_VECTOR, camTarget, 0x1DCFF30);
 FastcallFunctionPointer(void, CameraFollowCharacter, (int playID), 0x4EC770);
 DataPointer(char, cam_handle, 0x01DCFF00);
 
 DataPointer(NJS_VECTOR, CamEventPos, 0x1DCFE10);
 DataPointer(int, CamEventAngleZ, 0x1DCFDF8);
 DataPointer(int, CamEventAngleY, 0x1DCFDFC);
+
 DataPointer(char, ShowHud, 0x0174AFCC);
 DataPointer(int, dword_1A558BC, 0x1A558BC);
 DataPointer(int, dword_17472BC, 0x17472BC);

@@ -36,8 +36,10 @@ struct save_struct {
     char playerPaused;
     NJS_VECTOR grv;
     CharaStruct charData;
-    DynColInfo* dyncol;
+    char dyncolinfo[sizeof(DynColInfo)];
+    __int16 ActiveLandTableColCount;
     CameraUnit CameraUnit;
+    NJS_VECTOR CamExtVariables[4];
     ObjectMaster* ObjectList[8];
 };
 

@@ -28,6 +28,10 @@ void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].pauseValue[2] = dword_1AEE5AC;
 	this->slots[currentSaveState].playerPaused = PlayerPaused;
 
+	memcpy(&this->slots[currentSaveState].dyncolinfo, LandColList, sizeof(DynColInfo));
+	this->slots[currentSaveState].ActiveLandTableColCount = ActiveLandTableColCount;
+
+
 	return;
 }
 
@@ -90,6 +94,12 @@ void SaveStates::getCameraInfo() {
 	this->slots[currentSaveState].CameraUnit.posRotBuffer[1] = PosRotBufferIndex[1];
 	memcpy(&this->slots[currentSaveState].CameraUnit.pastpos, (void*)0x19f1740, 0xc00);
 	memcpy(&this->slots[currentSaveState].CameraUnit.idk2, &camConstPastPosIDX, sizeof(byte*));
+
+	//camera cons main
+	this->slots[currentSaveState].CamExtVariables[0] = camPos;
+	this->slots[currentSaveState].CamExtVariables[1] = camRot;
+	this->slots[currentSaveState].CamExtVariables[2] = camIDK;
+	this->slots[currentSaveState].CamExtVariables[3] = camTarget;
 	return;
 }
 
@@ -138,6 +148,9 @@ void SaveStates::restoreGameInfo() {
 	CartTimer = this->slots[currentSaveState].timerCart;
 
 	TimerStopped = this->slots[currentSaveState].timerStopped;
+
+	memcpy(LandColList, &this->slots[currentSaveState].dyncolinfo, sizeof(DynColInfo));
+	ActiveLandTableColCount = this->slots[currentSaveState].ActiveLandTableColCount;
 	return;
 }
 
@@ -199,6 +212,11 @@ void SaveStates::restoreCameraInfo() {
 	PosRotBufferIndex[1] = this->slots[currentSaveState].CameraUnit.posRotBuffer[1];
 	memcpy((void*)0x19f1740, &this->slots[currentSaveState].CameraUnit.pastpos, 0xc00);
 	memcpy(&camConstPastPosIDX, &this->slots[currentSaveState].CameraUnit.idk2, sizeof(byte*));
+
+	camPos = this->slots[currentSaveState].CamExtVariables[0];
+	camRot = this->slots[currentSaveState].CamExtVariables[1];
+	camIDK = this->slots[currentSaveState].CamExtVariables[2];
+	camTarget = this->slots[currentSaveState].CamExtVariables[3];
 	return;
 }
 

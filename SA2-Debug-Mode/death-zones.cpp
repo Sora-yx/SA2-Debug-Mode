@@ -2,6 +2,7 @@
 
 ModelInfo* DZObj[50];
 bool renderDZ = false;
+uint8_t DZCount = 0;
 
 struct DeathZoneExtern
 {
@@ -20,7 +21,7 @@ DeathZoneExtern DeathZoneRenderArray[5] = {
 
 void Delete_DeathZones()
 {
-	for (uint8_t i = 0; i < LengthOfArray(DZObj); i++)
+	for (uint8_t i = 0; i < DZCount; i++)
 	{
 		if (DZObj[i])
 		{
@@ -38,14 +39,16 @@ void DeathZone_Display(ObjectMaster* obj)
 
 	for (uint8_t i = 0; i < data->Index; i++) {
 
-		//NJS_VECTOR pos = { DZObj[i]->getmodel()->pos[0],  DZObj[i]->getmodel()->pos[1],  DZObj[i]->getmodel()->pos[2] };
+		njSetTexture(texlist_objtex_common);
 		njPushMatrix(_nj_current_matrix_ptr_);
 		njControl3D_Backup();
 		njControl3D_Add(NJD_CONTROL_3D_CONSTANT_MATERIAL | NJD_CONTROL_3D_ENABLE_ALPHA | NJD_CONTROL_3D_CONSTANT_ATTR);
-		SetMaterial(0.5f, 1.0f, 0, 0);
+		SetMaterial(0.4f, 1.0f, 0, 0);
 
 		sub_42D340();
-		ProcessChunkModelsWithCallback(DZObj[i]->getmodel(), ProcessChunkModel);
+
+		if (DZObj[i]) 
+			ProcessChunkModelsWithCallback(DZObj[i]->getmodel(), ProcessChunkModel);
 
 		njPopMatrix(1u);
 		njControl3D_Restore();
@@ -84,24 +87,25 @@ void DeathZoneRender_Manager(ObjectMaster* obj)
 
 void LoadDeathZonesModels()
 {
-	int size = 0;
+
+	DZCount = 0;
 
 	for (uint8_t i = 0; i < LengthOfArray(DeathZoneRenderArray); i++)
 	{
 		if (CurrentLevel == DeathZoneRenderArray[i].CurLevel)
 		{
-			size = DeathZoneRenderArray[i].count;
+			DZCount = DeathZoneRenderArray[i].count;
 
-			for (Uint8 j = 0; j < size; ++j) {
+			for (Uint8 j = 0; j < DZCount; ++j) {
 				std::string str = std::to_string(j);
 				DZObj[j] = LoadDZMDL(str.c_str(), DeathZoneRenderArray[i].levelName);
 			}
 		}
 	}
 
-	if (size) {
+	if (DZCount) {
 		ObjectMaster* DZManager = LoadObject(2, "DeathZoneRender", DeathZoneRender_Manager, LoadObj_Data1);
-		DZManager->Data1.Entity->Index = size;
+		DZManager->Data1.Entity->Index = DZCount;
 	}
 }
 

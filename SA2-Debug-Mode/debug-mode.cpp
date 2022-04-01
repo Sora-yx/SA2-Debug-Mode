@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 bool isFreeMov = false;
+Trampoline* DeleteMostObjects_t = nullptr;
 
 //The hunters originally can't use free movements since their action is shared with something else, so we force a different action and manually call the function.
 void Hunters_FreeMovements() {
@@ -108,7 +109,16 @@ void MissionStartVariableSetup_r()
 	return MissionStartVariableSetup();
 }
 
+void DeleteMostObjects_r()
+{
+	Delete_DeathZones();
+
+	VoidFunc(original, DeleteMostObjects_t->Target());
+	original();
+}
+
 void init_DebuggingObjHack()
 {
 	WriteCall((void*)0x43CB80, MissionStartVariableSetup_r);
+	DeleteMostObjects_t = new Trampoline((int)DeleteMostObjects, (int)DeleteMostObjects + 0x7, DeleteMostObjects_r);
 }

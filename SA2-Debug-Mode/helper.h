@@ -28,3 +28,4 @@ char* getHintText_r(void* a1, char hintID);
 void init_DebuggingObjHack();
 void LoadDeathZoneObj();
 void Delete_DeathZones();
+void DeleteColModels();

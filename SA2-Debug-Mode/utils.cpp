@@ -77,10 +77,10 @@ ModelInfo* LoadDZMDL(const char* name, std::string level) {
 
 	if (temp->getformat() == ModelFormat_Chunk)
 	{
-		PrintDebug("[SA2 Debug Mode] Loaded %s model: %s.", ModelFormatStrings[(int)ModelFormat_Chunk - 1], name);
+		PrintDebug("[SA2 Debug Mode] Loaded Death Zones %s model: %s.", ModelFormatStrings[(int)ModelFormat_Chunk - 1], name);
 	}
 	else {
-		PrintDebug("[SA2 Debug Mode] Failed loading %s model: %s.", ModelFormatStrings[(int)ModelFormat_Chunk - 1], name);
+		PrintDebug("[SA2 Debug Mode] Failed loading Death Zone %s model: %s.", ModelFormatStrings[(int)ModelFormat_Chunk - 1], name);
 	}
 
 	return temp;
@@ -88,7 +88,8 @@ ModelInfo* LoadDZMDL(const char* name, std::string level) {
 
 void FreeMDL(ModelInfo* pointer)
 {
-	if (pointer) delete(pointer);
+	if (pointer) 
+		delete(pointer);
 }
 
 void FreeAnim(AnimationFile* pointer)

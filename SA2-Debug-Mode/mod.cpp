@@ -46,5 +46,11 @@ extern "C" {
 		Debugging_InputCheck();
 	}
 
+	__declspec(dllexport) void __cdecl OnExit()
+	{
+		Delete_DeathZones();
+		DeleteColModels();
+	}
+
 	__declspec(dllexport) ModInfo SA2ModInfo = { ModLoaderVer };
 }
