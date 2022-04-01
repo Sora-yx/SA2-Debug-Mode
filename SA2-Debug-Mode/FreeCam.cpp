@@ -176,7 +176,7 @@ void FreeCam_OnInput()
 
 void FreeCam_CheckInput()
 {
-	if (GameState < GameStates_Ingame || GameState > GameStates_Pause)
+	if (GameState != GameStates_Ingame)
 		return;
 
 	FreeCam_OnInput();
