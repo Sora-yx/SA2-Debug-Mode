@@ -31,12 +31,12 @@ struct save_struct {
     int timerCart;
     char timerStopped;
     short gameState;
-    char pauseEnabled;
+    char pauseDisabled;
     int pauseValue[3];
     char playerPaused;
     NJS_VECTOR grv;
     CharaStruct charData;
-    char dyncolinfo[sizeof(DynColInfo)];
+    char dyncolinfo[1024 * sizeof(DynColInfo)];
     __int16 ActiveLandTableColCount;
     CameraUnit CameraUnit;
     NJS_VECTOR CamExtVariables[4];

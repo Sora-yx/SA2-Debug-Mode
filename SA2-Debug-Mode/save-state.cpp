@@ -5,8 +5,8 @@ int currentSaveState = 0;
 SaveStates* SaveStates::instance = 0;
 SaveStates* obj1 = obj1->getInstance();
 bool canDisplayMSG = false;
-Trampoline* MechEggman_chkDmg_t;
-Trampoline* sub_461F10_t;
+Trampoline* MechEggman_chkDmg_t = nullptr;
+Trampoline* GamePlayerMissed_t = nullptr;
 const char slot_count = 7;
 
 
@@ -26,11 +26,11 @@ void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].pauseValue[0] = dword_1A558BC;
 	this->slots[currentSaveState].pauseValue[1] = dword_1A558B8;
 	this->slots[currentSaveState].pauseValue[2] = dword_1AEE5AC;
-	this->slots[currentSaveState].playerPaused = PlayerPaused;
+	this->slots[currentSaveState].playerPaused = PlayerPaused;	
+	this->slots[currentSaveState].pauseDisabled = PauseDisabled;
 
-	memcpy(&this->slots[currentSaveState].dyncolinfo, LandColList, sizeof(DynColInfo));
+	memcpy(this->slots[currentSaveState].dyncolinfo, &LandColList[0], 1024 * sizeof(DynColInfo));
 	this->slots[currentSaveState].ActiveLandTableColCount = ActiveLandTableColCount;
-
 
 	return;
 }
@@ -136,6 +136,7 @@ void SaveStates::restoreGameInfo() {
 	dword_1A558B8 = this->slots[currentSaveState].pauseValue[1];
 	dword_1AEE5AC = this->slots[currentSaveState].pauseValue[2];
 	PlayerPaused = this->slots[currentSaveState].playerPaused;
+	PauseDisabled = this->slots[currentSaveState].pauseDisabled;
 	GameState = this->slots[currentSaveState].gameState;
 
 	Life_Count[0] = this->slots[currentSaveState].lives;
@@ -149,8 +150,8 @@ void SaveStates::restoreGameInfo() {
 
 	TimerStopped = this->slots[currentSaveState].timerStopped;
 
-	memcpy(LandColList, &this->slots[currentSaveState].dyncolinfo, sizeof(DynColInfo));
 	ActiveLandTableColCount = this->slots[currentSaveState].ActiveLandTableColCount;
+	memcpy(&LandColList[0], this->slots[currentSaveState].dyncolinfo, 1024 * sizeof(DynColInfo));
 	return;
 }
 
@@ -511,7 +512,21 @@ void Save_Pause() {
 	savestateObj->MainSub(savestateObj);
 }
 
+void __cdecl GamePlayerMissed_r(ObjectMaster* obj)
+{
+	if (savestateObj) {
+		if (savestateObj->Data1.Entity->Action >= LoadSaveMode) {
+
+			DeleteObject_(obj);
+			return;
+		}
+	}
+
+	ObjectFunc(origin, GamePlayerMissed_t->Target());
+	origin(obj);
+}
 
 void init_SaveState() {
 	MechEggman_chkDmg_t = new Trampoline((int)0x742C10, (int)0x742C17, MechEggman_ChecksDamage_r);
+	GamePlayerMissed_t = new Trampoline((int)GamePlayerMissed, (int)GamePlayerMissed + 0x5, GamePlayerMissed_r);
 }
