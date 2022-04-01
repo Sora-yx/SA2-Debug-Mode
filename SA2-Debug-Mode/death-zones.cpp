@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 ModelInfo* DZObj[50];
-bool renderDZ = true;
+bool renderDZ = false;
 
 struct DeathZoneExtern
 {
@@ -18,26 +18,28 @@ DeathZoneExtern DeathZoneRenderArray[5] = {
 	{ LevelIDs_EternalEngine, "EternalEngine", 5}
 };
 
-VoidFunc(sub_42D340, 0x42D340);
-
-DataPointer(int, nj_constant_attr_and_, 0x01DEB6A8);
-DataPointer(int, nj_constant_attr_or_, 0x01DEB6A0);
-
+void Delete_DeathZones()
+{
+	for (uint8_t i = 0; i < LengthOfArray(DZObj); i++)
+	{
+		if (DZObj[i])
+		{
+			FreeMDL(DZObj[i]);
+		}
+	}
+}
 
 void DeathZone_Display(ObjectMaster* obj)
 {
-	if (!renderDZ)
+	if (!renderDZ || CurrentLevel == LevelIDs_CrazyGadget) //CG DZ really doesn't render properly it's not worth.
 		return;
 
 	EntityData1* data = obj->Data1.Entity;
 
 	for (uint8_t i = 0; i < data->Index; i++) {
 
-		NJS_VECTOR pos = { DZObj[i]->getmodel()->pos[0],  DZObj[i]->getmodel()->pos[1],  DZObj[i]->getmodel()->pos[2] };
-		
+		//NJS_VECTOR pos = { DZObj[i]->getmodel()->pos[0],  DZObj[i]->getmodel()->pos[1],  DZObj[i]->getmodel()->pos[2] };
 		njPushMatrix(_nj_current_matrix_ptr_);
-
-
 		njControl3D_Backup();
 		njControl3D_Add(NJD_CONTROL_3D_CONSTANT_MATERIAL | NJD_CONTROL_3D_ENABLE_ALPHA | NJD_CONTROL_3D_CONSTANT_ATTR);
 		SetMaterial(0.5f, 1.0f, 0, 0);
@@ -49,7 +51,6 @@ void DeathZone_Display(ObjectMaster* obj)
 		njControl3D_Restore();
 		ResetMaterial();
 	}
-
 }
 
 void DeathZoneRender_Manager(ObjectMaster* obj)
@@ -103,7 +104,6 @@ void LoadDeathZonesModels()
 		DZManager->Data1.Entity->Index = size;
 	}
 }
-
 
 
 void LoadDeathZoneObj()

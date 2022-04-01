@@ -5,8 +5,6 @@ bool isDebugTxt;
 bool objSave;
 
 HelperFunctions HelperFunctionsGlobal;
-void GetGoalRing();
-void __cdecl DeathZoneObject_r(ObjectMaster* obj);
 
 extern "C" {
 

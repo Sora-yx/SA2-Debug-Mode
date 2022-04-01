@@ -86,3 +86,7 @@ static inline void AddConstantAttr(int a1, int a2)
 	}
 }
 
+
+VoidFunc(sub_42D340, 0x42D340);
+DataPointer(int, nj_constant_attr_and_, 0x01DEB6A8);
+DataPointer(int, nj_constant_attr_or_, 0x01DEB6A0);
