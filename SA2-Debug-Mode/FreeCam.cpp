@@ -188,6 +188,11 @@ void FreeCam_CheckInput()
 
 	if (GetKeyState('Y') & 0x8000)
 	{
+		bool isActive = GetActiveWindow();
+		
+		if (!isActive)
+			return;
+
 		FreeCamEnabled = !FreeCamEnabled;
 
 		SendTimedDebugMessage(FreeCamEnabled ? "FREE CAM ENABLED" : "FREE CAM DISABLED", 60);

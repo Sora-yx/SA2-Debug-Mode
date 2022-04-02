@@ -69,6 +69,11 @@ void DeathZoneRender_Manager(ObjectMaster* obj)
 	case 1:
 		if (GetKeyState('D') & 0x8000)
 		{
+			bool isActive = GetActiveWindow();
+			
+			if (!isActive)
+				return;
+
 			renderDZ = !renderDZ;
 			SendTimedDebugMessage(renderDZ ? "SHOW DEATH ZONES: ON" : "SHOW DEATH ZONES: OFF", 40);
 			data->Action++;
