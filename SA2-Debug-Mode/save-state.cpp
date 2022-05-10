@@ -27,11 +27,8 @@ void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].pauseValue[0] = dword_1A558BC;
 	this->slots[currentSaveState].pauseValue[1] = dword_1A558B8;
 	this->slots[currentSaveState].pauseValue[2] = dword_1AEE5AC;
-	this->slots[currentSaveState].playerPaused = PlayerPaused;	
+	this->slots[currentSaveState].playerPaused = PlayerPaused;
 	this->slots[currentSaveState].pauseDisabled = PauseDisabled;
-
-	memcpy(this->slots[currentSaveState].dyncolinfo, &LandColList[0], 1024 * sizeof(DynColInfo));
-	this->slots[currentSaveState].ActiveLandTableColCount = ActiveLandTableColCount;
 
 	return;
 }
@@ -56,7 +53,7 @@ void SaveStates::getPlayerInfo() {
 	if (!co2 || getCartPointer())
 		return;
 
-	//memcpy(&this->slots[currentSaveState].charData.data2, MainCharData2[0], sizeof(EntityData2));
+	memcpy(&this->slots[currentSaveState].charData.data2, MainCharData2[0], sizeof(EntityData2));
 
 	if (co2->CharID <= Characters_Shadow)
 	{
@@ -87,36 +84,31 @@ void SaveStates::getPlayerInfo() {
 	return;
 }
 
-//Copy camera stuff credits: OnVar
-void SaveStates::getCameraInfo() {
-	memcpy(&this->slots[currentSaveState].CameraUnit.camera, (void*)0x1dcff00, 0x2518);
-	memcpy(&this->slots[currentSaveState].CameraUnit.camPos, (void*)0x1a5a234, sizeof(byte*));
-	memcpy(&this->slots[currentSaveState].CameraUnit.camRot, (void*)0x1a5a238, sizeof(byte*));
-	this->slots[currentSaveState].CameraUnit.posRotBuffer[0] = PosRotBufferIndex[0];
-	this->slots[currentSaveState].CameraUnit.posRotBuffer[1] = PosRotBufferIndex[1];
-	memcpy(&this->slots[currentSaveState].CameraUnit.pastpos, (void*)0x19f1740, 0xc00);
-	memcpy(&this->slots[currentSaveState].CameraUnit.idk2, &camConstPastPosIDX, sizeof(byte*));
+//credit onvar
+INT_PTR camPast = 0x1A5A234;
+INT_PTR camRot = 0x1a5a238;
+INT_PTR camConstPastPos = 0x19f1740;
+INT_PTR camPastPosIDX = 0x19f173c;
 
-	//camera cons main
-	this->slots[currentSaveState].CamExtVariables[0] = camPos;
-	this->slots[currentSaveState].CamExtVariables[1] = camRot;
-	this->slots[currentSaveState].CamExtVariables[2] = camIDK;
-	this->slots[currentSaveState].CamExtVariables[3] = camTarget;
+DataPointer(char, CampastPosIDX, 0x19f173c);
+
+void SaveStates::getCameraInfo() {
+
+	//general values (target, camera col, pos etc.)
+	memcpy(&this->slots[currentSaveState].CameraUnit.cameraBackup, (void*)0x1dcff00, 0x2518);
+
+	//cam struct and array (fix most of the random cam issues)
+	memcpy(&this->slots[currentSaveState].CameraUnit.cameraPastPosBackup, (void*)camPast, 0xC000);
+	memcpy(&this->slots[currentSaveState].CameraUnit.cameraPastRotBackup, (void*)camRot, 0xC000);
+	this->slots[currentSaveState].CameraUnit.PosRotBufferIndex = PosRotBufferIndex[0];
+
+	memcpy(&this->slots[currentSaveState].CameraUnit.camConstpastPos, (void*)camConstPastPos, 0xC000);
+	this->slots[currentSaveState].CameraUnit.camConstPastPosIDX = CampastPosIDX;
+
+
 	return;
 }
 
-void SaveStates::getObjectsState() {
-
-	if (!objSave)
-		return;
-
-	for (int i = 2; i < 6; i++) {
-		if (ObjectLists[i]) {
-			this->slots[currentSaveState].ObjectList[i] = ObjectLists[i];
-		}
-	}
-
-}
 
 static const void* const loc_43ADA9 = (void*)0x43ADA9;
 void SaveStates::restoreGameInfo() {
@@ -132,7 +124,7 @@ void SaveStates::restoreGameInfo() {
 	else if (GameState == GameStates_Ingame && this->slots[currentSaveState].gameState == GameStates_Pause)
 	{
 		PauseSound(1);
-	}	
+	}
 
 	dword_1A558BC = this->slots[currentSaveState].pauseValue[0];
 	dword_1A558B8 = this->slots[currentSaveState].pauseValue[1];
@@ -156,19 +148,17 @@ void SaveStates::restoreGameInfo() {
 
 	TimerStopped = this->slots[currentSaveState].timerStopped;
 
-	memcpy(&LandColList[0], this->slots[currentSaveState].dyncolinfo, 1024 * sizeof(DynColInfo));
-	ActiveLandTableColCount = this->slots[currentSaveState].ActiveLandTableColCount;
 	return;
 }
 
 
 void SaveStates::restorePlayerInfo() {
+
 	EntityData1* data = MainCharObj1[0];
 	CharObj2Base* co2 = MainCharObj2[0];
 
 	if (!data)
 		return;
-
 
 	if (getCartPointer())
 	{
@@ -216,18 +206,15 @@ void SaveStates::restorePlayerInfo() {
 }
 
 void SaveStates::restoreCameraInfo() {
-	memcpy((void*)0x1dcff00, &this->slots[currentSaveState].CameraUnit.camera, 0x2518);
-	memcpy((void*)0x1a5a234, &this->slots[currentSaveState].CameraUnit.camPos, sizeof(byte*));
-	memcpy((void*)0x1a5a238, &this->slots[currentSaveState].CameraUnit.camRot, sizeof(byte*));
-	PosRotBufferIndex[0] = this->slots[currentSaveState].CameraUnit.posRotBuffer[0];
-	PosRotBufferIndex[1] = this->slots[currentSaveState].CameraUnit.posRotBuffer[1];
-	memcpy((void*)0x19f1740, &this->slots[currentSaveState].CameraUnit.pastpos, 0xc00);
-	memcpy(&camConstPastPosIDX, &this->slots[currentSaveState].CameraUnit.idk2, sizeof(byte*));
 
-	camPos = this->slots[currentSaveState].CamExtVariables[0];
-	camRot = this->slots[currentSaveState].CamExtVariables[1];
-	camIDK = this->slots[currentSaveState].CamExtVariables[2];
-	camTarget = this->slots[currentSaveState].CamExtVariables[3];
+	memcpy((void*)0x1dcff00, &this->slots[currentSaveState].CameraUnit.cameraBackup, 0x2518);
+	//Crash the game for some reason...
+	//memcpy((void*)camPast, &this->slots[currentSaveState].CameraUnit.cameraPastPosBackup, 0xC000);
+	//memcpy((void*)camRot, &this->slots[currentSaveState].CameraUnit.cameraPastRotBackup, 0xC0000);
+	PosRotBufferIndex[0] = this->slots[currentSaveState].CameraUnit.PosRotBufferIndex;
+	memcpy((void*)camConstPastPos, &this->slots[currentSaveState].CameraUnit.camConstpastPos, 0xC000);
+	CampastPosIDX = this->slots[currentSaveState].CameraUnit.camConstPastPosIDX;
+
 	return;
 }
 
@@ -345,7 +332,6 @@ void SaveStates::saveOnSlot() {
 	this->getCameraInfo();
 	this->getGameInfo();
 	this->getPlayerInfo();
-	this->getObjectsState();
 	SetDebugFontColor(0xFF1dcf01);
 	this->message = "Saved on slot: %d";
 	return;
@@ -373,7 +359,7 @@ void SaveStates::loadSlot(ObjectMaster* obj) {
 	this->restoreGameInfo();
 	this->restorePlayerInfo();
 	obj1->restoreCameraInfo();
-	this->restoreObjectState();
+	//this->restoreObjectState();
 	SetDebugFontColor(0xFF29c8e1);
 	this->message = "Loaded Save State on slot %d";
 
@@ -468,7 +454,7 @@ void SaveStateManager(ObjectMaster* obj) {
 		data->Action = CheckInputs;
 		break;
 	case CheckInputs:
-		data->field_6 = 0;
+		data->Timer = 0;
 		data->Index = 0;
 		data->NextAction = 0;
 		SavestatesCheckInput(obj);
@@ -483,7 +469,7 @@ void SaveStateManager(ObjectMaster* obj) {
 		break;
 	case SaveDelay:
 
-		if (++data->field_6 == 8) {
+		if (++data->Timer == 8) {
 			data->Action = CheckInputs;
 
 			if (!isFreeMov) {

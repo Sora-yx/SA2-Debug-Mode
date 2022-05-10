@@ -17,7 +17,7 @@ extern "C" {
 		isDebugTxt = config->getBool("General", "isDebugTxt", true);
 
 		delete config;
-
+	
 		Collisions_Init();
 		initializeDebugText();
 		init_FreeCamHack();
@@ -32,6 +32,7 @@ extern "C" {
 		}
 
 		init_DebuggingObjHack();
+
 	}
 
 	__declspec(dllexport) void __cdecl OnFrame() {

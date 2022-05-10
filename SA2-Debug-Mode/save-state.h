@@ -13,12 +13,12 @@ struct CharaStruct {
 };
 
 struct CameraUnit {
-    byte camera[0x2518];
-    byte* camPos;
-    byte* camRot;
-    char posRotBuffer[2];
-    byte pastpos[0xc00];
-    char* idk2;
+    char cameraBackup[0x2518];
+    char cameraPastPosBackup[0xc000];
+    char cameraPastRotBackup[0xc000];
+    char PosRotBufferIndex;
+    char camConstpastPos[0xc000];
+    char camConstPastPosIDX;
 };
 
 struct save_struct {
@@ -38,11 +38,7 @@ struct save_struct {
     char playerPaused;
     NJS_VECTOR grv;
     CharaStruct charData;
-    char dyncolinfo[1024 * sizeof(DynColInfo)];
-    __int16 ActiveLandTableColCount;
     CameraUnit CameraUnit;
-    NJS_VECTOR CamExtVariables[4];
-    ObjectMaster* ObjectList[8];
 };
 
 

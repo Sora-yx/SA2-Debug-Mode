@@ -2,10 +2,32 @@
 
 bool isFreeMov = false;
 Trampoline* DeleteMostObjects_t = nullptr;
+Trampoline* sub_42D500_t = nullptr;
+
+
+int CurTexList_Current = 0;
+NJS_TEXLIST* CurrentTexList;
+DataPointer(RenderInfo, Has_texlist_batadvPlayerChara_in_it, 0x02670544);
+FunctionPointer(void, sub_42D500, (NJS_CNK_MODEL* a1), 0x42D500);
+
+void sub_42D500_r(NJS_CNK_MODEL* a1)
+{
+	CurrentTexList = (NJS_TEXLIST*)Has_texlist_batadvPlayerChara_in_it.gap0 + 32;
+
+	if (CurTexList_Current != (int)CurrentTexList)
+	{
+		PrintDebug("Texlist change: %X\n", CurrentTexList);
+		CurTexList_Current = (int)CurrentTexList;
+	}
+
+	auto original = reinterpret_cast<decltype(sub_42D500_r)*>(sub_42D500_t->Target());
+	original(a1);
+
+}
+
 
 //The hunters originally can't use free movements since their action is shared with something else, so we force a different action and manually call the function.
 void Hunters_FreeMovements() {
-
 	if (!isFreeMov)
 		return;
 
@@ -35,7 +57,7 @@ void SetFreeMovements() {
 
 	for (int i = 0; i < 2; i++) {
 
-		if ( (Controllers[i].on & Buttons_L && Controllers[i].on & Buttons_R && Controllers[i].on & Buttons_Y)) {
+		if ((Controllers[i].on & Buttons_L && Controllers[i].on & Buttons_R && Controllers[i].on & Buttons_Y)) {
 
 
 			isFreeMov = true;
@@ -117,18 +139,20 @@ void DeleteMostObjects_r()
 	original();
 }
 
-void init_DebuggingObjHack()
-{
-	WriteCall((void*)0x43CB80, MissionStartVariableSetup_r);
-	DeleteMostObjects_t = new Trampoline((int)DeleteMostObjects, (int)DeleteMostObjects + 0x7, DeleteMostObjects_r);
-}
-
 DataPointer(char, runStart, 0x174AFFA);
 
 void DebugMode_Warning() //check for speedrunners so they know if the mod is still enabled
 {
 	if (runStart == 1 && GameMode == 7)
 	{
-		SendTimedDebugMessage("DEBUG MODE ENABLED", 200);	
+		SendTimedDebugMessage("DEBUG MODE ENABLED", 200);
 	}
+}
+
+void init_DebuggingObjHack()
+{
+	WriteCall((void*)0x43CB80, MissionStartVariableSetup_r);
+	DeleteMostObjects_t = new Trampoline((int)DeleteMostObjects, (int)DeleteMostObjects + 0x7, DeleteMostObjects_r);
+	sub_42D500_t = new Trampoline((int)0x42D500, (int)0x42D506, sub_42D500_r);
+
 }
