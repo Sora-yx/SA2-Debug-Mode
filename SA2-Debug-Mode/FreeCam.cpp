@@ -234,7 +234,7 @@ void FreeCam_CheckInput()
 
 			IsNotPauseHide = 1;
 			isGamePaused = false;
-			ReleaseCamera(0, CameraData->currentCameraSlot);
+			ReleaseCamera(0, CameraData[0].currentCameraSlot);
 		}
 
 		delayCam = 35;

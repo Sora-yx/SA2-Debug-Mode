@@ -19,3 +19,5 @@ void njRotateZXY(Rotation* rot);
 signed char GetCharacterLevel();
 bool isBossLevel();
 ModelInfo* LoadDZMDL(const char* name, std::string level);
+void CharColliOff(taskwk* twp);
+void CharColliOn(taskwk* a1);

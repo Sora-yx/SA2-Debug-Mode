@@ -151,3 +151,40 @@ bool isBossLevel()
 		CurrentLevel == LevelIDs_SonicVsShadow1 || CurrentLevel == LevelIDs_TailsVsEggman1
 		|| CurrentLevel == LevelIDs_TailsVsEggman2 || CurrentLevel == LevelIDs_KnucklesVsRouge || CurrentLevel == LevelIDs_SonicVsShadow2;
 }
+
+void CharColliOff(taskwk* twp)
+{
+	auto cwp = twp->cwp;
+	auto nbinfo = cwp->nbInfo;
+	auto info = cwp->info;
+
+	if (nbinfo)
+	{
+		auto attr = &info->attr;
+		do
+		{
+			*attr |= 0x10u;
+			attr += 12;
+			--nbinfo;
+		} while (nbinfo);
+	}
+}
+
+void CharColliOn(taskwk* a1)
+{
+
+	auto col = a1->cwp;
+	auto nbINfo = col->nbInfo;
+	auto colInfo = col->info;
+
+	if (nbINfo)
+	{
+		auto attr = &colInfo->attr;
+		do
+		{
+			*attr &= 0xFFFFFFEF;
+			attr += 12;
+			--nbINfo;
+		} while (nbINfo);
+	}
+}

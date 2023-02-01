@@ -7,8 +7,16 @@ SaveStates* obj1 = obj1->getInstance();
 bool canDisplayMSG = false;
 Trampoline* MechEggman_chkDmg_t = nullptr;
 Trampoline* GamePlayerMissed_t = nullptr;
+static Trampoline* Init_LandColMemory_t = nullptr;
 const char slot_count = 7;
 
+void SaveStates::resetSaveFiles()
+{
+	for (int i = 0; i < slot_count; i++)
+	{
+		memset(&this->slots[currentSaveState], 0, sizeof(save_struct));
+	}	
+}
 
 void SaveStates::getGameInfo() {
 
@@ -258,7 +266,7 @@ void SaveStates::restoreObjectState() {
 	if (bannedLvlException())
 		return;
 
-	for (int i = 2; i < 6; i++)
+	for (int i = 2; i < 4; i++)
 	{
 		ObjectMaster* obj = ObjectLists[i];
 		ObjectMaster* obj_orig = obj;
@@ -355,12 +363,15 @@ void SaveStates::loadSlot(ObjectMaster* obj) {
 		return;
 	}
 
+	CharColliOff((taskwk*)MainCharObj1[0]);
 	this->timerMessage = 60;
 	this->restoreGameInfo();
 	this->restorePlayerInfo();
-	obj1->restoreCameraInfo();
-	//this->restoreObjectState();
+	this->restoreCameraInfo();
+	if (!isBossLevel())
+		this->restoreObjectState();
 	SetDebugFontColor(0xFF29c8e1);
+	CharColliOn((taskwk*)MainCharObj1[0]);
 	this->message = "Loaded Save State on slot %d";
 
 	if (obj)
@@ -378,10 +389,10 @@ void SaveStates::changeSlot(Buttons input) {
 
 	SetDebugFontColor(0xFFBFBFBF);
 
-	if (input == Buttons_Up) {
+	if (input & Buttons_Up) {
 		currentSaveState++;
 	}
-	else if (input == Buttons_Down) {
+	else if (input & Buttons_Down) {
 		currentSaveState--;
 	}
 
@@ -395,7 +406,6 @@ void SaveStates::changeSlot(Buttons input) {
 	this->message = "Current Slot %d";
 	return;
 }
-
 
 void SavestatesCheckInput(ObjectMaster* obj) {
 
@@ -425,7 +435,7 @@ void SavestatesCheckInput(ObjectMaster* obj) {
 	}
 }
 
-ObjectMaster* savestateObj;
+ObjectMaster* savestateObj = nullptr;
 
 void DeleteSaveManager(ObjectMaster* obj) {
 
@@ -522,7 +532,21 @@ void __cdecl GamePlayerMissed_r(ObjectMaster* obj)
 	origin(obj);
 }
 
+//Reset save files when loading a new stage to avoid crash if you load a previous save
+void InitLandColMemory_r()
+{
+	if (obj1)
+	{
+		obj1->resetSaveFiles();
+	}
+
+	VoidFunc(origin, Init_LandColMemory_t->Target());
+	origin();
+}
+
+
 void init_SaveState() {
 	MechEggman_chkDmg_t = new Trampoline((int)0x742C10, (int)0x742C17, MechEggman_ChecksDamage_r);
 	GamePlayerMissed_t = new Trampoline((int)GamePlayerMissed, (int)GamePlayerMissed + 0x5, GamePlayerMissed_r);
+	Init_LandColMemory_t = new Trampoline((int)0x47BB50, (int)0x47BB57, InitLandColMemory_r);
 }

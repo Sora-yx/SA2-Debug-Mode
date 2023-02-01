@@ -66,6 +66,7 @@ public:
     }
 
     void saveOnSlot();
+    void resetSaveFiles();
     void loadSlot(ObjectMaster* obj);
     void changeSlot(Buttons input);
     void displaySaveText();
