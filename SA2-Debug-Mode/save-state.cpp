@@ -54,7 +54,7 @@ void SaveStates::getPlayerInfo() {
 
 	memcpy(&this->slots[currentSaveState].charData.player, MainCharacter[0], sizeof(ObjectMaster));
 	memcpy(&this->slots[currentSaveState].charData.data, MainCharacter[0]->Data1.Entity, sizeof(EntityData1));
-	memcpy(&this->slots[currentSaveState].charData.col, MainCharacter[0]->Data1.Entity->Collision, sizeof(CollisionInfo));
+	//memcpy(&this->slots[currentSaveState].charData.col, MainCharacter[0]->Data1.Entity->Collision, sizeof(CollisionInfo));
 
 	SaveCartPointer();
 
@@ -207,7 +207,7 @@ void SaveStates::restorePlayerInfo() {
 	if (TimeTotal % 1 == 0) //wait 1 frame to re load collision
 	{
 		memcpy(MainCharacter[0]->Data1.Entity, &this->slots[currentSaveState].charData.data, sizeof(EntityData1));
-		memcpy(MainCharacter[0]->Data1.Entity->Collision, &this->slots[currentSaveState].charData.col, sizeof(CollisionInfo));
+		//memcpy(MainCharacter[0]->Data1.Entity->Collision, &this->slots[currentSaveState].charData.col, sizeof(CollisionInfo));
 	}
 
 	return;
