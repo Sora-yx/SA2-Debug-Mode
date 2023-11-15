@@ -19,6 +19,12 @@ DataArray(char, PosRotBufferIndex, 0x1945910, 2);
 DataPointer(char, camConstPastPosIDX, 0x19f173c);
 DataPointer(__int16, ActiveLandTableColCount, 0x1DE9484);
 
+
+DataPointer(NJS_VECTOR, camPos, 0x01DCFF0C);
+DataPointer(NJS_VECTOR, camRot, 0x01DCFF18);
+DataPointer(NJS_VECTOR, camIDK, 0x01DCFF24);
+DataPointer(NJS_VECTOR, camTarget, 0x01DCFF30);
+
 #pragma pack(push, 1)
 struct cartStruct
 {
@@ -42,7 +48,9 @@ DataPointer(float, flt_1DCFF3C, 0x1DCFF3C);
 FastcallFunctionPointer(void, CameraFollowCharacter, (int playID), 0x4EC770);
 DataPointer(char, cam_handle, 0x01DCFF00);
 
-
+DataPointer(NJS_VECTOR, CamEventPos, 0x1DCFE10);
+DataPointer(int, CamEventAngleZ, 0x1DCFDF8);
+DataPointer(int, CamEventAngleY, 0x1DCFDFC);
 
 DataPointer(char, ShowHud, 0x0174AFCC);
 DataPointer(int, dword_1A558BC, 0x1A558BC);
@@ -82,5 +90,64 @@ static inline void AddConstantAttr(int a1, int a2)
 
 
 VoidFunc(sub_42D340, 0x42D340);
-
+DataPointer(int, nj_constant_attr_and_, 0x01DEB6A8);
+DataPointer(int, nj_constant_attr_or_, 0x01DEB6A0);
 DataPointer(char, PauseDisabled, 0x0174AFD6);
+
+using Angle3 = Rotation;
+struct taskwk;
+
+struct c_colli_hit_info
+{
+	char my_num;
+	char hit_num;
+	unsigned __int16 flag;
+	taskwk* hit_twp;
+};
+
+struct CCL_INFO
+{
+	char kind;
+	char form;
+	char push;
+	char damage;
+	unsigned int attr;
+	NJS_POINT3 center;
+	float a;
+	float b;
+	float c;
+	float d;
+	int angx;
+	int angy;
+	int angz;
+};
+
+struct colliwk
+{
+	unsigned __int16 id;
+	__int16 nbHit;
+	unsigned __int16 flag;
+	unsigned __int16 nbInfo;
+	float colli_range;
+	CCL_INFO* info;
+	c_colli_hit_info hit_info[16];
+	NJS_POINT3 normal;
+	ObjectMaster* mytask;
+	__int16 my_num;
+	__int16 hit_num;
+	colliwk* hit_cwp;
+};
+
+struct taskwk
+{
+	char mode;
+	char smode;
+	char id;
+	char btimer;
+	__int16 flag;
+	unsigned __int16 wtimer;
+	Angle3 ang;
+	NJS_POINT3 pos;
+	NJS_POINT3 scl;
+	colliwk* cwp;
+};

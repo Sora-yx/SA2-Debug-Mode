@@ -263,12 +263,12 @@ void DisplayCameraInfo()
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 7 + texPosY), "- CAMERA INFO -");
 	SetDebugFontColor(0xFFBFBFBF);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "POS X: %.2f", CameraData[0].location.pos.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "POS Y: %.2f", CameraData[0].location.pos.y);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "POS Z: %.2f", CameraData[0].location.pos.z);	
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "POS X: %.2f", CameraData.Position.x);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "POS Y: %.2f", CameraData.Position.y);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "POS Z: %.2f", CameraData.Position.z);	
 	
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "ANG X: %d", (Uint16)CameraData[0].location.ang.x, (360.0f / 65535.0f) * (Uint16)CameraData[0].location.ang.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "ANG Y: %d", (Uint16)CameraData[0].location.ang.y, (360.0f / 65535.0f) * (Uint16)CameraData[0].location.ang.y);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "ANG X: %d", (Uint16)CameraData.Rotation.x, (360.0f / 65535.0f) * (Uint16)CameraData.Rotation.x);
+	DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "ANG Y: %d", (Uint16)CameraData.Rotation.y, (360.0f / 65535.0f) * (Uint16)CameraData.Rotation.y);
 
 	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "FREECAM MODE: %d", FreeCamMode);
 

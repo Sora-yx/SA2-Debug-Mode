@@ -10,13 +10,6 @@ Trampoline* GamePlayerMissed_t = nullptr;
 static Trampoline* Init_LandColMemory_t = nullptr;
 const char slot_count = 7;
 
-void SaveStates::resetSaveFiles()
-{
-	for (int i = 0; i < slot_count; i++)
-	{
-		memset(&this->slots[currentSaveState], 0, sizeof(save_struct));
-	}	
-}
 
 void SaveStates::getGameInfo() {
 
@@ -35,7 +28,7 @@ void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].pauseValue[0] = dword_1A558BC;
 	this->slots[currentSaveState].pauseValue[1] = dword_1A558B8;
 	this->slots[currentSaveState].pauseValue[2] = dword_1AEE5AC;
-	this->slots[currentSaveState].playerPaused = PlayerPaused;
+	this->slots[currentSaveState].playerPaused = PlayerPaused;	
 	this->slots[currentSaveState].pauseDisabled = PauseDisabled;
 
 	return;
@@ -54,7 +47,6 @@ void SaveStates::getPlayerInfo() {
 
 	memcpy(&this->slots[currentSaveState].charData.player, MainCharacter[0], sizeof(ObjectMaster));
 	memcpy(&this->slots[currentSaveState].charData.data, MainCharacter[0]->Data1.Entity, sizeof(EntityData1));
-	//memcpy(&this->slots[currentSaveState].charData.col, MainCharacter[0]->Data1.Entity->Collision, sizeof(CollisionInfo));
 
 	SaveCartPointer();
 
@@ -93,11 +85,7 @@ void SaveStates::getPlayerInfo() {
 }
 
 //credit onvar
-INT_PTR camPast = 0x1A5A234;
-INT_PTR camRot = 0x1a5a238;
 INT_PTR camConstPastPos = 0x19f1740;
-INT_PTR camPastPosIDX = 0x19f173c;
-
 DataPointer(char, CampastPosIDX, 0x19f173c);
 
 void SaveStates::getCameraInfo() {
@@ -106,13 +94,10 @@ void SaveStates::getCameraInfo() {
 	memcpy(&this->slots[currentSaveState].CameraUnit.cameraBackup, (void*)0x1dcff00, 0x2518);
 
 	//cam struct and array (fix most of the random cam issues)
-	memcpy(&this->slots[currentSaveState].CameraUnit.cameraPastPosBackup, (void*)camPast, 0xC000);
-	memcpy(&this->slots[currentSaveState].CameraUnit.cameraPastRotBackup, (void*)camRot, 0xC000);
 	this->slots[currentSaveState].CameraUnit.PosRotBufferIndex = PosRotBufferIndex[0];
 
 	memcpy(&this->slots[currentSaveState].CameraUnit.camConstpastPos, (void*)camConstPastPos, 0xC000);
 	this->slots[currentSaveState].CameraUnit.camConstPastPosIDX = CampastPosIDX;
-
 
 	return;
 }
@@ -132,7 +117,7 @@ void SaveStates::restoreGameInfo() {
 	else if (GameState == GameStates_Ingame && this->slots[currentSaveState].gameState == GameStates_Pause)
 	{
 		PauseSound(1);
-	}
+	}	
 
 	dword_1A558BC = this->slots[currentSaveState].pauseValue[0];
 	dword_1A558B8 = this->slots[currentSaveState].pauseValue[1];
@@ -155,19 +140,16 @@ void SaveStates::restoreGameInfo() {
 	CartTimer = this->slots[currentSaveState].timerCart;
 
 	TimerStopped = this->slots[currentSaveState].timerStopped;
-
 	return;
 }
 
 
 void SaveStates::restorePlayerInfo() {
-
 	EntityData1* data = MainCharObj1[0];
 	CharObj2Base* co2 = MainCharObj2[0];
 
 	if (!data)
 		return;
-
 	if (getCartPointer())
 	{
 		isCartSaved = true;
@@ -207,7 +189,6 @@ void SaveStates::restorePlayerInfo() {
 	if (TimeTotal % 1 == 0) //wait 1 frame to re load collision
 	{
 		memcpy(MainCharacter[0]->Data1.Entity, &this->slots[currentSaveState].charData.data, sizeof(EntityData1));
-		//memcpy(MainCharacter[0]->Data1.Entity->Collision, &this->slots[currentSaveState].charData.col, sizeof(CollisionInfo));
 	}
 
 	return;
@@ -216,9 +197,6 @@ void SaveStates::restorePlayerInfo() {
 void SaveStates::restoreCameraInfo() {
 
 	memcpy((void*)0x1dcff00, &this->slots[currentSaveState].CameraUnit.cameraBackup, 0x2518);
-	//Crash the game for some reason...
-	//memcpy((void*)camPast, &this->slots[currentSaveState].CameraUnit.cameraPastPosBackup, 0xC000);
-	//memcpy((void*)camRot, &this->slots[currentSaveState].CameraUnit.cameraPastRotBackup, 0xC0000);
 	PosRotBufferIndex[0] = this->slots[currentSaveState].CameraUnit.PosRotBufferIndex;
 	memcpy((void*)camConstPastPos, &this->slots[currentSaveState].CameraUnit.camConstpastPos, 0xC000);
 	CampastPosIDX = this->slots[currentSaveState].CameraUnit.camConstPastPosIDX;
@@ -342,7 +320,6 @@ void SaveStates::saveOnSlot() {
 	this->getPlayerInfo();
 	SetDebugFontColor(0xFF1dcf01);
 	this->message = "Saved on slot: %d";
-	return;
 }
 
 void SaveStates::loadSlot(ObjectMaster* obj) {
@@ -464,7 +441,7 @@ void SaveStateManager(ObjectMaster* obj) {
 		data->Action = CheckInputs;
 		break;
 	case CheckInputs:
-		data->Timer = 0;
+		data->field_6 = 0;
 		data->Index = 0;
 		data->NextAction = 0;
 		SavestatesCheckInput(obj);
@@ -479,7 +456,7 @@ void SaveStateManager(ObjectMaster* obj) {
 		break;
 	case SaveDelay:
 
-		if (++data->Timer == 8) {
+		if (++data->field_6 == 8) {
 			data->Action = CheckInputs;
 
 			if (!isFreeMov) {
@@ -532,7 +509,14 @@ void __cdecl GamePlayerMissed_r(ObjectMaster* obj)
 	origin(obj);
 }
 
-//Reset save files when loading a new stage to avoid crash if you load a previous save
+void SaveStates::resetSaveFiles()
+{
+	for (int i = 0; i < slot_count; i++)
+	{
+		memset(&this->slots[currentSaveState], 0, sizeof(save_struct));
+	}
+}
+
 void InitLandColMemory_r()
 {
 	if (obj1)
@@ -543,7 +527,6 @@ void InitLandColMemory_r()
 	VoidFunc(origin, Init_LandColMemory_t->Target());
 	origin();
 }
-
 
 void init_SaveState() {
 	MechEggman_chkDmg_t = new Trampoline((int)0x742C10, (int)0x742C17, MechEggman_ChecksDamage_r);

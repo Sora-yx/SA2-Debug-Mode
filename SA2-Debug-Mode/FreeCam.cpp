@@ -207,16 +207,15 @@ void FreeCam_CheckInput()
 			SetCursorPos(w / 2, h / 2);
 
 			//Use Cam Event since the regular cam has issue with angle for some reason
-	
-			RegisterCameraMode(0, 20);
-			DoSomethingWithCam(*(int*)&CameraData[0].currentCameraSlot, 0, 0);
+			SetCameraEvent(0, 20);
+			DoSomethingWithCam(*(int*)&CameraData.gap1AC[168], 0, 0);
 			*(float*)0x1DCFE1C = 1.0f; //Zoom Needed to make angle working
 			*(int*)0x1DCFDE0 = 3;
 			*(int*)0x1DCFDE4 = 0;
 			*(int*)0x1DCFDE8 = 0;
-			CamEventPos = CameraData[0].location.pos;
-			CamEventAngleY = CameraData[0].location.ang.y;
-			CamEventAngleZ = CameraData[0].location.ang.z;
+			CamEventPos = CameraData.Position;
+			CamEventAngleY = CameraData.Rotation.y;
+			CamEventAngleZ = CameraData.Rotation.z;	
 
 			ShowHud = 0;
 			HudSpecialEnabled = 0;
@@ -234,7 +233,7 @@ void FreeCam_CheckInput()
 
 			IsNotPauseHide = 1;
 			isGamePaused = false;
-			ReleaseCamera(0, CameraData[0].currentCameraSlot);
+			ResetCam(CameraData.gap1AC[168], 0);
 		}
 
 		delayCam = 35;
