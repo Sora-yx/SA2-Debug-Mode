@@ -5,9 +5,9 @@ int currentSaveState = 0;
 SaveStates* SaveStates::instance = 0;
 SaveStates* obj1 = obj1->getInstance();
 bool canDisplayMSG = false;
-FunctionHook<void, EntityData1*, EntityData2*, CharObj2Base*, CharObj2Base*> MechEggman_chkDmg_t((intptr_t)0x742C10);
-FunctionHook<void, ObjectMaster*> GamePlayerMissed_t((intptr_t)GamePlayerMissed);
-static FunctionHook<void> Init_LandColMemory_t((intptr_t)0x47BB50);
+FunctionHook<void, EntityData1*, EntityData2*, CharObj2Base*, CharObj2Base*> MechEggman_chkDmg_h((intptr_t)0x742C10);
+FunctionHook<void, ObjectMaster*> GamePlayerMissed_h((intptr_t)GamePlayerMissed);
+static FunctionHook<void> Init_LandColMemory_h((intptr_t)0x47BB50);
 const char slot_count = 7;
 
 void SaveStates::getGameInfo() {
@@ -415,7 +415,7 @@ void __cdecl MechEggman_ChecksDamage_r(EntityData1* a1, EntityData2* a3, CharObj
 		}
 	}
 
-	MechEggman_chkDmg_t.Original(a1, a3, a4, a2);
+	MechEggman_chkDmg_h.Original(a1, a3, a4, a2);
 }
 
 //since object doesn't run when the pause menu is active, we manually allow the player to save when the game is paused.
@@ -435,7 +435,7 @@ void __cdecl GamePlayerMissed_r(ObjectMaster* obj) {
 		}
 	}
 
-	GamePlayerMissed_t.Original(obj);
+	GamePlayerMissed_h.Original(obj);
 }
 
 void SaveStates::resetSaveFiles() {
@@ -449,11 +449,11 @@ void InitLandColMemory_r() {
 		obj1->resetSaveFiles();
 	}
 
-	Init_LandColMemory_t.Original();
+	Init_LandColMemory_h.Original();
 }
 
 void init_SaveState() {
-	MechEggman_chkDmg_t.Hook(MechEggman_ChecksDamage_r);
-	GamePlayerMissed_t.Hook(GamePlayerMissed_r);
-	Init_LandColMemory_t.Hook(InitLandColMemory_r);
+	MechEggman_chkDmg_h.Hook(MechEggman_ChecksDamage_r);
+	GamePlayerMissed_h.Hook(GamePlayerMissed_r);
+	Init_LandColMemory_h.Hook(InitLandColMemory_r);
 }
