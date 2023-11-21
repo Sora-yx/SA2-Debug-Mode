@@ -40,11 +40,9 @@ void DeathZone_Display(ObjectMaster* obj)
 	for (uint8_t i = 0; i < data->Index; i++) {
 
 		njSetTexture(texlist_objtex_common);
-		njPushMatrix(CURRENT_MATRIX);
-		SaveConstantAttr();
-		SaveControl3D();
-		OnControl3D(NJD_CONTROL_3D_CNK_BLEND_MODE | NJD_CONTROL_3D_CONSTANT_MATERIAL | NJD_CONTROL_3D_ENABLE_ALPHA | NJD_CONTROL_3D_CONSTANT_ATTR);
-		AddConstantAttr(2048, 0);
+		njPushMatrix(_nj_current_matrix_ptr_);
+		njControl3D_Backup();
+		njControl3D_Add(NJD_CONTROL_3D_CONSTANT_MATERIAL | NJD_CONTROL_3D_ENABLE_ALPHA | NJD_CONTROL_3D_CONSTANT_ATTR);
 		SetMaterial(0.4f, 1.0f, 0, 0);
 
 		sub_42D340();
@@ -53,9 +51,8 @@ void DeathZone_Display(ObjectMaster* obj)
 			ProcessChunkModelsWithCallback(DZObj[i]->getmodel(), ProcessChunkModel);
 
 		njPopMatrix(1u);
-		LoadControl3D();
+		njControl3D_Restore();
 		ResetMaterial();
-		LoadConstantAttr();
 	}
 }
 
@@ -83,9 +80,9 @@ void DeathZoneRender_Manager(ObjectMaster* obj)
 		}
 		break;
 	case 2:
-		if (++data->Timer == 30)
+		if (++data->field_6 == 30)
 		{
-			data->Timer = 0;
+			data->field_6 = 0;
 			data->Action--;
 		}
 		break;

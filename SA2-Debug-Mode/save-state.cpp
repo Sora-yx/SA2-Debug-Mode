@@ -26,7 +26,7 @@ void SaveStates::getGameInfo() {
 	this->slots[currentSaveState].pauseValue[0] = dword_1A558BC;
 	this->slots[currentSaveState].pauseValue[1] = dword_1A558B8;
 	this->slots[currentSaveState].pauseValue[2] = dword_1AEE5AC;
-	this->slots[currentSaveState].playerPaused = PlayerPaused;
+	this->slots[currentSaveState].playerPaused = PlayerPaused;	
 	this->slots[currentSaveState].pauseDisabled = PauseDisabled;
 }
 
@@ -98,7 +98,7 @@ void SaveStates::restoreGameInfo() {
 		dword_17483FC = 1;
 	} else if (GameState == GameStates_Ingame && this->slots[currentSaveState].gameState == GameStates_Pause) {
 		PauseSound(1);
-	}
+	}	
 
 	dword_1A558BC = this->slots[currentSaveState].pauseValue[0];
 	dword_1A558B8 = this->slots[currentSaveState].pauseValue[1];

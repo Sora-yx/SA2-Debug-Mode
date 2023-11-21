@@ -50,7 +50,6 @@ private:
     void getGameInfo();
     void getPlayerInfo();
     void getCameraInfo();
-    void getObjectsState();
     void restoreGameInfo();
     void restorePlayerInfo();
     void restoreObjectState();
