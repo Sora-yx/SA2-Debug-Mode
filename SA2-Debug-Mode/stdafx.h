@@ -11,7 +11,6 @@
 #include "LandTableInfo.h"
 #include "ModelInfo.h"
 #include "AnimationFile.h"
-#include "FunctionHook.h"
 #include "Trampoline.h"
 #include "sa2-util.h"
 #include "mod.h"

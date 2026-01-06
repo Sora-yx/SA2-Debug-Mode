@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "save-state.h"
 
-int currentSaveState = 0;
+uint8_t currentSaveState = 0;
 SaveStates* SaveStates::instance = 0;
 SaveStates* obj1 = obj1->getInstance();
 bool canDisplayMSG = false;
-FunctionHook<void, EntityData1*, EntityData2*, CharObj2Base*, CharObj2Base*> MechEggman_chkDmg_h((intptr_t)0x742C10);
-FunctionHook<void, ObjectMaster*> GamePlayerMissed_h((intptr_t)GamePlayerMissed);
-static FunctionHook<void> Init_LandColMemory_h((intptr_t)0x47BB50);
+Trampoline* MechEggman_chkDmg_t = nullptr;
+Trampoline* GamePlayerMissed_t = nullptr;
+static Trampoline* Init_LandColMemory_t = nullptr;
 const char slot_count = 7;
 
 void SaveStates::getGameInfo() {
@@ -172,8 +172,8 @@ void SaveStates::restoreCameraInfo() {
 	CampastPosIDX = this->slots[currentSaveState].CameraUnit.camConstPastPosIDX;
 }
 
-int bannedLevel[9] = { LevelIDs_PyramidCave, LevelIDs_AquaticMine, LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall,
-LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush };
+int bannedLevel[10] = { LevelIDs_PyramidCave, LevelIDs_AquaticMine, LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall,
+LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush, LevelIDs_EternalEngine };
 ObjectFuncPtr bannedObj[2] = { (ObjectFuncPtr)0x6A79E0,(ObjectFuncPtr)0x6F7AF0 };
 
 bool bannedLvlException() {
@@ -415,7 +415,8 @@ void __cdecl MechEggman_ChecksDamage_r(EntityData1* a1, EntityData2* a3, CharObj
 		}
 	}
 
-	MechEggman_chkDmg_h.Original(a1, a3, a4, a2);
+	FunctionPointer(void, original, (EntityData1 * a1, EntityData2 * a3, CharObj2Base * a4, CharObj2Base * a2), MechEggman_chkDmg_t->Target());
+	original(a1, a3, a4, a2);
 }
 
 //since object doesn't run when the pause menu is active, we manually allow the player to save when the game is paused.
@@ -435,7 +436,8 @@ void __cdecl GamePlayerMissed_r(ObjectMaster* obj) {
 		}
 	}
 
-	GamePlayerMissed_h.Original(obj);
+	ObjectFunc(origin, GamePlayerMissed_t->Target());
+	origin(obj);
 }
 
 void SaveStates::resetSaveFiles() {
@@ -449,11 +451,12 @@ void InitLandColMemory_r() {
 		obj1->resetSaveFiles();
 	}
 
-	Init_LandColMemory_h.Original();
+	VoidFunc(origin, Init_LandColMemory_t->Target());
+	origin();
 }
 
 void init_SaveState() {
-	MechEggman_chkDmg_h.Hook(MechEggman_ChecksDamage_r);
-	GamePlayerMissed_h.Hook(GamePlayerMissed_r);
-	Init_LandColMemory_h.Hook(InitLandColMemory_r);
+	MechEggman_chkDmg_t = new Trampoline((int)0x742C10, (int)0x742C17, MechEggman_ChecksDamage_r);
+	GamePlayerMissed_t = new Trampoline((int)GamePlayerMissed, (int)GamePlayerMissed + 0x5, GamePlayerMissed_r);
+	Init_LandColMemory_t = new Trampoline((int)0x47BB50, (int)0x47BB57, InitLandColMemory_r);
 }
