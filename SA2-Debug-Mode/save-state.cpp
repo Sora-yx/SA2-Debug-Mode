@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "save-state.h"
 
-int currentSaveState = 0;
+uint8_t currentSaveState = 0;
 SaveStates* SaveStates::instance = 0;
 SaveStates* obj1 = obj1->getInstance();
 bool canDisplayMSG = false;
@@ -172,8 +172,8 @@ void SaveStates::restoreCameraInfo() {
 	CampastPosIDX = this->slots[currentSaveState].CameraUnit.camConstPastPosIDX;
 }
 
-int bannedLevel[9] = { LevelIDs_PyramidCave, LevelIDs_AquaticMine, LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall,
-LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush };
+int bannedLevel[10] = { LevelIDs_PyramidCave, LevelIDs_AquaticMine, LevelIDs_HiddenBase, LevelIDs_LostColony, LevelIDs_CosmicWall,
+LevelIDs_EggQuarters, LevelIDs_IronGate, LevelIDs_FinalChase, LevelIDs_FinalRush, LevelIDs_EternalEngine };
 ObjectFuncPtr bannedObj[2] = { (ObjectFuncPtr)0x6A79E0,(ObjectFuncPtr)0x6F7AF0 };
 
 bool bannedLvlException() {
