@@ -308,15 +308,14 @@ void SaveStates::changeSlot(Buttons input) {
 
 	if (input & Buttons_Up) {
 		currentSaveState++;
+		if (currentSaveState > slot_count)
+			currentSaveState = 0;
 	} else if (input & Buttons_Down) {
+		if (currentSaveState == 0)
+			currentSaveState = slot_count + 1;
+
 		currentSaveState--;
 	}
-
-	if (currentSaveState > slot_count)
-		currentSaveState = 0;
-
-	if (currentSaveState < 0)
-		currentSaveState = slot_count;
 
 	timerMessage = 60;
 	this->message = "Current Slot %d";
