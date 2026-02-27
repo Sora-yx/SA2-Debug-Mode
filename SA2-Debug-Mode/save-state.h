@@ -13,11 +13,11 @@ struct CharaStruct {
 };
 
 struct CameraUnit {
-    char cameraBackup[0x2518];
-    char cameraPastPosBackup[0xc000];
-    char cameraPastRotBackup[0xc000];
+    char cameraBackup[0x2518];  
+    char cameraPastPosBackup[0xc00];
+    char cameraPastRotBackup[0xc00];
     char PosRotBufferIndex;
-    char camConstpastPos[0xc000];
+    char camConstpastPos[0xc00];
     char camConstPastPosIDX;
 };
 
