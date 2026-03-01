@@ -84,7 +84,7 @@ void SaveStates::getCameraInfo() {
 	//cam struct and array (fix most of the random cam issues)
 	this->slots[currentSaveState].CameraUnit.PosRotBufferIndex = PosRotBufferIndex[0];
 
-	memcpy(&this->slots[currentSaveState].CameraUnit.camConstpastPos, (void*)camConstPastPos, 0xC000);
+	memcpy(&this->slots[currentSaveState].CameraUnit.camConstpastPos, (void*)camConstPastPos, 0xC00);
 	this->slots[currentSaveState].CameraUnit.camConstPastPosIDX = CampastPosIDX;
 }
 
@@ -168,7 +168,7 @@ void SaveStates::restorePlayerInfo() {
 void SaveStates::restoreCameraInfo() {
 	memcpy((void*)0x1dcff00, &this->slots[currentSaveState].CameraUnit.cameraBackup, 0x2518);
 	PosRotBufferIndex[0] = this->slots[currentSaveState].CameraUnit.PosRotBufferIndex;
-	memcpy((void*)camConstPastPos, &this->slots[currentSaveState].CameraUnit.camConstpastPos, 0xC000);
+	memcpy((void*)camConstPastPos, &this->slots[currentSaveState].CameraUnit.camConstpastPos, 0xC00 );
 	CampastPosIDX = this->slots[currentSaveState].CameraUnit.camConstPastPosIDX;
 }
 
