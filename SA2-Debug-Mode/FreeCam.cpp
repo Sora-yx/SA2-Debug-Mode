@@ -17,8 +17,6 @@ bool isGamePaused = false;
 bool isCheatDisableHud = false;
 bool isCheatDisableExtraHud = false;
 
-auto DoSomethingWithCam = GenerateUsercallWrapper<void (*)(int a1, int a2, int a3)>(noret, 0x4EBCD0, rEAX, rECX, rEDI);
-
 enum FreeCamModes
 {
 	Camera_None = 0,
@@ -207,15 +205,15 @@ void FreeCam_CheckInput()
 			SetCursorPos(w / 2, h / 2);
 
 			//Use Cam Event since the regular cam has issue with angle for some reason
-			SetCameraEvent(0, 20);
-			DoSomethingWithCam(*(int*)&CameraData.gap1AC[168], 0, 0);
+			RegisterCameraMode(0, 20);
+			SetAdjustMode(*(int*)&CameraData[0].currentCameraSlot, 0, 0);
 			*(float*)0x1DCFE1C = 1.0f; //Zoom Needed to make angle working
 			*(int*)0x1DCFDE0 = 3;
 			*(int*)0x1DCFDE4 = 0;
 			*(int*)0x1DCFDE8 = 0;
-			CamEventPos = CameraData.Position;
-			CamEventAngleY = CameraData.Rotation.y;
-			CamEventAngleZ = CameraData.Rotation.z;	
+			CamEventPos = CameraData[0].location.pos;
+			CamEventAngleY = CameraData[0].location.ang.y;
+			CamEventAngleZ = CameraData[0].location.ang.z;
 
 			ShowHud = 0;
 			HudSpecialEnabled = 0;
@@ -233,7 +231,9 @@ void FreeCam_CheckInput()
 
 			IsNotPauseHide = 1;
 			isGamePaused = false;
-			ResetCam(CameraData.gap1AC[168], 0);
+			// Modloader flipped the args for this func in
+			// d634b7d25bea4be297f071221098cfc9eef2b19a
+			ReleaseCamera(0, CameraData[0].currentCameraSlot);
 		}
 
 		delayCam = 35;
