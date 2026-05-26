@@ -45,7 +45,7 @@ void GetGoalRing()
 
 		if (CurrentObjectList->List[id].Function == GoalRing_Main)
 		{
-			CurrentObjectList->List[id].DistanceMaybe *= 120; //increase goal ring display distance
+			CurrentObjectList->List[id].Distance *= 120; //increase goal ring display distance
 
 			if (Set[i].XRot != 1 && MissionNum == 2) { //if it's a lost chao mission, don't take the regular goal ring pos
 				continue;

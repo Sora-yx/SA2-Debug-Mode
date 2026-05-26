@@ -374,7 +374,7 @@ void SaveStateManager(ObjectMaster* obj) {
 		data->Action = CheckInputs;
 		break;
 	case CheckInputs:
-		data->field_6 = 0;
+		data->Timer = 0;
 		data->Index = 0;
 		data->NextAction = 0;
 		SavestatesCheckInput(obj);
@@ -389,7 +389,7 @@ void SaveStateManager(ObjectMaster* obj) {
 		break;
 	case SaveDelay:
 
-		if (++data->field_6 == 8) {
+		if (++data->Timer == 8) {
 			data->Action = CheckInputs;
 
 			if (!isFreeMov) {
