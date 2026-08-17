@@ -7,110 +7,130 @@ static NJS_TEXLIST RecBG_TEXLIST = { arrayptrandlength(RecBG, Uint32) };
 ObjectMaster* DrawBGObj = nullptr;
 extern int currentPage;
 
+static const int hudTexAnimID = 1;
+constexpr Sint16 panelU1 = 11;	// 44 / 1024 * 256
+constexpr Sint16 panelV1 = 21;	// 84 / 1024 * 256
+constexpr Sint16 panelU2 = 244;	// 976 / 1024 * 256
+constexpr Sint16 panelV2 = 235;	// 940 / 1024 * 256
+
 NJS_TEXANIM	SA2_HUD_TEXANIM[]{
-	{ 0x30, 0x10, 0x10, 0, 0, 0, 0x100, 0x100, 0, 0x20 },
-	{ 0x30, 0x10, 0x10, 0, 0, 0, 0x100, 0x100, 1, 0x20 },
+	{ 0x30, 0x10, 0, 0, 0, 0, 0x100, 0x100, 0, 0x20 },
+	{ 0x30, 0x10, 0, 0, panelU1, panelV1, panelU2, panelV2, 1, 0x20 },
 };
 
 NJS_SPRITE SA2_HUD_SPRITE = { { 0, 0, 0 }, 1.0, 1.0, 0, &RecBG_TEXLIST , SA2_HUD_TEXANIM };
 
+
+struct textExtentsData
+{
+	int page;
+	int minCol;
+	int maxCol; // one past the last character
+	int minRow;
+	int maxRow;
+	bool valid;
+};
+
+textExtentsData textExtents;
+
+float GetHudScale()
+{
+	if (VerticalResolution < 1.0f)
+		return 1.0f;
+
+	return VerticalResolution / hudRefHeight;
+}
+
+int GetDebugFontSize()
+{
+	const int size = (int)(debugFontRefSize * GetHudScale() + 0.5f);
+
+	return size < 8 ? 8 : size;
+}
+
+float PixelToHudX(float pixelX)
+{
+	return (pixelX - HorizontalResolution * 0.5f) / GetHudScale() + hudCenterX;
+}
+
+float PixelToHudY(float pixelY)
+{
+	return pixelY / GetHudScale();
+}
+
+void ResetTextExtents()
+{
+	textExtents.valid = false;
+}
+
+void AddTextExtents(int col, int row, int length)
+{
+	if (textExtents.page != currentPage)
+	{
+		textExtents.page = currentPage;
+		textExtents.valid = false;
+	}
+
+	if (!textExtents.valid)
+	{
+		textExtents.minCol = col;
+		textExtents.maxCol = col + length;
+		textExtents.minRow = row;
+		textExtents.maxRow = row;
+		textExtents.valid = true;
+		return;
+	}
+
+	if (col < textExtents.minCol)
+		textExtents.minCol = col;
+
+	if (col + length > textExtents.maxCol)
+		textExtents.maxCol = col + length;
+
+	if (row < textExtents.minRow)
+		textExtents.minRow = row;
+
+	if (row > textExtents.maxRow)
+		textExtents.maxRow = row;
+}
+
+bool GetTextExtentsCells(int* minCol, int* maxCol, int* minRow, int* maxRow)
+{
+	if (!textExtents.valid)
+		return false;
+
+	*minCol = textExtents.minCol;
+	*maxCol = textExtents.maxCol;
+	*minRow = textExtents.minRow;
+	*maxRow = textExtents.maxRow;
+
+	return true;
+}
+
+bool GetTextPanelRect(hudRect* out)
+{
+	if (!textExtents.valid || textExtents.page != currentPage)
+		return false;
+
+	const float font = (float)GetDebugFontSize();
+	const float left = textExtents.minCol * font;
+	const float top = textExtents.minRow * font;
+	const float width = (textExtents.maxCol - textExtents.minCol) * font;
+	const float height = (textExtents.maxRow + 1 - textExtents.minRow) * font;
+
+	const float scale = GetHudScale();
+
+	out->x = PixelToHudX(left) - panelPadX;
+	out->y = PixelToHudY(top) - panelPadY;
+	out->w = width / scale + panelPadX * 2.0f;
+	out->h = height / scale + panelPadY * 2.0f;
+
+	return true;
+}
+
 void DeleteDebugManager(ObjectMaster* obj) {
 	DrawBGObj = nullptr;
 	DeleteKartPointer();
-}
-
-void CalcAndDrawRec(NJS_SPRITE sp, float FontScale) {
-
-	float x;
-	float y;
-
-	switch (currentPage) {
-
-	case pPlayerInfo:
-		x = 1.80f;
-		y = 0.90f;
-		break;
-	case pGameInfo:
-		x = 1.90f;
-		y = 0.70f;
-		break;
-	case pCharacterInfo:
-		x = 2.40f;
-		y = 0.70f;
-		break;
-	default:
-		x = 1.80f;
-		y = 0.70f;
-		break;
-	}
-
-	if (CurrentLevel == LevelIDs_ChaoWorld) {
-		if (HorizontalResolution >= 1920)
-			SA2_HUD_SPRITE.p.x = HorizontalStretch - 10.0f;
-
-		if (HorizontalResolution == 1280)
-		{
-			SA2_HUD_SPRITE.p.x = HorizontalStretch - 30.0f;
-		}
-
-		if (HorizontalResolution < 1280 && HorizontalResolution > 800)
-		{
-			SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 20;
-		}
-
-		if (HorizontalResolution <= 800)
-			SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 50.0;
-	}
-	else {
-
-		if (HorizontalResolution >= 1280)
-		{
-			SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 5;
-		}
-
-		if (HorizontalResolution <= 800)
-			SA2_HUD_SPRITE.p.x = HorizontalStretch + 32.0 + 50.0;
-	}
-
-
-	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280) {
-		if (HorizontalResolution >= 1920)
-			SA2_HUD_SPRITE.p.x = SA2_HUD_SPRITE.p.x + 40.0f;
-
-		SA2_HUD_SPRITE.p.y = VerticalStretch + 120.0f;
-	}
-	else {
-		SA2_HUD_SPRITE.p.y = VerticalStretch + 90.0f;
-
-	}
-
-
-	if (CurrentLevel == LevelIDs_KartRace || CurrentLevel == LevelIDs_Route101280) {
-
-		SA2_HUD_SPRITE.sx = { x * FontScale * 1.70f };
-		SA2_HUD_SPRITE.sy = { y * FontScale * 8.5f };
-	}
-	else {
-
-		SA2_HUD_SPRITE.sx = { x * FontScale * 1.70f };
-		SA2_HUD_SPRITE.sy = { y * FontScale * 10.0f };
-	}
-
-	if (HorizontalResolution <= 800)
-	{
-		SA2_HUD_SPRITE.sx = SA2_HUD_SPRITE.sx + 0.3f;
-	}
-
-	if (HorizontalResolution == 800)
-	{
-		SA2_HUD_SPRITE.p.y = SA2_HUD_SPRITE.p.y - 15.0;
-	}
-
-	if (HorizontalResolution < 800)
-		SA2_HUD_SPRITE.sy = SA2_HUD_SPRITE.sy + 0.8f;
-
-
-	njDrawSprite2D(&SA2_HUD_SPRITE, 1, 1, NJD_SPRITE_ALPHA | NJD_SPRITE_COLOR);
 }
 
 void DrawDebugRectangle(ObjectMaster* obj)
@@ -118,23 +138,24 @@ void DrawDebugRectangle(ObjectMaster* obj)
 	if (!currentPage)
 		return;
 
+	hudRect rect;
+
+	if (!GetTextPanelRect(&rect))
+		return;
+
 	SetMaterial(1, 1, 1, 1);
 	njSetTexture(&RecBG_TEXLIST);
 
-	float FontScale;
 
-	if ((float)HorizontalResolution / (float)VerticalResolution > 1.33f)
-		FontScale = floor((float)VerticalResolution / 480.0f);
-	else
-		FontScale = floor((float)HorizontalResolution / 640.0f);
+	SA2_HUD_TEXANIM[hudTexAnimID].sx = (Sint16)(rect.w + 0.5f);
+	SA2_HUD_TEXANIM[hudTexAnimID].sy = (Sint16)(rect.h + 0.5f);
 
-	if (FontScale <= 1.0)
-		FontScale *= 1.5;
+	SA2_HUD_SPRITE.p.x = rect.x;
+	SA2_HUD_SPRITE.p.y = rect.y;
+	SA2_HUD_SPRITE.sx = 1.0f;
+	SA2_HUD_SPRITE.sy = 1.0f;
 
-	if (HorizontalResolution <= 800)
-		FontScale += 0.3;
-
-	CalcAndDrawRec(SA2_HUD_SPRITE, FontScale);
+	njDrawSprite2D(&SA2_HUD_SPRITE, hudTexAnimID, 1.0f, NJD_SPRITE_ALPHA | NJD_SPRITE_COLOR);
 	ResetMaterial();
 }
 

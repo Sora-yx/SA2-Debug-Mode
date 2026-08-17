@@ -15,9 +15,9 @@ void DisplayGoalRingPos(int texFirst, int texPosY)
 		return;
 
 	if (MissionNum == 2)
-		DisplayDebugStringFormatted(NJM_LOCATION(3, texFirst + texPosY), "CHAO DISTANCE: %.2f", CheckDistance(&GoalRingPosition, &MainCharObj1[0]->Position));
+		PrintPanelText(3, texFirst + texPosY, "CHAO DISTANCE: %.2f", CheckDistance(&GoalRingPosition, &MainCharObj1[0]->Position));
 	else if (!EmeraldManagerObj2)
-		DisplayDebugStringFormatted(NJM_LOCATION(3, texFirst + texPosY), "GOAL DISTANCE: %.2f", CheckDistance(&GoalRingPosition, &MainCharObj1[0]->Position));
+		PrintPanelText(3, texFirst + texPosY, "GOAL DISTANCE: %.2f", CheckDistance(&GoalRingPosition, &MainCharObj1[0]->Position));
 }
 
 

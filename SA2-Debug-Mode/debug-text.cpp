@@ -1,46 +1,48 @@
 #include "stdafx.h"
+#include <cstdarg>
+#include <cstdio>
 
 int currentPage = None;
-char texPosY = 4;
-char resPosY = 0;
-const char scaleText = 14;
+int texPosY = 4;
 std::string debugText = "";
 int DebugMessageTimer = 0;
-int DebugFontSize = 0;
 
-void ScaleDebugFont(int scale)
+static void ScaleDebugFont()
 {
-	float FontScale;
+	HelperFunctionsGlobal.SetDebugFontSize((float)GetDebugFontSize());
 
-	if ((float)HorizontalResolution / (float)VerticalResolution > 1.33f)
-		FontScale = floor((float)VerticalResolution / 480.0f);
-	else
-		FontScale = floor((float)HorizontalResolution / 640.0f);
+}
 
-	if (HorizontalResolution < 800)
-		scale -= 1;
+// Formats a line, records where it lands so DrawDebugRectangle can size the
+// background around it, then queues it.
+void PrintPanelText(int col, int row, const char* format, ...)
+{
+	char text[128];
 
-	if (!DebugFontSize)
-		DebugFontSize = FontScale * scale;
+	va_list args;
+	va_start(args, format);
+	int length = vsnprintf(text, sizeof(text), format, args);
+	va_end(args);
 
-	HelperFunctionsGlobal.SetDebugFontSize(FontScale * scale);
+	if (length < 0)
+		return;
 
+	if (length >= (int)sizeof(text))
+		length = (int)sizeof(text) - 1;
 
-	if (HorizontalResolution <= 1280)
-		resPosY = 5;
-
-	if (HorizontalResolution <= 800)
-		resPosY = 0;
-
-	return;
+	AddTextExtents(col, row, length);
+	HelperFunctionsGlobal.DisplayDebugString(NJM_LOCATION(col, row), text);
 }
 
 void setTexPosY() {
 
-	if (CurrentLevel == LevelIDs_Route101280 || CurrentLevel == LevelIDs_KartRace)
-		texPosY = 6.0f + resPosY;
-	else
-		texPosY = 4.0f + resPosY;
+	const int rowOffset = (CurrentLevel == LevelIDs_Route101280 || CurrentLevel == LevelIDs_KartRace) ? 6 : 4;
+
+	if (rowOffset != texPosY)
+	{
+		texPosY = rowOffset;
+		ResetTextExtents(); // the whole block moved, measure it again
+	}
 
 	return;
 }
@@ -53,45 +55,45 @@ void DisplayPlayerInformation() {
 	if (MainCharObj1[0] == nullptr || CurrentLevel == LevelIDs_KartRace)
 	{
 		SetDebugFontColor(0xFFFF0000);
-		DisplayDebugStringFormatted(NJM_LOCATION(2, 7 + texPosY), "- PLAYER INFO UNAVAILABLE -");
+		PrintPanelText(2, 7 + texPosY, "- PLAYER INFO UNAVAILABLE -");
 		return;
 	}
 
 	SetDebugFontColor(0xFF88FFAA);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 7 + texPosY), "- PLAYER INFO -");
+	PrintPanelText(3, 7 + texPosY, "- PLAYER INFO -");
 	SetDebugFontColor(0xFFBFBFBF);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "POS X: %.2f", MainCharObj1[0]->Position.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "POS Y: %.2f", MainCharObj1[0]->Position.y);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "POS Z: %.2f", MainCharObj1[0]->Position.z);
+	PrintPanelText(3, 9 + texPosY, "POS X: %.2f", MainCharObj1[0]->Position.x);
+	PrintPanelText(3, 10 + texPosY, "POS Y: %.2f", MainCharObj1[0]->Position.y);
+	PrintPanelText(3, 11 + texPosY, "POS Z: %.2f", MainCharObj1[0]->Position.z);
 
 	cartStruct* cartPointer = getCartPointer();
 
 	if (!cartPointer)
 	{
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "ACTION: %d", MainCharObj1[0]->Action);
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "NEXT ACTION: %d", MainCharObj1[0]->NextAction);
+		PrintPanelText(3, 13 + texPosY, "ACTION: %d", MainCharObj1[0]->Action);
+		PrintPanelText(3, 14 + texPosY, "NEXT ACTION: %d", MainCharObj1[0]->NextAction);
 	}
 	else {
 
 		float spdX = fabs(cartPointer[1].SpeedX);
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "ACTION: %d", cartPointer->KartAction);
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "CART SPEED X: %.2f", spdX);
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 15 + texPosY), "CART SPEED Y: %.2f", cartPointer[1].SpeedY);
+		PrintPanelText(3, 13 + texPosY, "ACTION: %d", cartPointer->KartAction);
+		PrintPanelText(3, 14 + texPosY, "CART SPEED X: %.2f", spdX);
+		PrintPanelText(3, 15 + texPosY, "CART SPEED Y: %.2f", cartPointer[1].SpeedY);
 		return;
 	}
 
 	if (MainCharObj2[0] == nullptr)
 		return;
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "HOVER FRAMES: %d", MainCharObj2[0]->field_12);
+	PrintPanelText(3, 16 + texPosY, "HOVER FRAMES: %d", MainCharObj2[0]->field_12);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 17 + texPosY), "NEXT ANIM: %d", MainCharObj2[0]->AnimInfo.Next);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 18 + texPosY), "CURRENT ANIM: %d", MainCharObj2[0]->AnimInfo.Current);
+	PrintPanelText(3, 17 + texPosY, "NEXT ANIM: %d", MainCharObj2[0]->AnimInfo.Next);
+	PrintPanelText(3, 18 + texPosY, "CURRENT ANIM: %d", MainCharObj2[0]->AnimInfo.Current);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 20 + texPosY), "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 21 + texPosY), "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 22 + texPosY), "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
+	PrintPanelText(3, 20 + texPosY, "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
+	PrintPanelText(3, 21 + texPosY, "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
+	PrintPanelText(3, 22 + texPosY, "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
 
 	return;
 }
@@ -102,24 +104,24 @@ void DisplayGameInfo()
 		return;
 
 	SetDebugFontColor(0xFF88FFAA);
-	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- GAME STATS -");
+	PrintPanelText(5, 7 + texPosY, "- GAME STATS -");
 	SetDebugFontColor(0xFFBFBFBF);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "FRAME: %08d", FrameCount);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "FRAME LVL: %08d", FrameCountIngame);
+	PrintPanelText(3, 9 + texPosY, "FRAME: %08d", FrameCount);
+	PrintPanelText(3, 10 + texPosY, "FRAME LVL: %08d", FrameCountIngame);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "GAME MODE: %02d", GameMode);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "GAME STATE: %02d", GameState);
+	PrintPanelText(3, 12 + texPosY, "GAME MODE: %02d", GameMode);
+	PrintPanelText(3, 13 + texPosY, "GAME STATE: %02d", GameState);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 15 + texPosY), "CHARACTER: %01d", CurrentCharacter);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "LEVEL: %02d", CurrentLevel);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 17 + texPosY), "CHAO AREA: %02d", CurrentChaoArea);
+	PrintPanelText(3, 15 + texPosY, "CHARACTER: %01d", CurrentCharacter);
+	PrintPanelText(3, 16 + texPosY, "LEVEL: %02d", CurrentLevel);
+	PrintPanelText(3, 17 + texPosY, "CHAO AREA: %02d", CurrentChaoArea);
 	return;
 }
 
 void DrawHintText(char* text, char pID, char count) {
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, count + texPosY), "P%d: %.18s", pID +1, text);
+	PrintPanelText(3, count + texPosY, "P%d: %.18s", pID +1, text);
 }
 
 void GetNextEmeraldPosition() {
@@ -127,7 +129,7 @@ void GetNextEmeraldPosition() {
 	if (!EmeraldManagerObj2)
 		return;
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "Piece(s) Left: %d", EmeraldManagerObj2->byte5);
+	PrintPanelText(3, 9 + texPosY, "Piece(s) Left: %d", EmeraldManagerObj2->byte5);
 
 	if (!EmeraldManagerObj2->byte5)
 		return;
@@ -140,7 +142,7 @@ void GetNextEmeraldPosition() {
 
 		text = (char*)getHintText_r(NULL, 0);
 		DrawHintText(text, 0, 15);
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "P1 Distance: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[0].v, &MainCharObj1[0]->Position));
+		PrintPanelText(3, 11 + texPosY, "P1 Distance: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[0].v, &MainCharObj1[0]->Position));
 	}
 
 	piece = EmeraldManagerObj2->byte2C[1];
@@ -149,7 +151,7 @@ void GetNextEmeraldPosition() {
 
 		text = (char*)getHintText_r(NULL, 1);
 		DrawHintText(text, 1, 16);
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "P2 Distance: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[1].v, &MainCharObj1[0]->Position));
+		PrintPanelText(3, 12 + texPosY, "P2 Distance: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[1].v, &MainCharObj1[0]->Position));
 	}
 
 	piece = EmeraldManagerObj2->byte2C[2];
@@ -158,7 +160,7 @@ void GetNextEmeraldPosition() {
 		text = (char*)getHintText_r(NULL, 2);
 
 		DrawHintText(text, 2, 17);
-		DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "P3 Distance: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[2].v, &MainCharObj1[0]->Position));
+		PrintPanelText(3, 13 + texPosY, "P3 Distance: %.2f", CheckDistance(&EmeraldManagerObj2->byte2C[2].v, &MainCharObj1[0]->Position));
 	}
 }
 
@@ -167,12 +169,12 @@ void DisplayTreasureHuntingInfo()
 	if (GetCharacterLevel() != Characters_Knuckles && GetCharacterLevel() != Characters_Rouge || !EmeraldManagerObj2)
 	{
 		SetDebugFontColor(0xFFFF0000);
-		DisplayDebugStringFormatted(NJM_LOCATION(2, 7 + texPosY), "- HUNTING UNAVAILABLE -");
+		PrintPanelText(2, 7 + texPosY, "- HUNTING UNAVAILABLE -");
 		return;
 	}
 
 	SetDebugFontColor(0xFF88FFAA);
-	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- HUNTING -");
+	PrintPanelText(5, 7 + texPosY, "- HUNTING -");
 	SetDebugFontColor(0xFFBFBFBF);
 
 	GetNextEmeraldPosition();
@@ -182,34 +184,34 @@ void DisplayTreasureHuntingInfo()
 void DisplaySpeedCharInfo() {
 
 	SetDebugFontColor(0xFF88FFAA);
-	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- SPEED CHAR INFO -");
+	PrintPanelText(5, 7 + texPosY, "- SPEED CHAR INFO -");
 	SetDebugFontColor(0xFFBFBFBF);
 
 	SonicCharObj2* sonicCO2 = (SonicCharObj2*)MainCharacter[0]->Data2.Undefined;
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "SOMERSAULT TIMER: %d", sonicCO2->SomersaultTime);
+	PrintPanelText(3, 9 + texPosY, "SOMERSAULT TIMER: %d", sonicCO2->SomersaultTime);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "SPIN DASH COUNTER: %d", sonicCO2->SpindashCounter);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "HOVER FRAMES: %d", MainCharObj2[0]->field_12);	
+	PrintPanelText(3, 10 + texPosY, "SPIN DASH COUNTER: %d", sonicCO2->SpindashCounter);
+	PrintPanelText(3, 16 + texPosY, "HOVER FRAMES: %d", MainCharObj2[0]->field_12);	
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
+	PrintPanelText(3, 12 + texPosY, "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
+	PrintPanelText(3, 13 + texPosY, "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
+	PrintPanelText(3, 14 + texPosY, "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
 }
 
 void DisplayMechCharInfo() {
 
 	SetDebugFontColor(0xFF88FFAA);
-	DisplayDebugStringFormatted(NJM_LOCATION(5, 7 + texPosY), "- MECH CHAR INFO -");
+	PrintPanelText(5, 7 + texPosY, "- MECH CHAR INFO -");
 	SetDebugFontColor(0xFFBFBFBF);
 
 	auto mechCO2 = (MechEggmanCharObj2*)MainCharacter[0]->Data2.Undefined;
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "MECH HP: %.2f", mechCO2->base.MechHP);
+	PrintPanelText(3, 9 + texPosY, "MECH HP: %.2f", mechCO2->base.MechHP);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 12 + texPosY), "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
+	PrintPanelText(3, 12 + texPosY, "SPEED X: %.2f", MainCharObj2[0]->Speed.x);
+	PrintPanelText(3, 13 + texPosY, "SPEED Y: %.2f", MainCharObj2[0]->Speed.y);
+	PrintPanelText(3, 14 + texPosY, "SPEED Z: %.2f", MainCharObj2[0]->Speed.z);
 }
 
 void DisplayCharacterInfo() {
@@ -255,22 +257,22 @@ void DisplayCameraInfo()
 	if (!MainCharObj1[0])
 	{
 		SetDebugFontColor(0xFFFF0000);
-		DisplayDebugStringFormatted(NJM_LOCATION(2, 7 + texPosY), "- CAM UNAVAILABLE -");
+		PrintPanelText(2, 7 + texPosY, "- CAM UNAVAILABLE -");
 		return;
 	}
 
 	SetDebugFontColor(0xFF88FFAA);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 7 + texPosY), "- CAMERA INFO -");
+	PrintPanelText(3, 7 + texPosY, "- CAMERA INFO -");
 	SetDebugFontColor(0xFFBFBFBF);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 9 + texPosY), "POS X: %.2f", CameraData[0].location.pos.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 10 + texPosY), "POS Y: %.2f", CameraData[0].location.pos.y);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 11 + texPosY), "POS Z: %.2f", CameraData[0].location.pos.z);
+	PrintPanelText(3, 9 + texPosY, "POS X: %.2f", CameraData[0].location.pos.x);
+	PrintPanelText(3, 10 + texPosY, "POS Y: %.2f", CameraData[0].location.pos.y);
+	PrintPanelText(3, 11 + texPosY, "POS Z: %.2f", CameraData[0].location.pos.z);
 	
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 13 + texPosY), "ANG X: %d", (Uint16)CameraData[0].location.ang.x, (360.0f / 65535.0f) * (Uint16)CameraData[0].location.ang.x);
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 14 + texPosY), "ANG Y: %d", (Uint16)CameraData[0].location.ang.y, (360.0f / 65535.0f) * (Uint16)CameraData[0].location.ang.y);
+	PrintPanelText(3, 13 + texPosY, "ANG X: %d", (Uint16)CameraData[0].location.ang.x, (360.0f / 65535.0f) * (Uint16)CameraData[0].location.ang.x);
+	PrintPanelText(3, 14 + texPosY, "ANG Y: %d", (Uint16)CameraData[0].location.ang.y, (360.0f / 65535.0f) * (Uint16)CameraData[0].location.ang.y);
 
-	DisplayDebugStringFormatted(NJM_LOCATION(3, 16 + texPosY), "FREECAM MODE: %d", FreeCamMode);
+	PrintPanelText(3, 16 + texPosY, "FREECAM MODE: %d", FreeCamMode);
 
 	return;
 }
@@ -300,7 +302,7 @@ void DisplayTimed_DebugMessage_OnFrames()
 	if (DebugMessageTimer && debugText != "")
 	{
 		SetDebugFontColor(0xFFBFBFBF);
-		DisplayDebugStringFormatted(NJM_LOCATION(25, 10), debugText.c_str());
+		HelperFunctionsGlobal.DisplayDebugString(NJM_LOCATION(25, 10), debugText.c_str());
 		SetDebugFontColor(0xFFBFBFBF);
 		DebugMessageTimer--;
 	}
@@ -314,19 +316,17 @@ void SendTimedDebugMessage(std::string msg, int timer)
 
 void DisplayDebugTextInfo() {
 
-	ScaleDebugFont(scaleText);
+	ScaleDebugFont();
 	setTexPosY();
 	DisplayPlayerInformation();
 	DisplayGameInfo();
 	DisplayCharacterInfo();
 	DisplayCameraInfo();
 	DisplayTimed_DebugMessage_OnFrames();
-	return;
 }
 
 void initializeDebugText() {
 
 	SetDebugFontColor(0xFFBFBFBF);
-	ScaleDebugFont(scaleText);
-	return;
+	ScaleDebugFont();
 }
