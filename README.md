@@ -37,6 +37,10 @@ only work if you are on the original stage where you saved. If you saved on slot
 Green Forest and try to load it when you are on Metal harbor, you will get an error.
 Save states are deleted when you close the game.
 
+**Free Camera** 
+
+Self explanatory, this mode allows you to move the camera everywhere in a stage, this does not work during cutscene.
+
 ## Controls :
 
 **_Note : The controls are likely to change with the next updates, since there is no input mod
@@ -70,7 +74,22 @@ collision/display information.)**
 - Press Up to change slot (increase)
 - Press Down to change slot (decrease).
 
+**Free Camera :**
+
+When the free camera mode is enabled, you can use the mouse to move the camera around. The control scheme is similar to the one used in 3D editors in SA Tools.
+
+Move the mouse to rotate the camera.
+Hold Left Shift and move the mouse to move the camera.
+Hold Control and move the mouse up and down to zoom in and out.
+Press both Left Shift and Control to lock the camera in place. Press them again to unlock it.
+Press Numpad + and Numpad - to change camera speed.
+Press Y on the keyboard to re-enable vanilla camera. It will remain locked in place until the character touches a camera trigger.
+
 Thanks for reading, more features will eventually come, until then, feel free to share me
 your feedback and report bugs.
 
+**Display Death Zones :**
 
+- Press D (keyboard) to toggle Death Zone, this will render them on any stage or boss.
+
+Please note that some stages have hardcoded position check to kill the player regardless of the death zones.

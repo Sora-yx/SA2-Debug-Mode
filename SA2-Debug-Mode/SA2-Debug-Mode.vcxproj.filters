@@ -54,6 +54,9 @@
     <ClCompile Include="death-zones.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="basic-to-chunk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sa2-util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="basic-to-chunk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

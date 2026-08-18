@@ -1,59 +1,80 @@
 #include "stdafx.h"
+#include "basic-to-chunk.h"
 
-ModelInfo* DZObj[50];
-bool renderDZ = false;
-uint8_t DZCount = 0;
+static bool renderDZ = false;
 
-struct DeathZoneExtern
+// The game's death zones are Basic models (NJS_MODEL) and SA2 has no Basic renderer,
+// so we convert each model to a Chunk model the first time it is draw.
+
+
+static const BasicToChunkOptions DeathZoneChunkOptions = []
 {
-	uint8_t CurLevel;
-	const char* levelName;
-	uint8_t count;
-};
-
-DeathZoneExtern DeathZoneRenderArray[5] = {
-	{ LevelIDs_CosmicWall, "CosmicWall", 17},
-	{ LevelIDs_CrazyGadget, "CrazyGadget", 47},
-	{ LevelIDs_FinalRush, "FinalRush", 18},
-	{ LevelIDs_FinalChase, "FinalChase", 6},
-	{ LevelIDs_EternalEngine, "EternalEngine", 5}
-};
+	BasicToChunkOptions opt;
+	opt.forceUseAlpha = true;
+	opt.forceIgnoreLight = true;
+	opt.forceDoubleSide = true;
+	opt.forceBlend = true;
+	opt.forceNoTexture = true;
+	return opt;
+}();
 
 void Delete_DeathZones()
 {
-	for (uint8_t i = 0; i < DZCount; i++)
-	{
-		if (DZObj[i])
-		{
-			FreeMDL(DZObj[i]);
-		}
-	}
+	ReleaseAllChunkConversions();
 }
+
+static int LevelsWithLessAlpha[] =
+{
+	LevelIDs_MetalHarbor, LevelIDs_SkyRail
+};
 
 void DeathZone_Display(ObjectMaster* obj)
 {
-	if (!renderDZ || CurrentLevel == LevelIDs_CrazyGadget) //CG DZ really doesn't render properly it's not worth.
+	if (!renderDZ || !CurrentDeathZones)
 		return;
 
-	EntityData1* data = obj->Data1.Entity;
+	njSetTexture(texlist_objtex_common);
+	SaveControl3D();
+	OnControl3D(NJD_CONTROL_3D_CONSTANT_MATERIAL | NJD_CONTROL_3D_ENABLE_ALPHA);
 
-	for (uint8_t i = 0; i < data->Index; i++) {
+	float alpha = 0.4f;
 
-		njSetTexture(texlist_objtex_common);
-		njPushMatrix(_nj_current_matrix_ptr_);
-		SaveControl3D();
-		OnControl3D(NJD_CONTROL_3D_CONSTANT_MATERIAL | NJD_CONTROL_3D_ENABLE_ALPHA | NJD_CONTROL_3D_CONSTANT_ATTR);
-		SetMaterial(0.4f, 1.0f, 0, 0);
-
-		sub_42D340();
-
-		if (DZObj[i]) 
-			ProcessChunkModelsWithCallback(DZObj[i]->getmodel(), ProcessChunkModel);
-
-		njPopMatrix(1u);
-		LoadControl3D();
-		ResetMaterial();
+	for (int i = 0; i < LengthOfArray(LevelsWithLessAlpha); i++)
+	{
+		if (CurrentLevel == LevelsWithLessAlpha[i])
+		{
+			alpha = 0.8f;
+			break;
+		}
 	}
+	SetMaterial(alpha, 1.0f, 0.0f, 0.0f);
+
+	// we browse all the death zone models loaded in the current level
+	// then convert them to chunk format to draw them
+	for (DeathZone* zone = CurrentDeathZones; zone->Model; zone++)
+	{
+		if ((Sint32)zone->Flags < 0)
+			continue;
+
+		NJS_OBJECT* chunk = GetChunkObject(zone->Model, DeathZoneChunkOptions);
+
+		if (!chunk)
+			continue;
+
+		njPushMatrix(_nj_current_matrix_ptr_);
+		ResetRenderSpace();
+		ROTATEZ(0, chunk->ang[2]);
+		ROTATEX(0, chunk->ang[0]);
+		ROTATEY(0, chunk->ang[1]);
+		njScale(0, chunk->scl[0], chunk->scl[1], chunk->scl[2]);
+	
+		
+		ProcessChunkModelsWithCallback(chunk, ProcessChunkModel);
+		njPopMatrix(1u);
+	}
+
+	LoadControl3D();
+	ResetMaterial();
 }
 
 void DeathZoneRender_Manager(ObjectMaster* obj)
@@ -70,7 +91,7 @@ void DeathZoneRender_Manager(ObjectMaster* obj)
 		if (GetKeyState('D') & 0x8000)
 		{
 			bool isActive = GetActiveWindow();
-			
+
 			if (!isActive)
 				return;
 
@@ -87,36 +108,9 @@ void DeathZoneRender_Manager(ObjectMaster* obj)
 		}
 		break;
 	}
-
 }
-
-void LoadDeathZonesModels()
-{
-
-	DZCount = 0;
-
-	for (uint8_t i = 0; i < LengthOfArray(DeathZoneRenderArray); i++)
-	{
-		if (CurrentLevel == DeathZoneRenderArray[i].CurLevel)
-		{
-			DZCount = DeathZoneRenderArray[i].count;
-
-			for (Uint8 j = 0; j < DZCount; ++j) {
-				std::string str = std::to_string(j);
-				DZObj[j] = LoadDZMDL(str.c_str(), DeathZoneRenderArray[i].levelName);
-			}
-		}
-	}
-
-	if (DZCount) {
-		ObjectMaster* DZManager = LoadObject(2, "DeathZoneRender", DeathZoneRender_Manager, LoadObj_Data1);
-		DZManager->Data1.Entity->Index = DZCount;
-	}
-}
-
 
 void LoadDeathZoneObj()
 {
-	//WriteData<5>((int*)0x0612E79, 0x90);
-	LoadDeathZonesModels();
+	LoadObject(2, "DeathZoneRender", DeathZoneRender_Manager, LoadObj_Data1);
 }

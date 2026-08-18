@@ -89,6 +89,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="basic-to-chunk.cpp" />
     <ClCompile Include="cart.cpp" />
     <ClCompile Include="collisions.cpp" />
     <ClCompile Include="death-zones.cpp" />
@@ -104,6 +105,7 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="basic-to-chunk.h" />
     <ClInclude Include="helper.h" />
     <ClInclude Include="hud.h" />
     <ClInclude Include="mod.h" />

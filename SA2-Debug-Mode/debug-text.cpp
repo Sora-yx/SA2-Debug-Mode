@@ -112,11 +112,12 @@ void DisplayGameInfo()
 
 	PrintPanelText(3, 12 + texPosY, "GAME MODE: %02d", GameMode);
 	PrintPanelText(3, 13 + texPosY, "GAME STATE: %02d", GameState);
+	PrintPanelText(3, 14 + texPosY, "HARDCODED DEATH ZONE POS: %02d", CurrentChaoArea);
 
-	PrintPanelText(3, 15 + texPosY, "CHARACTER: %01d", CurrentCharacter);
-	PrintPanelText(3, 16 + texPosY, "LEVEL: %02d", CurrentLevel);
-	PrintPanelText(3, 17 + texPosY, "CHAO AREA: %02d", CurrentChaoArea);
-	return;
+	PrintPanelText(3, 16 + texPosY, "CHARACTER: %01d", CurrentCharacter);
+	PrintPanelText(3, 17 + texPosY, "LEVEL: %02d", CurrentLevel);
+	PrintPanelText(3, 18 + texPosY, "CHAO AREA: %02d", CurrentChaoArea);
+
 }
 
 void DrawHintText(char* text, char pID, char count) {
@@ -302,7 +303,7 @@ void DisplayTimed_DebugMessage_OnFrames()
 	if (DebugMessageTimer && debugText != "")
 	{
 		SetDebugFontColor(0xFFBFBFBF);
-		HelperFunctionsGlobal.DisplayDebugString(NJM_LOCATION(25, 10), debugText.c_str());
+		HelperFunctionsGlobal.DisplayDebugString(NJM_LOCATION(20, 10), debugText.c_str());
 		SetDebugFontColor(0xFFBFBFBF);
 		DebugMessageTimer--;
 	}
