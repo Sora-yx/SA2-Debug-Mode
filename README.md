@@ -85,11 +85,14 @@ Press both Left Shift and Control to lock the camera in place. Press them again 
 Press Numpad + and Numpad - to change camera speed.
 Press Y on the keyboard to re-enable vanilla camera. It will remain locked in place until the character touches a camera trigger.
 
-Thanks for reading, more features will eventually come, until then, feel free to share me
-your feedback and report bugs.
-
 **Display Death Zones :**
 
 - Press D (keyboard) to toggle Death Zone, this will render them on any stage or boss.
 
 Please note that some stages have hardcoded position check to kill the player regardless of the death zones.
+
+--
+
+Thanks for reading, more features will eventually come, until then, feel free to share me
+your feedback and report bugs.
+
