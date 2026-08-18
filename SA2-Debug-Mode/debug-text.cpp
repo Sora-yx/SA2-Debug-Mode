@@ -112,11 +112,10 @@ void DisplayGameInfo()
 
 	PrintPanelText(3, 12 + texPosY, "GAME MODE: %02d", GameMode);
 	PrintPanelText(3, 13 + texPosY, "GAME STATE: %02d", GameState);
-	PrintPanelText(3, 14 + texPosY, "HARDCODED DEATH ZONE POS: %02d", CurrentChaoArea);
 
-	PrintPanelText(3, 16 + texPosY, "CHARACTER: %01d", CurrentCharacter);
-	PrintPanelText(3, 17 + texPosY, "LEVEL: %02d", CurrentLevel);
-	PrintPanelText(3, 18 + texPosY, "CHAO AREA: %02d", CurrentChaoArea);
+	PrintPanelText(3, 15 + texPosY, "CHARACTER: %01d", CurrentCharacter);
+	PrintPanelText(3, 16 + texPosY, "LEVEL: %02d", CurrentLevel);
+	PrintPanelText(3, 17 + texPosY, "CHAO AREA: %02d", CurrentChaoArea);
 
 }
 
